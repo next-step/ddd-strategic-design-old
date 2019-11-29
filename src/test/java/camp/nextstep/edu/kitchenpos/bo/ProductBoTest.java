@@ -79,7 +79,7 @@ class ProductBoTest {
     @Test
     void list() {
         //given
-        List<Product> products = mockProducts();
+        List<Product> products = Arrays.asList(MockBuilder.mockValidProduct());
         when(productDao.findAll()).thenReturn(products);
         //when
         List<Product> result = productBo.list();
@@ -87,11 +87,4 @@ class ProductBoTest {
         assertThat(result).isNotNull();
     }
 
-    private List<Product> mockProducts() {
-        Product product = new Product();
-        product.setId(1L);
-        product.setName("테스트");
-        product.setPrice(BigDecimal.valueOf(100L));
-        return Arrays.asList(product);
-    }
 }
