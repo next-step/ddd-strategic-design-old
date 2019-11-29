@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import camp.nextstep.edu.kitchenpos.model.MenuProduct;
+import camp.nextstep.edu.kitchenpos.model.OrderTable;
 import camp.nextstep.edu.kitchenpos.model.Product;
 import java.math.BigDecimal;
 
@@ -12,7 +13,7 @@ public class MockBuilder {
         product.setPrice(BigDecimal.valueOf(100L));
         return product;
     }
-    public static MenuProduct mockValidMenuProduct(Long menuId) {
+    public static MenuProduct mockValidMenuProduct(long menuId) {
         MenuProduct menuProduct = new MenuProduct();
         menuProduct.setSeq(0L);
         menuProduct.setMenuId(menuId);
@@ -21,5 +22,21 @@ public class MockBuilder {
         return menuProduct;
     }
 
+
+    public static OrderTable mockNotEmptyOrderTable(long id) {
+        OrderTable orderTable = new OrderTable();
+        orderTable.setId(id);
+        orderTable.setNumberOfGuests(3);
+        orderTable.setEmpty(false);
+        return orderTable;
+    }
+
+    public static OrderTable mockEmptyOrderTable(long id) {
+        OrderTable orderTable = new OrderTable();
+        orderTable.setId(id);
+        orderTable.setNumberOfGuests(0);
+        orderTable.setEmpty(true);
+        return orderTable;
+    }
 
 }
