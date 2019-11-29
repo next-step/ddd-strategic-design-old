@@ -66,6 +66,62 @@
         - [ ] 테이블그룹에 속하는 테이블 중 식별자가 가장 작은 테이블이 주문 정보를 가질 경우, 이 주문의 주문 진행 상태는 '요리 중' 이거나 '식사 중'이면 안 된다.
         - [ ] 테이블그룹을 삭제한 뒤에는 해당 테이블그룹에 속했던 테이블의 테이블그룹 정보를 없애야 한다.
 
+#### TODO
+추가되어야 할 요구사항인지 검토 필요한 것들
+
+- 새로운 메뉴를 만들 때, 해당 메뉴를 구성하는 상품의 갯수가 하나 이상이어야 하는지? (현재는 가격이 0이고 메뉴를 구성하는 상품이 아무것도 없어도 메뉴 만들어짐. 이벤트 메뉴라면 필요한 기능일 듯)
+        
+        POST {{host}}/api/menus
+        Content-Type: application/json
+        
+        {
+          "name": "0원 메뉴",
+          "price": 0,
+          "menuGroupId": 1,
+          "menuProducts": [
+        
+          ]
+        }
+
+- 새로운 메뉴를 만들 때, 해당 메뉴를 구성하는 상품이 존재하는 경우 각각의 수량이 1개 이상이어야 하는지? (수량이 0개인 상품이 메뉴에 포함되어야 할 경우가 있을까?)
+
+        POST {{host}}/api/menus
+        Content-Type: application/json
+        
+        {
+          "name": "후라이드+0개",
+          "price": 900,
+          "menuGroupId": 1,
+          "menuProducts": [
+            {
+              "productId": 1,
+              "quantity": 0
+            },
+            {
+              "productId": 2,
+              "quantity": 1
+            }
+          ]
+        }
+
+- 새로운 주문을 만들 때, 주문을 구성하는 메뉴의 수량이 각각 1개 이상이어야 하는지? (수량이 0개인 메뉴가 주문에 포함되어야 할 경우가 있을까?)
+
+        POST {{host}}/api/orders
+        Content-Type: application/json
+        
+        {
+          "orderTableId": 1,
+          "orderLineItems": [
+            {
+              "menuId": 3,
+              "quantity": 0
+            }
+          ]
+        }
+
+- 새로운 주문을 만들 때, 주문한 테이블의 손님 수가 1명 이상이어야 하는지? (손님 수가 0명인 테이블도 새로운 주문을 만들 수 있는 경우가 필요할까?)
+
+- (DB) menu_product 테이블에 product.id 에 대한 FK 제약조건이 필요하지 않을까?
 
 ## 용어 사전
 
