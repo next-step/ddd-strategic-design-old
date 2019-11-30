@@ -2,6 +2,7 @@ package camp.nextstep.edu.kitchenpos.bo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import camp.nextstep.edu.kitchenpos.dao.ProductDao;
@@ -35,6 +36,11 @@ class ProductBoTest {
         request.setName("상품1");
         request.setPrice(BigDecimal.valueOf(price));
 
+        when(productDao.save(any())).thenAnswer(invocation -> {
+            Product saved = invocation.getArgument(0);
+            saved.setId(1L);
+            return saved;
+        });
         //when
         Product result = productBo.create(request);
 
@@ -44,7 +50,7 @@ class ProductBoTest {
         assertThat(result.getPrice()).isEqualTo(request.getPrice());
     }
 
-    @DisplayName("0 미만의 가격과 이름이 주어졌을 때 상품 생성 성공")
+    @DisplayName("0 미만의 가격과 이름이 주어졌을 때 상품 생성 실")
     @ParameterizedTest
     @ValueSource(longs = {-1L, -100L, -10000L, -2500000L})
     void given_negative_price_create_product_fails(long price) {
@@ -72,14 +78,13 @@ class ProductBoTest {
         assertThatIllegalArgumentException().isThrownBy(() -> {
             Product result = productBo.create(request);
         });
-
     }
 
     @DisplayName("전체 상품 목록을 조회할 수 있다")
     @Test
     void list() {
         //given
-        List<Product> products = Arrays.asList(MockBuilder.mockValidProduct());
+        List<Product> products = Arrays.asList(MockBuilder.mockValidProduct(1L));
         when(productDao.findAll()).thenReturn(products);
         //when
         List<Product> result = productBo.list();

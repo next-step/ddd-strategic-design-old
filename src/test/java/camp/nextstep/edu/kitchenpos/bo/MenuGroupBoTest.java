@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
@@ -28,6 +29,11 @@ class MenuGroupBoTest {
         //given
         MenuGroup request = new MenuGroup();
         request.setName("분식");
+        when(menuGroupDao.save(any())).thenAnswer(invocation -> {
+            MenuGroup saved = invocation.getArgument(0);
+            saved.setId(1L);
+            return saved;
+        });
         //when
         MenuGroup result = menuGroupBo.create(request);
         //then

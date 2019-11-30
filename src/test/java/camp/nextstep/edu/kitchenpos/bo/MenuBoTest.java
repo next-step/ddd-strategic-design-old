@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 
+import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockValidProduct;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,9 +26,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 @ExtendWith(MockitoExtension.class)
 class MenuBoTest {
@@ -47,32 +46,28 @@ class MenuBoTest {
     @Test
     void create() {
         //given
+        Product product = mockValidProduct(1L);
+        product.setPrice(BigDecimal.valueOf(1500L));
+        when(productDao.findById(any())).thenReturn(Optional.of(product));
+
+        List<MenuProduct> menuProducts = Arrays.asList(mockMenuProduct(product.getId(), 2));
+
         Menu request = new Menu();
         request.setName("떡볶이 1인분");
         request.setPrice(BigDecimal.valueOf(2500));
         request.setMenuGroupId(100L);
-        List<MenuProduct> menuProducts = Arrays.asList(mockMenuProduct());
+
         request.setMenuProducts(menuProducts);
 
         when(menuGroupDao.existsById(request.getMenuGroupId())).thenReturn(true);
 
-        Product product = MockBuilder.mockValidProduct();
-        product.setPrice(BigDecimal.valueOf(1500L));
-
-        when(productDao.findById(any())).thenReturn(Optional.of(product));
-
-        when(menuDao.save(any())).thenAnswer(new Answer<Menu>() {
-            public Menu answer(InvocationOnMock invocation) throws Throwable {
-                Menu menu = invocation.getArgument(0);
-                menu.setId(1L);
-                return menu;
-            }
+        when(menuDao.save(any())).thenAnswer(invocation -> {
+            Menu menu = invocation.getArgument(0);
+            menu.setId(1L);
+            return menu;
         });
-        when(menuProductDao.save(any())).thenAnswer(new Answer<MenuProduct>() {
-            public MenuProduct answer(InvocationOnMock invocation) throws Throwable {
-                return invocation.getArgument(0);
-            }
-        });
+
+        when(menuProductDao.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
         //when
         Menu menu = menuBo.create(request);
 
@@ -85,6 +80,7 @@ class MenuBoTest {
 
         MenuProduct requested = menuProducts.get(0);
         MenuProduct created = menu.getMenuProducts().get(0);
+
         assertThat(created.getMenuId()).isEqualTo(menu.getId());
         assertThat(created.getProductId()).isEqualTo(requested.getProductId());
         assertThat(created.getQuantity()).isEqualTo(requested.getQuantity());
@@ -97,17 +93,13 @@ class MenuBoTest {
     @ValueSource(longs = {-1L, -1000L, 25000L})
     void given_negative_price_create_menu_fail(long price) {
         //given
+        List<MenuProduct> menuProducts = Arrays.asList(mockMenuProduct(1L, 2));
+
         Menu request = new Menu();
         request.setName("떡볶이 1인분");
         request.setPrice(BigDecimal.valueOf(price));
         request.setMenuGroupId(100L);
-        List<MenuProduct> menuProducts = Arrays.asList(mockMenuProduct());
         request.setMenuProducts(menuProducts);
-
-        when(menuGroupDao.existsById(request.getMenuGroupId())).thenReturn(true);
-
-        Product product = MockBuilder.mockValidProduct();
-        product.setPrice(BigDecimal.valueOf(1500L));
 
         //then
         assertThatIllegalArgumentException().isThrownBy(() ->
@@ -115,40 +107,40 @@ class MenuBoTest {
         );
     }
 
-    @DisplayName("메뉴의 가격은 판매할 상품 목록의 개별 (수량 * 가격)의 총합보다 작으면 메뉴 생성이 실패한다")
+    @DisplayName("메뉴의 가격은 판매할 상품 목록의 개별 (수량 * 가격)의 총합보다 크면 메뉴 생성이 실패한다")
     @Test
     void given_sum_of_menu_products_is_smaller_then_menu_price_create_menu_fail() {
         //given
-        MenuProduct menuProduct = mockMenuProduct();
-        List<MenuProduct> menuProducts = Arrays.asList(menuProduct);
+        Product product = mockValidProduct(1L);
+        product.setPrice(BigDecimal.valueOf(1500L));
+        when(productDao.findById(any())).thenReturn(Optional.of(product));
+
+        List<MenuProduct> menuProducts = Arrays.asList(mockMenuProduct(product.getId(), 2));
+
         Menu request = new Menu();
         request.setName("떡볶이 1인분");
         request.setMenuGroupId(100L);
+        request.setPrice(BigDecimal.valueOf(3001L));
         request.setMenuProducts(menuProducts);
 
         when(menuGroupDao.existsById(request.getMenuGroupId())).thenReturn(true);
 
-        Product product = MockBuilder.mockValidProduct();
-        product.setPrice(BigDecimal.valueOf(1500L));
-
-        BigDecimal sumOfSalePrice = product.getPrice()
-            .multiply(BigDecimal.valueOf(menuProduct.getQuantity()));
-        request.setPrice(sumOfSalePrice);
         //then
         assertThatIllegalArgumentException().isThrownBy(() ->
             menuBo.create(request)
         );
     }
 
-    @DisplayName("속하는 메뉴 그룹이 없을 경 메뉴 생성이 실패한다")
+    @DisplayName("속하는 메뉴 그룹이 없을 경우 메뉴 생성이 실패한다")
     @Test
     void given_menu_group_not_exists_then_menu_price_create_menu_fail() {
         //given
+        List<MenuProduct> menuProducts = Arrays.asList(mockMenuProduct(1L, 2L));
+
         Menu request = new Menu();
         request.setName("떡볶이 1인분");
         request.setPrice(BigDecimal.valueOf(2500));
         request.setMenuGroupId(100L);
-        List<MenuProduct> menuProducts = Arrays.asList(mockMenuProduct());
         request.setMenuProducts(menuProducts);
 
         when(menuGroupDao.existsById(request.getMenuGroupId())).thenReturn(true);
@@ -182,12 +174,12 @@ class MenuBoTest {
         assertThat(queriedMenu.getMenuProducts()).isEqualTo(menuProducts);
     }
 
-    private MenuProduct mockMenuProduct() {
+    private MenuProduct mockMenuProduct(long productId, long quantity) {
         MenuProduct menuProduct = new MenuProduct();
         menuProduct.setSeq(0L);
         menuProduct.setMenuId(null);
-        menuProduct.setProductId(20L);
-        menuProduct.setQuantity(2L);
+        menuProduct.setProductId(productId);
+        menuProduct.setQuantity(quantity);
         return menuProduct;
     }
 }

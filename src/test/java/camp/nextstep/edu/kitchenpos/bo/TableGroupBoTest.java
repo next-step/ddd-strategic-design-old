@@ -161,7 +161,9 @@ class TableGroupBoTest {
         );
     }
 
-    @DisplayName("삭제하려는 테이블 그룹에 속하는 주문 테이블 중 ID가 가장 작은 주문테이블에 요리중/식사중인 주문이 있는 경우 특정 테이블 그룹 삭제 실패")
+    @DisplayName("삭제하려는 테이블 그룹에 속하는 주문 테이블 중"
+        + " ID가 가장 작은 주문테이블에 요리중/식사중인 주문이 있는 경우 "
+        + " 특정 테이블 그룹 삭제 실패")
     @Test
     void given_any_order_table_is_not_completed_then_delete_table_group_fails() {
         //given
@@ -170,7 +172,8 @@ class TableGroupBoTest {
         List<OrderTable> savedOrderTables = Arrays.asList(queriedFirstOrderTable);
         when(orderTableDao.findAllByTableGroupId(eq(tableGroupId))).thenReturn(savedOrderTables);
 
-        when(orderDao.existsByOrderTableIdAndOrderStatusIn(eq(queriedFirstOrderTable.getId()), any()))
+        when(orderDao
+            .existsByOrderTableIdAndOrderStatusIn(eq(queriedFirstOrderTable.getId()), any()))
             .thenReturn(true);
         //then
         assertThatIllegalArgumentException().isThrownBy(() ->

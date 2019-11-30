@@ -9,13 +9,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class MockBuilder {
-    public static Product mockValidProduct() {
+
+    public static Product mockValidProduct(long id) {
         Product product = new Product();
-        product.setId(1L);
-        product.setName("테스트");
+        product.setId(id);
+        product.setName("테스트 상품");
         product.setPrice(BigDecimal.valueOf(100L));
         return product;
     }
+
     public static MenuProduct mockValidMenuProduct(long menuId) {
         MenuProduct menuProduct = new MenuProduct();
         menuProduct.setSeq(0L);
@@ -42,22 +44,24 @@ public class MockBuilder {
         return orderTable;
     }
 
-    public static Order mockCompletedOrder(long id, long tableId){
+    public static Order mockCompletedOrder(long id, long tableId) {
         return mockOrder(1L, 100L, OrderStatus.COMPLETION);
     }
-    public static Order mockMealOrder(long id, long tableId){
+
+    public static Order mockMealOrder(long id, long tableId) {
         return mockOrder(1L, 100L, OrderStatus.MEAL);
     }
-    public static Order mockCookingOrder(long id, long tableId){
+
+    public static Order mockCookingOrder(long id, long tableId) {
         return mockOrder(1L, 100L, OrderStatus.COOKING);
     }
 
-    public static Order mockOrder(long id, long tableId, OrderStatus orderStatus){
+    public static Order mockOrder(long id, long tableId, OrderStatus orderStatus) {
         Order order = new Order();
         order.setId(id);
         order.setOrderTableId(tableId);
         order.setOrderStatus(orderStatus.name());
-        order.setOrderedTime(LocalDateTime.of(2019, 11,29, 12, 0,0));
+        order.setOrderedTime(LocalDateTime.of(2019, 11, 29, 12, 0, 0));
         return order;
     }
 }
