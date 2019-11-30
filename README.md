@@ -40,7 +40,7 @@
   
 - Order Table Group
   - [ ] Order Table Group을 등록할 수 있다.
-  - [ ] Group에 속한 Order Table의 목록이 1개 이상이어야 한다.
+  - [ ] Group에 속한 Order Table의 목록이 2개 이상이어야 한다.
   - [ ] Order Table들은 다른 Order Table Group에 속해 있으면 안된다.
   - [ ] Order Table Group의 생성시점을 저장한다.
   
