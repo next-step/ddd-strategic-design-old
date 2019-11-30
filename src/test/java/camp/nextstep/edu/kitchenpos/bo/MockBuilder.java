@@ -1,9 +1,12 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import camp.nextstep.edu.kitchenpos.model.MenuProduct;
+import camp.nextstep.edu.kitchenpos.model.Order;
+import camp.nextstep.edu.kitchenpos.model.OrderStatus;
 import camp.nextstep.edu.kitchenpos.model.OrderTable;
 import camp.nextstep.edu.kitchenpos.model.Product;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class MockBuilder {
     public static Product mockValidProduct() {
@@ -39,4 +42,22 @@ public class MockBuilder {
         return orderTable;
     }
 
+    public static Order mockCompletedOrder(long id, long tableId){
+        return mockOrder(1L, 100L, OrderStatus.COMPLETION);
+    }
+    public static Order mockMealOrder(long id, long tableId){
+        return mockOrder(1L, 100L, OrderStatus.MEAL);
+    }
+    public static Order mockCookingOrder(long id, long tableId){
+        return mockOrder(1L, 100L, OrderStatus.COOKING);
+    }
+
+    public static Order mockOrder(long id, long tableId, OrderStatus orderStatus){
+        Order order = new Order();
+        order.setId(id);
+        order.setOrderTableId(tableId);
+        order.setOrderStatus(orderStatus.name());
+        order.setOrderedTime(LocalDateTime.of(2019, 11,29, 12, 0,0));
+        return order;
+    }
 }
