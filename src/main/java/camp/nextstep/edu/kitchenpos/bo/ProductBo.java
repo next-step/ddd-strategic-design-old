@@ -11,6 +11,7 @@ import java.util.Objects;
 
 @Component
 public class ProductBo {
+
     private final ProductDao productDao;
 
     public ProductBo(final ProductDao productDao) {

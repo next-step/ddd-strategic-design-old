@@ -4,7 +4,11 @@ import camp.nextstep.edu.kitchenpos.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderLineItemDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
-import camp.nextstep.edu.kitchenpos.model.*;
+import camp.nextstep.edu.kitchenpos.model.Order;
+import camp.nextstep.edu.kitchenpos.model.OrderLineItem;
+import camp.nextstep.edu.kitchenpos.model.OrderStatus;
+import camp.nextstep.edu.kitchenpos.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.model.TableGroup;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -17,6 +21,7 @@ import java.util.Objects;
 
 @Component
 public class OrderBo {
+
     private final OrderDao orderDao;
     private final OrderLineItemDao orderLineItemDao;
     private final OrderTableDao orderTableDao;

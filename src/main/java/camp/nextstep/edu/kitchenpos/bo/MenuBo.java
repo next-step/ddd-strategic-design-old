@@ -17,6 +17,7 @@ import java.util.Objects;
 
 @Component
 public class MenuBo {
+
     private final MenuDao menuDao;
     private final MenuGroupDao menuGroupDao;
     private final MenuProductDao menuProductDao;

@@ -9,6 +9,7 @@ import java.util.List;
 
 @Component
 public class MenuGroupBo {
+
     private final MenuGroupDao menuGroupDao;
 
     public MenuGroupBo(final MenuGroupDao menuGroupDao) {
