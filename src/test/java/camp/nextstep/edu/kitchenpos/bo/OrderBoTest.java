@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockCompletedOrder;
+import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockMealOrder;
 import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockNotEmptyOrderTable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -206,6 +207,59 @@ class OrderBoTest {
         assertThat(result.get(0).getOrderLineItems()).hasSize(orderLineItems.size());
     }
 
+
+    @DisplayName("특정 주문의 상태를 변경할 수 있다")
+    @Test
+    void changeOrderStatus() {
+        //given
+        long orderId = 1L;
+        Order request = new Order();
+        request.setOrderStatus(OrderStatus.COMPLETION.name());
+
+        Order queriedOrder = mockMealOrder(orderId, 100L);
+        when(orderDao.findById(anyLong())).thenReturn(Optional.of(queriedOrder));
+
+        //when
+        Order result = orderBo.changeOrderStatus(orderId, request);
+
+        //then
+        assertThat(result.getId()).isEqualTo(orderId);
+        assertThat(result.getOrderStatus()).isEqualTo(queriedOrder.getOrderStatus());
+    }
+
+    @DisplayName("변경하려는 주문이 없을 때 특정 주문 상태 변경 실패 ")
+    @Test
+    void given_order_not_found_then_changeOrderStatus_fails() {
+        //given
+        long orderId = 1L;
+        Order request = new Order();
+        request.setOrderStatus(OrderStatus.COMPLETION.name());
+
+        when(orderDao.findById(anyLong())).thenReturn(Optional.empty());
+
+        //then
+        assertThatIllegalArgumentException().isThrownBy(() ->
+            orderBo.changeOrderStatus(orderId, request)
+        );
+    }
+
+    @DisplayName("주문 상태가 '완료' 일때 특정 주문 상태 변경 실패 ")
+    @Test
+    void given_completed_order_status_then_changeOrderStatus_fails() {
+        //given
+        long orderId = 1L;
+        Order request = new Order();
+        request.setOrderStatus(OrderStatus.COMPLETION.name());
+
+        Order queriedOrder = mockCompletedOrder(orderId, 100L);
+        when(orderDao.findById(anyLong())).thenReturn(Optional.of(queriedOrder));
+
+        //then
+        assertThatIllegalArgumentException().isThrownBy(() ->
+            orderBo.changeOrderStatus(orderId, request)
+        );
+    }
+
     private OrderLineItem mockOrderLineItem(long orderId) {
         OrderLineItem orderLineItem = new OrderLineItem();
         orderLineItem.setOrderId(orderId);
@@ -215,8 +269,4 @@ class OrderBoTest {
         return orderLineItem;
     }
 
-
-    @Test
-    void changeOrderStatus() {
-    }
 }
