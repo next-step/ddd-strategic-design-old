@@ -2,16 +2,16 @@
 
 ## 요구 사항
 
+- 치킨집에 포스 시스템을 구현한다.
+
 - Product
   - [ ] Product를 등록할 수 있다.
-  - [ ] Product는 0이상의 가격을 갖는다.
-  
-  - [ ] 전체 목록을 확인할 수 있다.
+  - [ ] Product의 가격은 0 이상이어야 한다.
   
 - Menu
   - [ ] Menu를 등록할 수 있다.
   - [ ] Menu는 0이상의 가격을 갖는다.
-  - [ ] Menu GroupId가 있어야 한다.
+  - [ ] MenuGroup은 미리 등록되어 있어야 한다.
   - [ ] Product의 가격 * 수량에 의해 합산한다.
   - [ ] Product들의 가격 합산이 0이상의 가격을 갖는다.
   
@@ -28,13 +28,11 @@
   - [ ] Order Table을 등록할 수 있다
   - [ ] Order Table은 사용여부와 사용자수를 갖는다.
   
-  - [ ] 전체 목록을 확인할 수 있다.
-  
   - [ ] Order Table의 비어있는 상태로 변경할 수 있다.  
-  - [ ] Order Table의 Order Table이 존재해야한다.
-  - [ ] Order Table의 비어있는 상태로 변경시, Order Table GroupId가 존재하며 COMPLETION 상태여야만 한다.
+  - [ ] Order Table은 Order Table Group에 속하면 안된다.
+  - [ ] Order Table의 비어있는 상태로 변경시, Order Table Group에 속하지 않고 COMPLETION 상태여야만 한다.
   
-  - [ ] Order Table의 0이상의 사용자수 변경할 수 있다.
+  - [ ] Order Table에 변경하고자하는 인원이 0명 이상인경우만 변경가능하다.
   - [ ] Order Table이 비어있는 상태이면 안된다.
   
   
@@ -49,8 +47,6 @@
 
 
 - Order
-  - [ ] 전체 목록을 조회할 수 있다.
-  
   - [ ] Order는 Order item이 있는 경우 생성할 수 있다.
   - [ ] Order Table이 비어있으면 안된다.
   - [ ] Order Table Group에 속한 경우 현재 Order를 Order Table Group에 추가한다.
@@ -59,6 +55,7 @@
   
   - [ ] Order 상태를 변경할 수 있다.
   - [ ] COOKING, MEAL 상태의 경우만 변경할 수 있다.
+  - [ ] COMPLETION인 경우 변경할 수 없다.
   
 ## 용어 사전
 
