@@ -20,8 +20,7 @@
   - [ ] Menu 전체 목록에서 Product의 목록을 확인할 수 있다.
     
 - Menu Group
-  - [ ] Menu Group을 등록할 수 있다.
-  - [ ] Menu Group은 이름이 있어야 등록할 수 있다.
+  - [ ] Menu Group을 이름이 있어야 등록할 수 있다.
   
   - [ ] Menu Group의 전체 목록을 조회할 수 있다.
   
