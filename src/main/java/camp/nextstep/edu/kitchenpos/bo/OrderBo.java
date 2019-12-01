@@ -4,16 +4,19 @@ import camp.nextstep.edu.kitchenpos.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderLineItemDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
-import camp.nextstep.edu.kitchenpos.model.*;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
+import camp.nextstep.edu.kitchenpos.model.Order;
+import camp.nextstep.edu.kitchenpos.model.OrderLineItem;
+import camp.nextstep.edu.kitchenpos.model.OrderStatus;
+import camp.nextstep.edu.kitchenpos.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.model.TableGroup;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class OrderBo {
@@ -44,24 +47,7 @@ public class OrderBo {
 
         order.setId(null);
 
-        OrderTable orderTable = orderTableDao.findById(order.getOrderTableId())
-                .orElseThrow(IllegalArgumentException::new);
-
-        if (orderTable.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-
-        if (Objects.nonNull(orderTable.getTableGroupId())) {
-            final TableGroup tableGroup = tableGroupDao.findById(orderTable.getTableGroupId())
-                    .orElseThrow(IllegalArgumentException::new);
-
-            final List<OrderTable> orderTables = orderTableDao.findAllByTableGroupId(tableGroup.getId());
-            orderTable = orderTables.stream()
-                    .sorted(Comparator.comparingLong(OrderTable::getId))
-                    .findFirst()
-                    .orElseThrow(IllegalArgumentException::new)
-            ;
-        }
+        OrderTable orderTable = getOrderTableToServeOrder(order);
 
         order.setOrderTableId(orderTable.getId());
         order.setOrderStatus(OrderStatus.COOKING.name());
@@ -108,4 +94,27 @@ public class OrderBo {
 
         return savedOrder;
     }
+
+    OrderTable getOrderTableToServeOrder(Order createRequest) {
+        OrderTable orderTable = orderTableDao.findById(createRequest.getOrderTableId())
+            .orElseThrow(IllegalArgumentException::new);
+
+        if (orderTable.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        if (Objects.nonNull(orderTable.getTableGroupId())) {
+            final TableGroup tableGroup = tableGroupDao.findById(orderTable.getTableGroupId())
+                .orElseThrow(IllegalArgumentException::new);
+
+            final List<OrderTable> orderTables = orderTableDao.findAllByTableGroupId(tableGroup.getId());
+            orderTable = orderTables.stream()
+                .sorted(Comparator.comparingLong(OrderTable::getId))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new)
+            ;
+        }
+        return orderTable;
+    }
+
 }
