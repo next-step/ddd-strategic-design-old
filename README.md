@@ -15,14 +15,11 @@
   - [ ] Product의 가격 * 수량에 의해 합산한다.
   - [ ] Product들의 가격 합산이 0이상의 가격을 갖는다.
   
-  - [ ] 전체 목록을 확인할 수 있다.
   - [ ] Menu 전체 목록에서 Product의 목록을 확인할 수 있다.
     
 - Menu Group
   - [ ] Menu Group을 등록할 수 있다.
   - [ ] Menu Group은 이름이 있어야 등록할 수 있다.
-  
-  - [ ] Menu Group의 전체 목록을 조회할 수 있다.
   
 - Order Table
   - [ ] Order Table을 등록할 수 있다
@@ -32,8 +29,8 @@
   - [ ] Order Table은 Order Table Group에 속하면 안된다.
   - [ ] Order Table의 비어있는 상태로 변경시, Order Table Group에 속하지 않고 COMPLETION 상태여야만 한다.
   
-  - [ ] Order Table에 변경하고자하는 인원이 0명 이상인경우만 변경가능하다.
-  - [ ] Order Table이 비어있는 상태이면 안된다.
+  - [ ] Order Table에 변경하고자하는 인원이 0명 이상인 경우만 변경가능하다.
+  - [ ] Order Table이 비어있는 상태면 안된다.
   
   
 - Order Table Group
