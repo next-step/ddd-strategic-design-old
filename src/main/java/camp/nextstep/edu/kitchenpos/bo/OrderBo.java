@@ -45,7 +45,7 @@ public class OrderBo {
         order.setId(null);
 
         OrderTable orderTable = orderTableDao.findById(order.getOrderTableId())
-                .orElseThrow(IllegalArgumentException::new);
+                                             .orElseThrow(IllegalArgumentException::new);
 
         if (orderTable.isEmpty()) {
             throw new IllegalArgumentException();
@@ -53,13 +53,13 @@ public class OrderBo {
 
         if (Objects.nonNull(orderTable.getTableGroupId())) {
             final TableGroup tableGroup = tableGroupDao.findById(orderTable.getTableGroupId())
-                    .orElseThrow(IllegalArgumentException::new);
+                                                       .orElseThrow(IllegalArgumentException::new);
 
             final List<OrderTable> orderTables = orderTableDao.findAllByTableGroupId(tableGroup.getId());
             orderTable = orderTables.stream()
-                    .sorted(Comparator.comparingLong(OrderTable::getId))
-                    .findFirst()
-                    .orElseThrow(IllegalArgumentException::new)
+                                    .sorted(Comparator.comparingLong(OrderTable::getId))
+                                    .findFirst()
+                                    .orElseThrow(IllegalArgumentException::new)
             ;
         }
 
@@ -93,9 +93,10 @@ public class OrderBo {
     @Transactional
     public Order changeOrderStatus(final long orderId, final Order order) {
         final Order savedOrder = orderDao.findById(orderId)
-                .orElseThrow(IllegalArgumentException::new);
+                                         .orElseThrow(IllegalArgumentException::new);
 
-        if (OrderStatus.COMPLETION.name().equals(savedOrder.getOrderStatus())) {
+        if (OrderStatus.COMPLETION.name()
+                                  .equals(savedOrder.getOrderStatus())) {
             throw new IllegalArgumentException();
         }
 
