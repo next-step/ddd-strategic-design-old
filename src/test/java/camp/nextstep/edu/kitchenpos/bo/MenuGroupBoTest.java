@@ -27,7 +27,7 @@ class MenuGroupBoTest {
     private MenuGroupBo menuGroupBo;
 
     @Test
-    @DisplayName("Menu Group을 이름이 있어야 등록할 수 있다.")
+    @DisplayName("Menu Group은 이름이 있어야 등록할 수 있다.")
     void add(){
 
         MenuGroup menuGroup = this.createMenuGroup();
