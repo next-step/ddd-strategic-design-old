@@ -7,19 +7,23 @@
 - Product
   - [ ] Product를 등록할 수 있다.
   - [ ] Product의 가격은 0 이상이어야 한다.
-  
+  - [ ] 전체 목록을 확인할 수 있다.
+    
 - Menu
   - [ ] Menu를 등록할 수 있다.
-  - [ ] Menu는 0이상의 가격을 갖는다.
-  - [ ] MenuGroup은 미리 등록되어 있어야 한다.
-  - [ ] Product의 가격 * 수량에 의해 합산한다.
-  - [ ] Product들의 가격 합산이 0이상의 가격을 갖는다.
+  - [ ] Menu에 등록되는 가격은 0이상이다.
+  - [ ] Menu는 Group에 속해 있어야한다.
+  - [ ] Menu Product의 가격 * 수량에 의해 합산한다.
+  - [ ] Menu의 가격은 Menu Product들의 가격 합산보다 클 수 없다
   
+  - [ ] 전체 목록을 확인할 수 있다.
   - [ ] Menu 전체 목록에서 Product의 목록을 확인할 수 있다.
     
 - Menu Group
   - [ ] Menu Group을 등록할 수 있다.
   - [ ] Menu Group은 이름이 있어야 등록할 수 있다.
+  
+  - [ ] Menu Group의 전체 목록을 조회할 수 있다.
   
 - Order Table
   - [ ] Order Table을 등록할 수 있다
@@ -44,6 +48,8 @@
 
 
 - Order
+  - [ ] 전체 목록을 조회할 수 있다.
+  
   - [ ] Order는 Order item이 있는 경우 생성할 수 있다.
   - [ ] Order Table이 비어있으면 안된다.
   - [ ] Order Table Group에 속한 경우 현재 Order를 Order Table Group에 추가한다.
