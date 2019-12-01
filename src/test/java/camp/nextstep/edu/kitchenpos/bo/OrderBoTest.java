@@ -4,7 +4,10 @@ import camp.nextstep.edu.kitchenpos.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderLineItemDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
-import camp.nextstep.edu.kitchenpos.model.*;
+import camp.nextstep.edu.kitchenpos.model.Order;
+import camp.nextstep.edu.kitchenpos.model.OrderLineItem;
+import camp.nextstep.edu.kitchenpos.model.OrderStatus;
+import camp.nextstep.edu.kitchenpos.model.OrderTable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class OrderBoTest {
@@ -38,10 +41,10 @@ class OrderBoTest {
         final OrderTable orderTable = createOrderTable(1L, false);
         final Order order = createOrder(1L, orderTable, createOrderLineItem());
 
-        // when
-        when(orderTableDao.findById(order.getOrderTableId())).thenReturn(Optional.of(orderTable));
-        when(orderDao.save(order)).thenReturn(order);
+        given(orderTableDao.findById(order.getOrderTableId())).willReturn(Optional.of(orderTable));
+        given(orderDao.save(order)).willReturn(order);
 
+        // when
         final Order actual = orderBo.create(order);
 
         // then
@@ -67,9 +70,9 @@ class OrderBoTest {
         final OrderTable orderTable = createOrderTable(1L, true);
         final Order order = createOrder(1L, orderTable, createOrderLineItem());
 
-        // when
-        when(orderTableDao.findById(order.getOrderTableId())).thenReturn(Optional.of(orderTable));
+        given(orderTableDao.findById(order.getOrderTableId())).willReturn(Optional.of(orderTable));
 
+        // when
         // then
         assertThrows(IllegalArgumentException.class,
                 () -> orderBo.create(order));
@@ -82,10 +85,10 @@ class OrderBoTest {
         final OrderTable orderTable = createOrderTable(1L, false);
         final Order order = createOrder(1L, orderTable, createOrderLineItem());
 
-        // when
-        when(orderTableDao.findById(order.getOrderTableId())).thenReturn(Optional.of(orderTable));
-        when(orderDao.save(order)).thenReturn(order);
+        given(orderTableDao.findById(order.getOrderTableId())).willReturn(Optional.of(orderTable));
+        given(orderDao.save(order)).willReturn(order);
 
+        // when
         final Order actual = orderBo.create(order);
 
         // then
@@ -99,10 +102,10 @@ class OrderBoTest {
         final OrderTable orderTable = createOrderTable(1L, false);
         final Order order = createOrder(1L, orderTable, createOrderLineItem());
 
-        // when
-        when(orderTableDao.findById(order.getOrderTableId())).thenReturn(Optional.of(orderTable));
-        when(orderDao.save(order)).thenReturn(order);
+        given(orderTableDao.findById(order.getOrderTableId())).willReturn(Optional.of(orderTable));
+        given(orderDao.save(order)).willReturn(order);
 
+        // when
         final Order actual = orderBo.create(order);
 
         // then
@@ -118,9 +121,9 @@ class OrderBoTest {
                 createOrder(2L, createOrderLineItem()),
                 createOrder(3L, createOrderLineItem()));
 
-        // when
-        when(orderDao.findAll()).thenReturn(orders);
+        given(orderDao.findAll()).willReturn(orders);
 
+        // when
         final List<Order> actual = orderBo.list();
 
         // then
@@ -133,10 +136,10 @@ class OrderBoTest {
         // given
         final Order order = createOrder(1L, OrderStatus.COOKING, createOrderLineItem(), createOrderLineItem());
 
-        // when
-        when(orderDao.findById(order.getId())).thenReturn(Optional.of(order));
-        when(orderLineItemDao.findAllByOrderId(order.getId())).thenReturn(order.getOrderLineItems());
+        given(orderDao.findById(order.getId())).willReturn(Optional.of(order));
+        given(orderLineItemDao.findAllByOrderId(order.getId())).willReturn(order.getOrderLineItems());
 
+        // when
         order.setOrderStatus(OrderStatus.MEAL.name());
         final Order actual = orderBo.changeOrderStatus(order.getId(), order);
 
@@ -150,11 +153,12 @@ class OrderBoTest {
         // given
         final Order order = createOrder(1L, OrderStatus.COOKING, createOrderLineItem(), createOrderLineItem());
 
-        // when
-        // then
-        when(orderDao.findById(order.getId())).thenReturn(Optional.of(order));
+        given(orderDao.findById(order.getId())).willReturn(Optional.of(order));
 
+        // when
         order.setOrderStatus(OrderStatus.COMPLETION.name());
+
+        // then
         assertThrows(IllegalArgumentException.class,
                 () -> orderBo.changeOrderStatus(order.getId(), order));
     }

@@ -18,7 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class TableGroupBoTest {
@@ -51,10 +51,10 @@ class TableGroupBoTest {
                 createOrderTable(1L, false), createOrderTable(2L, false));
         final TableGroup tableGroup = createTableGroup(1L, orderTables.toArray(new OrderTable[0]));
 
-        // when
-        when(orderTableDao.findAllByIdIn(any())).thenReturn(orderTables);
-        when(tableGroupDao.save(tableGroup)).thenReturn(tableGroup);
+        given(orderTableDao.findAllByIdIn(any())).willReturn(orderTables);
+        given(tableGroupDao.save(tableGroup)).willReturn(tableGroup);
 
+        // when
         final TableGroup actual = tableGroupBo.create(tableGroup);
 
         // then
@@ -68,9 +68,9 @@ class TableGroupBoTest {
         final TableGroup tableGroup = createTableGroup(
                 1L, createOrderTable(1L, false, 1L), createOrderTable(2L, false, 2L));
 
-        // when
-        when(tableGroupDao.save(tableGroup)).thenReturn(tableGroup);
+        given(tableGroupDao.save(tableGroup)).willReturn(tableGroup);
 
+        // when
         final TableGroup actual = tableGroupBo.create(tableGroup);
 
         // then
@@ -85,9 +85,9 @@ class TableGroupBoTest {
                 createOrderTable(1L, true, 1L), createOrderTable(2L, false, 2L));
         final TableGroup tableGroup = createTableGroup(1L, orderTables.toArray(new OrderTable[0]));
 
-        // when
-        when(orderTableDao.findAllByIdIn(any())).thenReturn(orderTables);
+        given(orderTableDao.findAllByIdIn(any())).willReturn(orderTables);
 
+        // when
         // then
         assertThrows(IllegalArgumentException.class,
                 () -> tableGroupBo.create(tableGroup));
@@ -101,10 +101,10 @@ class TableGroupBoTest {
                 createOrderTable(1L, true, 1L), createOrderTable(2L, false, 2L));
         final TableGroup tableGroup = createTableGroup(1L, orderTables.toArray(new OrderTable[0]));
 
-        // when
-        when(orderTableDao.findAllByTableGroupId(any())).thenReturn(orderTables);
-        when(orderDao.existsByOrderTableIdAndOrderStatusIn(any(), any())).thenReturn(false);
+        given(orderTableDao.findAllByTableGroupId(any())).willReturn(orderTables);
+        given(orderDao.existsByOrderTableIdAndOrderStatusIn(any(), any())).willReturn(false);
 
+        // when
         tableGroupBo.delete(tableGroup.getId());
 
         // then

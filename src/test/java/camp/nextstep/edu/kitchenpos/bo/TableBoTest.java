@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class TableBoTest {
@@ -36,9 +36,9 @@ class TableBoTest {
         // given
         final OrderTable orderTable = createOrderTable(1L, false, 1L);
 
-        // when
-        when(orderTableDao.save(orderTable)).thenReturn(orderTable);
+        given(orderTableDao.save(orderTable)).willReturn(orderTable);
 
+        // when
         final OrderTable actual = tableBo.create(orderTable);
 
         // then
@@ -52,9 +52,9 @@ class TableBoTest {
         final List<OrderTable> orderTables = Arrays.asList(
                 createOrderTable(1L, false, 1L), createOrderTable(2L, false, 1L));
 
-        // when
-        when(orderTableDao.findAll()).thenReturn(orderTables);
+        given(orderTableDao.findAll()).willReturn(orderTables);
 
+        // when
         final List<OrderTable> actual = tableBo.list();
 
         // then
@@ -67,9 +67,9 @@ class TableBoTest {
         // given
         final OrderTable orderTable = createOrderTable(1L, false, 999L);
 
-        // when
-        when(orderTableDao.findById(orderTable.getId())).thenReturn(Optional.of(orderTable));
+        given(orderTableDao.findById(orderTable.getId())).willReturn(Optional.of(orderTable));
 
+        // when
         // then
         assertThrows(IllegalArgumentException.class,
                 () -> tableBo.changeEmpty(orderTable.getId(), orderTable));
@@ -81,10 +81,10 @@ class TableBoTest {
         // given
         final OrderTable orderTable = createOrderTable(1L, false, 999L);
 
-        // when
-        when(orderTableDao.findById(orderTable.getId())).thenReturn(Optional.of(orderTable));
-        when(orderTableDao.save(orderTable)).thenReturn(orderTable);
+        given(orderTableDao.findById(orderTable.getId())).willReturn(Optional.of(orderTable));
+        given(orderTableDao.save(orderTable)).willReturn(orderTable);
 
+        // when
         orderTable.setNumberOfGuests(10);
         tableBo.changeNumberOfGuests(orderTable.getId(), orderTable);
 
@@ -111,11 +111,11 @@ class TableBoTest {
         // given
         final OrderTable orderTable = createOrderTable(1L, false);
 
-        // when
-        when(orderTableDao.findById(orderTable.getId())).thenReturn(Optional.of(orderTable));
-        when(orderDao.existsByOrderTableIdAndOrderStatusIn(any(), any())).thenReturn(false);
-        when(orderTableDao.save(orderTable)).thenReturn(orderTable);
+        given(orderTableDao.findById(orderTable.getId())).willReturn(Optional.of(orderTable));
+        given(orderDao.existsByOrderTableIdAndOrderStatusIn(any(), any())).willReturn(false);
+        given(orderTableDao.save(orderTable)).willReturn(orderTable);
 
+        // when
         orderTable.setEmpty(true);
         final OrderTable actual = tableBo.changeEmpty(orderTable.getId(), orderTable);
 

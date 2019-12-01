@@ -15,12 +15,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class MenuBoTest {
@@ -39,10 +41,10 @@ class MenuBoTest {
         // given
         final Menu menu = createMenu(0, 0);
 
-        // when
-        when(menuGroupDao.existsById(any(Long.class))).thenReturn(true);
-        when(menuDao.save(any())).thenReturn(menu);
+        given(menuGroupDao.existsById(any(Long.class))).willReturn(true);
+        given(menuDao.save(any())).willReturn(menu);
 
+        // when
         final Menu actual = menuBo.create(menu);
 
         // then
@@ -53,7 +55,7 @@ class MenuBoTest {
     @Test
     void findAll() {
         // given
-        when(menuDao.findAll()).thenReturn(Arrays.asList(new Menu(), new Menu()));
+        given(menuDao.findAll()).willReturn(Arrays.asList(new Menu(), new Menu()));
 
         // when
         final List<Menu> actual = menuBo.list();
@@ -81,10 +83,10 @@ class MenuBoTest {
         final Menu menu = createMenu(2001, 0, createMenuProduct(2, 0L));
         final Product product = createProduct(1000);
 
-        // when
-        when(menuGroupDao.existsById(any(Long.class))).thenReturn(true);
-        when(productDao.findById(any(Long.class))).thenReturn(Optional.of(product));
+        given(menuGroupDao.existsById(any(Long.class))).willReturn(true);
+        given(productDao.findById(any(Long.class))).willReturn(Optional.of(product));
 
+        // when
         // then
         assertThrows(IllegalArgumentException.class,
                 () -> menuBo.create(menu));
@@ -96,9 +98,9 @@ class MenuBoTest {
         // given
         final Menu menu = createMenu(2001, 0, createMenuProduct(2, 0L));
 
-        // when
-        when(menuGroupDao.existsById(any(Long.class))).thenReturn(false);
+        given(menuGroupDao.existsById(any(Long.class))).willReturn(false);
 
+        // when
         // then
         assertThat(menu.getPrice()).isEqualTo(new BigDecimal(2001));
         assertThrows(IllegalArgumentException.class,
@@ -112,11 +114,11 @@ class MenuBoTest {
         final Menu menu = createMenu(500, 0, createMenuProduct(1, 0L));
         final Product product = createProduct(500);
 
-        // when
-        when(menuGroupDao.existsById(any(Long.class))).thenReturn(true);
-        when(menuDao.save(any())).thenReturn(menu);
-        when(productDao.findById(any(Long.class))).thenReturn(Optional.of(product));
+        given(menuGroupDao.existsById(any(Long.class))).willReturn(true);
+        given(menuDao.save(any())).willReturn(menu);
+        given(productDao.findById(any(Long.class))).willReturn(Optional.of(product));
 
+        // when
         final Menu actual = menuBo.create(menu);
 
         // then

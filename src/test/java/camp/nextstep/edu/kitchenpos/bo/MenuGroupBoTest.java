@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class MenuGroupBoTest {
@@ -29,10 +29,9 @@ class MenuGroupBoTest {
     void create() {
         // given
         final MenuGroup menuGroup = createMenuGroup();
+        given(menuGroupDao.save(menuGroup)).willReturn(menuGroup);
 
         // when
-        when(menuGroupDao.save(menuGroup)).thenReturn(menuGroup);
-
         final MenuGroup actual = menuGroupBo.create(menuGroup);
 
         // then
@@ -44,10 +43,9 @@ class MenuGroupBoTest {
     void list() {
         // given
         final List<MenuGroup> menuGroups = Arrays.asList(createMenuGroup(), createMenuGroup());
+        given(menuGroupDao.findAll()).willReturn(menuGroups);
 
         // when
-        when(menuGroupDao.findAll()).thenReturn(menuGroups);
-
         final List<MenuGroup> actual = menuGroupBo.list();
 
         // then

@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class ProductBoTest {
@@ -48,9 +48,9 @@ class ProductBoTest {
         // given
         final Product product = createProduct(1000);
 
-        // when
-        when(productDao.save(product)).thenReturn(product);
+        given(productDao.save(product)).willReturn(product);
 
+        // when
         final Product actual = productBo.create(product);
 
         // then
@@ -64,9 +64,9 @@ class ProductBoTest {
         final List<Product> products = Arrays.asList(
                 createProduct(1), createProduct(2), createProduct(3));
 
-        // when
-        when(productDao.findAll()).thenReturn(products);
+        given(productDao.findAll()).willReturn(products);
 
+        // when
         final List<Product> actual = productBo.list();
 
         // then
