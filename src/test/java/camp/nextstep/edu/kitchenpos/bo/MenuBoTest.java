@@ -39,22 +39,23 @@ class MenuBoTest {
 
 
     @Test
-    @DisplayName("Menu를 등록할 수 있다.")
+    @DisplayName("메뉴를 등록할 수 있다.")
     void add(){
 
         Menu menu = this.createMenu();
-
         when(menuGroupDao.existsById(anyLong())).thenReturn(true);
         when(menuDao.save(any())).thenReturn(menu);
         when(productDao.findById(anyLong())).thenReturn(this.createProduct(5000L));
 
+
         Menu result = menuBo.create(menu);
+
 
         assertThat(result).isNotNull();
     }
 
     @Test
-    @DisplayName("Menu에 등록되는 가격은 0이상이다.")
+    @DisplayName("메뉴에 등록되는 가격은 0이상이다.")
     void menu_price_zero(){
 
         Menu menu = this.createMenu(-1);
@@ -64,7 +65,7 @@ class MenuBoTest {
     }
 
     @Test
-    @DisplayName("Menu는 Group에 속해 있어야한다.")
+    @DisplayName("메뉴는 그룹에 속해 있어야한다.")
     void menu_group(){
 
         Menu menu = this.createMenu();
@@ -75,13 +76,13 @@ class MenuBoTest {
     }
 
     @Test
-    @DisplayName("Menu의 가격은 Menu Product들의 가격 합산보다 클 수 없다.")
+    @DisplayName("메뉴의 가격은 메뉴상품들의 가격 합산보다 클 수 없다.")
     void menu_price_equals_products_price(){
 
         Menu menu = this.createMenu();
-
         when(menuGroupDao.existsById(anyLong())).thenReturn(true);
         when(productDao.findById(anyLong())).thenReturn(this.createProduct(3000L));
+
 
         assertThrows(IllegalArgumentException.class, () -> menuBo.create(menu));
     }
@@ -91,11 +92,12 @@ class MenuBoTest {
     void menu_list(){
 
         List<MenuProduct> menuProducts = Arrays.asList(this.createMenuProduct(3));
-
         when(menuProductDao.findAllByMenuId(anyLong())).thenReturn(menuProducts);
         when(menuDao.findAll()).thenReturn(Arrays.asList(this.createMenu()));
 
+
         List<Menu> menus = menuBo.list();
+
 
         assertThat(menus.size()).isEqualTo(1);
     }

@@ -27,28 +27,30 @@ class MenuGroupBoTest {
     private MenuGroupBo menuGroupBo;
 
     @Test
-    @DisplayName("Menu Group은 이름이 있어야 등록할 수 있다.")
+    @DisplayName("메뉴그룹은 이름이 있어야 등록할 수 있다.")
     void add(){
 
         MenuGroup menuGroup = this.createMenuGroup();
-
         when(menuGroupDao.save(any())).thenReturn(menuGroup);
 
+
         MenuGroup actual = menuGroupBo.create(menuGroup);
+
 
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(menuGroup);
     }
 
     @Test
-    @DisplayName("Menu Group의 전체 목록을 조회할 수 있다.")
+    @DisplayName("메뉴그룹의 전체 목록을 조회할 수 있다.")
     void menugroup_list(){
 
         MenuGroup menuGroup = this.createMenuGroup();
-
         when(menuGroupDao.findAll()).thenReturn(Arrays.asList(menuGroup));
 
+
         List<MenuGroup> menuGroups = menuGroupBo.list();
+
 
         assertThat(menuGroups).isNotNull();
         assertThat(menuGroups.size()).isEqualTo(1);
