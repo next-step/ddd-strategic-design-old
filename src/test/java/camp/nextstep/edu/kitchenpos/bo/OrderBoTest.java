@@ -183,28 +183,10 @@ class OrderBoTest {
         return orderLineItem;
     }
 
-    private OrderLineItem createOrderLineItem(final Order order) {
-        final OrderLineItem orderLineItem = createOrderLineItem();
-        orderLineItem.setOrderId(order.getId());
-        return orderLineItem;
-    }
-
     private OrderTable createOrderTable(final Long id, final boolean isEmpty) {
         final OrderTable orderTable = new OrderTable();
         orderTable.setId(id);
         orderTable.setEmpty(isEmpty);
         return orderTable;
-    }
-
-    private OrderTable createOrderTable(final Long id, final boolean isEmpty, final TableGroup tableGroup) {
-        final OrderTable orderTable = createOrderTable(id, isEmpty);
-        orderTable.setTableGroupId(tableGroup.getId());
-        return orderTable;
-    }
-
-    private TableGroup createTableGroup(final OrderTable orderTable) {
-        final TableGroup tableGroup = new TableGroup();
-        tableGroup.setId(orderTable.getTableGroupId());
-        return tableGroup;
     }
 }
