@@ -1,8 +1,7 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +57,7 @@ class MenuBoTest {
     @DisplayName("Menu에 등록되는 가격은 0이상이다.")
     void menu_price_zero(){
 
-        Menu menu = this.createMenu(1L, -1);
+        Menu menu = this.createMenu(-1);
 
         assertThrows(IllegalArgumentException.class, () -> menuBo.create(menu));
 
@@ -87,18 +86,32 @@ class MenuBoTest {
         assertThrows(IllegalArgumentException.class, () -> menuBo.create(menu));
     }
 
+    @Test
+    @DisplayName("전체 목록을 확인할 수 있다.")
+    void menu_list(){
 
-    private Menu createMenu(){
-        return this.createMenu(1L, 5000L);
+        List<MenuProduct> menuProducts = Arrays.asList(this.createMenuProduct(3));
+
+        when(menuProductDao.findAllByMenuId(anyLong())).thenReturn(menuProducts);
+        when(menuDao.findAll()).thenReturn(Arrays.asList(this.createMenu()));
+
+        List<Menu> menus = menuBo.list();
+
+        assertThat(menus.size()).isEqualTo(1);
     }
 
-    private Menu createMenu(long menuGroupId, long price){
+
+    private Menu createMenu(){
+        return this.createMenu(5000L);
+    }
+
+    private Menu createMenu(long price){
 
         Menu menu = new Menu();
+        menu.setId(1L);
         menu.setName("menu");
-        menu.setMenuGroupId(menuGroupId);
+        menu.setMenuGroupId(1L);
         menu.setPrice(new BigDecimal(price));
-        menu.setMenuGroupId(menuGroupId);
         menu.setMenuProducts(Arrays.asList(createMenuProduct(1 )));
 
         return menu;
