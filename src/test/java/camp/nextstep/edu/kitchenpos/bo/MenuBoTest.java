@@ -37,6 +37,7 @@ class MenuBoTest {
     @InjectMocks
     private MenuBo menuBo;
 
+    private final long DEFAULT_MENU_PRICE = 5000L;
 
     @Test
     @DisplayName("메뉴를 등록할 수 있다.")
@@ -45,7 +46,7 @@ class MenuBoTest {
         Menu menu = this.createMenu();
         when(menuGroupDao.existsById(anyLong())).thenReturn(true);
         when(menuDao.save(any())).thenReturn(menu);
-        when(productDao.findById(anyLong())).thenReturn(this.createProduct(5000L));
+        when(productDao.findById(anyLong())).thenReturn(this.createProduct(DEFAULT_MENU_PRICE));
 
 
         Menu result = menuBo.create(menu);
@@ -79,9 +80,11 @@ class MenuBoTest {
     @DisplayName("메뉴의 가격은 메뉴상품들의 가격 합산보다 클 수 없다.")
     void menu_price_equals_products_price(){
 
+        long priceOfProduct =  DEFAULT_MENU_PRICE - 2000L;
+
         Menu menu = this.createMenu();
         when(menuGroupDao.existsById(anyLong())).thenReturn(true);
-        when(productDao.findById(anyLong())).thenReturn(this.createProduct(3000L));
+        when(productDao.findById(anyLong())).thenReturn(this.createProduct(priceOfProduct));
 
 
         assertThrows(IllegalArgumentException.class, () -> menuBo.create(menu));
@@ -104,7 +107,7 @@ class MenuBoTest {
 
 
     private Menu createMenu(){
-        return this.createMenu(5000L);
+        return this.createMenu(DEFAULT_MENU_PRICE);
     }
 
     private Menu createMenu(long price){

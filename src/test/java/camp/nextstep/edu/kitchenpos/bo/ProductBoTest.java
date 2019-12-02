@@ -27,12 +27,13 @@ class ProductBoTest {
     @InjectMocks
     private ProductBo productBo;
 
+    private final int DEFAULT_PRICE = 5000;
 
     @Test
     @DisplayName("상품를 등록할 수 있다.")
     void add(){
 
-        Product product = this.createProduct(1000);
+        Product product = this.createProduct(DEFAULT_PRICE);
         when(productDao.save(any())).thenReturn(product);
 
 
@@ -56,7 +57,7 @@ class ProductBoTest {
     @DisplayName("전체 목록을 확인할 수 있다.")
     void product_list(){
 
-        List<Product> products = Arrays.asList(this.createProduct(1000), this.createProduct(2000));
+        List<Product> products = Arrays.asList(this.createProduct(DEFAULT_PRICE), this.createProduct(DEFAULT_PRICE));
         when(productDao.findAll()).thenReturn(products);
 
 
