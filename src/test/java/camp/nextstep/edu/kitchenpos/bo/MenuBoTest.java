@@ -44,6 +44,7 @@ class MenuBoTest {
     private MenuProduct menuProduct;
     private MenuGroup menuGroup;
     private Menu menu;
+    private List<Menu> menus;
 
     @BeforeEach
     void dummyMenuSetUp() {
@@ -82,6 +83,9 @@ class MenuBoTest {
         menu.setPrice(BigDecimal.valueOf(16000));
         menu.setMenuGroupId(1L);
         menu.setMenuProducts(menuProducts);
+
+        menus = new ArrayList<>();
+        menus.add(menu);
     }
 
 
@@ -121,5 +125,15 @@ class MenuBoTest {
         assertThat(savedMenu.getPrice()).isEqualTo(menu.getPrice());
         assertThat(savedMenu.getName()).isEqualTo(menu.getName());
         assertThat(savedMenu.getMenuGroupId()).isEqualTo(menuGroup.getId());
+    }
+
+    @DisplayName("메뉴 리스트 조회하기")
+    @Test
+    void menuListTest() {
+        given(menuDao.findAll()).willReturn(menus);
+
+        List<Menu> list = menuBo.list();
+
+        assertThat(list).hasSize(1);
     }
 }
