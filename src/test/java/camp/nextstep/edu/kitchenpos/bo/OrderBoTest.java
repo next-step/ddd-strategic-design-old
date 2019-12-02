@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockCompletedOrder;
+import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockEmptyOrderTable;
 import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockMealOrder;
 import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockNotEmptyOrderTable;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,7 +84,7 @@ class OrderBoTest {
         assertThat(result.getOrderLineItems()).allMatch(x -> x.getOrderId().equals(result.getId()));
     }
 
-    @DisplayName("포함할 주문아이템이 0개이거나 nul일 때 주문을 생성할 수 있다")
+    @DisplayName("포함할 주문아이템이 0개이거나 nul일 때 주문 생성 실패 ")
     @ParameterizedTest
     @NullAndEmptySource
     void given_order_line_items_is_null_or_empty_then_create_order_fails(
@@ -124,14 +125,27 @@ class OrderBoTest {
         );
 
     }
-
-    @DisplayName("주문테이블이 속한 테이블 그룹이 없을 때 getOrderTableToServeOrder 실패 ")
-    void given_order_does_not_have_order_table_when_getOrderTableToServeOrder_() {
+    @DisplayName("주문의 주문테이블이 없을 때 주문에 할당될 주문테이블 반환 실패 ")
+    void given_not_existing_order_table_when_getOrderTableToServeOrder_() {
         //given
         Order request = new Order();
         request.setOrderTableId(100L);
-
         when(orderTableDao.findById(anyLong())).thenReturn(Optional.empty());
+
+        //then
+        assertThatIllegalArgumentException().isThrownBy(() ->
+            orderBo.getOrderTableToServeOrder(request)
+        );
+
+    }
+    @DisplayName("주문의 주문테이블이 비었을 주문에 할당될 주문테이블 반환 실패 ")
+    void given_order_table_is_empty_when_getOrderTableToServeOrder_() {
+        //given
+        Order request = new Order();
+        request.setOrderTableId(100L);
+        OrderTable queriedOrderTable = mockEmptyOrderTable(1000L);
+        queriedOrderTable.setTableGroupId(request.getOrderTableId());
+        when(orderTableDao.findById(anyLong())).thenReturn(Optional.of(queriedOrderTable));
 
         //then
         assertThatIllegalArgumentException().isThrownBy(() ->

@@ -4,6 +4,7 @@ package camp.nextstep.edu.kitchenpos.bo;
 import static camp.nextstep.edu.kitchenpos.bo.MockBuilder.mockValidProduct;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -72,25 +73,26 @@ class MenuBoTest {
         Menu menu = menuBo.create(request);
 
         //then
-        assertThat(menu.getId()).isNotNull();
-        assertThat(menu.getName()).isEqualTo(request.getName());
-        assertThat(menu.getPrice()).isEqualTo(request.getPrice());
-        assertThat(menu.getMenuProducts()).hasSize(menuProducts.size());
-        assertThat(menu.getMenuGroupId()).isEqualTo(request.getMenuGroupId());
+        assertAll("assert on Menu fields",
+            () -> assertThat(menu.getId()).isNotNull(),
+            () -> assertThat(menu.getName()).isEqualTo(request.getName()),
+            () -> assertThat(menu.getPrice()).isEqualTo(request.getPrice()),
+            () -> assertThat(menu.getMenuProducts()).hasSize(menuProducts.size()),
+            () -> assertThat(menu.getMenuGroupId()).isEqualTo(request.getMenuGroupId()));
 
         MenuProduct requested = menuProducts.get(0);
         MenuProduct created = menu.getMenuProducts().get(0);
-
-        assertThat(created.getMenuId()).isEqualTo(menu.getId());
-        assertThat(created.getProductId()).isEqualTo(requested.getProductId());
-        assertThat(created.getQuantity()).isEqualTo(requested.getQuantity());
-        assertThat(created.getSeq()).isEqualTo(requested.getSeq());
+        assertAll("assert on MenuProduct fields",
+            () -> assertThat(created.getMenuId()).isEqualTo(menu.getId()),
+            () -> assertThat(created.getProductId()).isEqualTo(requested.getProductId()),
+            () -> assertThat(created.getQuantity()).isEqualTo(requested.getQuantity()),
+            () -> assertThat(created.getSeq()).isEqualTo(requested.getSeq()));
 
     }
 
     @DisplayName("0원 미만의 가격이 주어졌을 때 메뉴 생성이 실패한다")
     @ParameterizedTest
-    @ValueSource(longs = {-1L, -1000L, 25000L})
+    @ValueSource(longs = {-1L, -1000L, -25000L})
     void given_negative_price_create_menu_fail(long price) {
         //given
         List<MenuProduct> menuProducts = Arrays.asList(mockMenuProduct(1L, 2));
