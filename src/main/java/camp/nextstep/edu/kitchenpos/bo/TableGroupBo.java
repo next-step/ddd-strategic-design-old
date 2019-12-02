@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class TableGroupBo {
+
     private final OrderDao orderDao;
     private final OrderTableDao orderTableDao;
     private final TableGroupDao tableGroupDao;

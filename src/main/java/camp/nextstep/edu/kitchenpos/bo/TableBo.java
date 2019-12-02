@@ -14,6 +14,7 @@ import java.util.Objects;
 
 @Component
 public class TableBo {
+
     private final OrderDao orderDao;
     private final OrderTableDao orderTableDao;
     private final TableGroupDao tableGroupDao;
