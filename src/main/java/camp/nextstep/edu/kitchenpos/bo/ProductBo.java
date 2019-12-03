@@ -21,7 +21,7 @@ public class ProductBo {
     public Product create(final Product product) {
         final BigDecimal price = product.getPrice();
 
-        if (Objects.isNull(price) || price.compareTo(BigDecimal.ZERO) < 0) { // 금액은 0원이상이여야 한다
+        if (Objects.isNull(price) || price.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException();
         }
 
