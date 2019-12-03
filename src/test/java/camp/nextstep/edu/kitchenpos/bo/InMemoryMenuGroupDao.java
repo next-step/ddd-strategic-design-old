@@ -2,6 +2,7 @@ package camp.nextstep.edu.kitchenpos.bo;
 
 import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
 import camp.nextstep.edu.kitchenpos.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class InMemoryMenuGroupDao implements MenuGroupDao {
 
     @Override
     public Optional<MenuGroup> findById(Long id) {
-        return Optional.empty();
+        return Optional.ofNullable(menuGroups.get(id));
     }
 
     @Override
@@ -31,6 +32,6 @@ public class InMemoryMenuGroupDao implements MenuGroupDao {
 
     @Override
     public boolean existsById(Long id) {
-        return false;
+        return menuGroups.containsKey(id);
     }
 }
