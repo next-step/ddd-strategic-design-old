@@ -85,14 +85,6 @@ class TableBoTest {
         assertThatIllegalArgumentException().isThrownBy(() -> {
             bo.changeEmpty(orderTable.getId(), orderTable);
         });
-
-//        assertThat(orderTable.getTableGroupId()).isNotNull();
-//        assertThat(orderTable.getTableGroupId()).isPositive();
-//        assertThat(orderTable.getTableGroupId()).isEqualTo(1L);
-
-//        OrderTable changeEmpty = bo.changeEmpty(orderTable.getId(), orderTable);
-
-//        assertThat(changeEmpty.isEmpty()).isTrue();
     }
 
     @DisplayName("테이블 그룹을 가지고 있지 않고, 주문 상태가 조리중이거나 식사중이 아닌" +
