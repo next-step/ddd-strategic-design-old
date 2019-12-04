@@ -2,6 +2,7 @@ package camp.nextstep.edu.kitchenpos.bo;
 
 import camp.nextstep.edu.kitchenpos.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.model.OrderStatus;
 import camp.nextstep.edu.kitchenpos.model.OrderTable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,13 +11,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -35,6 +36,8 @@ class TableBoTest {
     @InjectMocks
     private TableBo tableBo;
 
+    private final Long DEFAULT_ID = 1L;
+
     @DisplayName("주문 테이블은 주문 테이블 번호, 테이블 그룹 번호, 고객 인원수, 테이블 이용여부 속성들을 가지고 있다.")
     @Test
     void hasProperties() {
@@ -43,50 +46,58 @@ class TableBoTest {
         String numberOfGuestsPropertyName = "numberOfGuests";
         String emptyPropertyName = "empty";
 
-        assertThat(orderTable).hasFieldOrProperty(orderTableIdPropertyName);
-        assertThat(orderTable).hasFieldOrProperty(tableGroupIdPropertyName);
-        assertThat(orderTable).hasFieldOrProperty(numberOfGuestsPropertyName);
-        assertThat(orderTable).hasFieldOrProperty(emptyPropertyName);
+        assertAll(
+                () -> assertThat(orderTable).hasFieldOrProperty(orderTableIdPropertyName),
+                () -> assertThat(orderTable).hasFieldOrProperty(tableGroupIdPropertyName),
+                () -> assertThat(orderTable).hasFieldOrProperty(numberOfGuestsPropertyName),
+                () -> assertThat(orderTable).hasFieldOrProperty(emptyPropertyName)
+        );
     }
 
     @DisplayName("[테이블 생성] 주문 테이블을 생성할 수 있다.")
     @Test
     void create() {
         // given
-        OrderTable orderTable = createOrderTable(1L, null, true);
-        given(orderTableDao.save(any())).willReturn(orderTable);
+        OrderTable orderTable = createOrderTable(DEFAULT_ID, null, true);
+        given(orderTableDao.save(orderTable)).willReturn(orderTable);
 
         // when
-        OrderTable savedOrderTable = tableBo.create(any());
+        OrderTable savedOrderTable = tableBo.create(orderTable);
 
         // then
-        assertThat(savedOrderTable).isNotNull();
-        assertThat(savedOrderTable).isEqualTo(orderTable);
+        assertAll(
+                () -> assertThat(savedOrderTable).isNotNull(),
+                () -> assertThat(savedOrderTable).isEqualTo(orderTable)
+        );
     }
 
     @DisplayName("[테이블 조회] 주문 테이블을 조회할 수 있다.")
     @Test
     void list() {
         // given
+        final int orderTablesSize = 2;
         List<OrderTable> orderTables = mock(List.class);
-        given(orderTables.size()).willReturn(2);
+        given(orderTables.size()).willReturn(orderTablesSize);
         given(orderTableDao.findAll()).willReturn(orderTables);
 
         // when
         List<OrderTable> allOrderTables = tableBo.list();
 
         // then
-        assertThat(allOrderTables).isNotNull();
-        assertThat(allOrderTables.size()).isEqualTo(2);
+        assertAll(
+                () -> assertThat(allOrderTables).isNotNull(),
+                () -> assertThat(allOrderTables.size()).isEqualTo(orderTablesSize)
+        );
     }
 
     @DisplayName("[주문 테이블 상태 변경] 주문 테이블이 존재하면 성공을 반환한다.")
     @Test
     void whenOrderTableIsExist_thenSuccess() {
         // when
-        OrderTable orderTable = createOrderTable(1l, null, true);
-        when(orderTableDao.findById(any())).thenReturn(Optional.of(orderTable));
-        OrderTable savedOrderTable = orderTableDao.findById(any()).get();
+        OrderTable orderTable = createOrderTable(DEFAULT_ID, null, true);
+        when(orderTableDao.findById(DEFAULT_ID)).thenReturn(Optional.of(orderTable));
+        OrderTable savedOrderTable = orderTableDao.findById(DEFAULT_ID)
+                                                  .get();
 
         // then
         assertThat(savedOrderTable).isNotNull();
@@ -96,77 +107,87 @@ class TableBoTest {
     @Test
     void whenOrderTableHasTableGroupId_thenFail() {
         // given
-        OrderTable orderTable = createOrderTable(1l, 1L, true);
-        given(orderTableDao.findById(any())).willReturn(Optional.of(orderTable));
+        OrderTable orderTable = createOrderTable(DEFAULT_ID, DEFAULT_ID, true);
+        given(orderTableDao.findById(DEFAULT_ID)).willReturn(Optional.of(orderTable));
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableBo.changeEmpty(1l, orderTable));
+                .isThrownBy(() -> tableBo.changeEmpty(DEFAULT_ID, orderTable));
     }
 
     @DisplayName("[주문 테이블 상태 변경] 주문 테이블의 테이블 이용 여부를 변경 한다.")
     @Test
     void changeEmpty() {
         // given
-        OrderTable beforeOrderTable = createOrderTable(1l, null, true);
-        OrderTable savedOrderTable = createOrderTable(1l, null, false);
+        final List<String> orderStatuses = Arrays.asList(OrderStatus.COOKING.name(), OrderStatus.MEAL.name());
+        OrderTable beforeOrderTable = createOrderTable(DEFAULT_ID, null, true);
+        OrderTable savedOrderTable = createOrderTable(DEFAULT_ID, null, false);
 
-        given(orderTableDao.findById(any())).willReturn(Optional.of(savedOrderTable));
-        given(orderDao.existsByOrderTableIdAndOrderStatusIn(any(), any())).willReturn(false);
-        given(orderTableDao.save(any())).willReturn(savedOrderTable);
+        given(orderTableDao.findById(DEFAULT_ID)).willReturn(Optional.of(savedOrderTable));
+        given(orderDao.existsByOrderTableIdAndOrderStatusIn(DEFAULT_ID, orderStatuses)).willReturn(false);
+        given(orderTableDao.save(savedOrderTable)).willReturn(savedOrderTable);
 
         // when
-        OrderTable changedOrderTable = tableBo.changeEmpty(1l, beforeOrderTable);
+        OrderTable changedOrderTable = tableBo.changeEmpty(DEFAULT_ID, beforeOrderTable);
 
         // then
-        assertThat(changedOrderTable.isEmpty()).isTrue();
-        assertThat(changedOrderTable.isEmpty()).isEqualTo(savedOrderTable.isEmpty());
+        assertAll(
+                () -> assertThat(changedOrderTable.isEmpty()).isTrue(),
+                () -> assertThat(changedOrderTable.isEmpty()).isEqualTo(savedOrderTable.isEmpty())
+        );
+
     }
 
     @DisplayName("[주문 테이블 인원수 변경] 고객 인원 숫자는 0명 미만 일경우 예외를 발생 한다")
     @Test
     void whenNumberOfGuestIsLessThanZero_thenFail() {
-        // when
-        when(orderTable.getNumberOfGuests()).thenReturn(-1);
+        // given
+        final int numberOfGuests = -1;
+        given(orderTable.getNumberOfGuests()).willReturn(numberOfGuests);
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableBo.changeNumberOfGuests(1l, orderTable));
+                .isThrownBy(() -> tableBo.changeNumberOfGuests(DEFAULT_ID, orderTable));
     }
 
     @DisplayName("[주문 테이블 인원수 변경] 테이블이 비워져 있으면 예외를 발생 한다")
     @Test
     void whenOrderTableIsEmpty_thenFail() {
-        when(orderTable.getNumberOfGuests()).thenReturn(1);
-        when(orderTableDao.findById(any())).thenReturn(Optional.of(createOrderTable(1l, 1L, true)));
+        // given
+        final int numberOfGuests = 1;
+        given(orderTable.getNumberOfGuests()).willReturn(numberOfGuests);
+        given(orderTableDao.findById(DEFAULT_ID)).willReturn(Optional.of(createOrderTable(DEFAULT_ID, DEFAULT_ID, true)));
 
+        // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableBo.changeNumberOfGuests(1L, orderTable));
+                .isThrownBy(() -> tableBo.changeNumberOfGuests(DEFAULT_ID, orderTable));
     }
 
     @DisplayName("[주문 테이블 인원수 변경] 주문 테이블 인원수를 1명으로 변경할 수 있다.")
     @Test
     void changeNumberOfGuests() {
-        OrderTable savedOrderTable = createOrderTable(1L, 1L, false);
-        when(orderTable.getNumberOfGuests()).thenReturn(1);
-        when(orderTableDao.findById(any())).thenReturn(Optional.of(savedOrderTable));
-        when(orderTableDao.save(any())).thenReturn(savedOrderTable);
+        final int numberOfGuests = 1;
+        OrderTable savedOrderTable = createOrderTable(DEFAULT_ID, DEFAULT_ID, false);
+        when(orderTable.getNumberOfGuests()).thenReturn(numberOfGuests);
+        when(orderTableDao.findById(DEFAULT_ID)).thenReturn(Optional.of(savedOrderTable));
+        when(orderTableDao.save(savedOrderTable)).thenReturn(savedOrderTable);
 
         // when
-        OrderTable changedOrder = tableBo.changeNumberOfGuests(1L, orderTable);
+        OrderTable changedOrder = tableBo.changeNumberOfGuests(DEFAULT_ID, orderTable);
 
         // then
-        assertThat(changedOrder.getNumberOfGuests()).isNotNull();
-        assertThat(changedOrder.getNumberOfGuests()).isEqualTo(1);
-
+        assertAll(
+                () -> assertThat(changedOrder.getNumberOfGuests()).isNotNull(),
+                () -> assertThat(changedOrder.getNumberOfGuests()).isEqualTo(numberOfGuests)
+        );
     }
 
-    @DisplayName("주문 테이블 객체 생성 테스트 픽스쳐")
-    OrderTable createOrderTable(Long id, Long tableGroupId, boolean empty) {
+    private OrderTable createOrderTable(Long id, Long tableGroupId, boolean empty) {
+        final int numberOfGuests = 4;
         OrderTable orderTable = new OrderTable();
         orderTable.setId(id);
         orderTable.setTableGroupId(tableGroupId);
-        orderTable.setNumberOfGuests(4);
+        orderTable.setNumberOfGuests(numberOfGuests);
         orderTable.setEmpty(empty);
         return orderTable;
     }
