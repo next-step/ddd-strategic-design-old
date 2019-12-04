@@ -3,6 +3,7 @@ package camp.nextstep.edu.kitchenpos.bo;
 import camp.nextstep.edu.kitchenpos.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.model.OrderStatus;
 import camp.nextstep.edu.kitchenpos.model.OrderTable;
 import camp.nextstep.edu.kitchenpos.model.TableGroup;
 import org.junit.jupiter.api.DisplayName;
@@ -15,13 +16,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.when;
 class TableGroupBoTest {
     @Mock
     private TableGroup tableGroup;
+
     @Mock
     private OrderDao orderDao;
 
@@ -43,6 +45,12 @@ class TableGroupBoTest {
     @InjectMocks
     private TableGroupBo tableGroupBo;
 
+    private final Long DEFAULT_ID = 1L;
+
+    private final Long SECOND_ORDER_TABLE_ID = 2L;
+
+    private final List<Long> IDS = Arrays.asList(DEFAULT_ID, SECOND_ORDER_TABLE_ID);
+
     @DisplayName("테이블 그룹은 테이블 번호, 주문 테이블 속성들을 가지고 있다.")
     @Test
     void hasProperties() {
@@ -50,23 +58,25 @@ class TableGroupBoTest {
         String createdDatePropertyName = "createdDate";
         String orderTablesPropertyName = "orderTables";
 
-        assertThat(tableGroup).hasFieldOrProperty(tableGroupIdPropertyName);
-        assertThat(tableGroup).hasFieldOrProperty(createdDatePropertyName);
-        assertThat(tableGroup).hasFieldOrProperty(orderTablesPropertyName);
+        assertAll(
+                () -> assertThat(tableGroup).hasFieldOrProperty(tableGroupIdPropertyName),
+                () -> assertThat(tableGroup).hasFieldOrProperty(createdDatePropertyName),
+                () -> assertThat(tableGroup).hasFieldOrProperty(orderTablesPropertyName)
+        );
     }
 
     @DisplayName("[테이블 그룹 생성] 주문 테이블이 없으면 예외를 발생 한다.")
     @Test
     void whenOrderTableNotExist_thenFail() {
-        //given
+        // given
         given(tableGroup.getOrderTables()).willReturn(null);
 
-        // when
+        // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> tableGroupBo.create(tableGroup));
     }
 
-    @DisplayName("[테이블 그룹 생성] 주문 테이블 갯수가 2개 미만일경우 예외를 발생 한다.")
+    @DisplayName("[테이블 그룹 생성] 주문 테이블 갯수가 2개 미만일 경우 예외를 발생 한다.")
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
     void whenOrderTableIsLessThanTwo_thenFail(int size) {
@@ -84,11 +94,12 @@ class TableGroupBoTest {
     @Test
     void whenOrderTableIsEmpty_thenFail() {
         //given
+
         List<OrderTable> orderTables = new ArrayList<>();
-        orderTables.add(createOrderTable(1L, null, true));
-        orderTables.add(createOrderTable(2L, null, true));
+        orderTables.add(createOrderTable(DEFAULT_ID, null, true));
+        orderTables.add(createOrderTable(SECOND_ORDER_TABLE_ID, null, true));
         given(tableGroup.getOrderTables()).willReturn(orderTables);
-        given(orderTableDao.findAllByIdIn(any())).willReturn(orderTables);
+        given(orderTableDao.findAllByIdIn(IDS)).willReturn(orderTables);
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -100,10 +111,10 @@ class TableGroupBoTest {
     void whenTableGroupExistInOrderTable_thenFail() {
         //given
         List<OrderTable> orderTables = new ArrayList<>();
-        orderTables.add(createOrderTable(1L, 1L, false));
-        orderTables.add(createOrderTable(2L, 1L, false));
+        orderTables.add(createOrderTable(DEFAULT_ID, DEFAULT_ID, false));
+        orderTables.add(createOrderTable(SECOND_ORDER_TABLE_ID, DEFAULT_ID, false));
         given(tableGroup.getOrderTables()).willReturn(orderTables);
-        given(orderTableDao.findAllByIdIn(any())).willReturn(orderTables);
+        given(orderTableDao.findAllByIdIn(IDS)).willReturn(orderTables);
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -114,15 +125,15 @@ class TableGroupBoTest {
     @Test
     void whenTableGroupNumberCreate_thenSuccess() {
         // given
-        given(tableGroupDao.save(any())).willReturn(tableGroup);
+        given(tableGroupDao.save(tableGroup)).willReturn(tableGroup);
 
         // when
-        TableGroup savedTableGroup = tableGroupDao.save(any());
-        when(savedTableGroup.getId()).thenReturn(1L);
+        TableGroup savedTableGroup = tableGroupDao.save(tableGroup);
+        when(savedTableGroup.getId()).thenReturn(DEFAULT_ID);
 
         // then
         assertThat(savedTableGroup.getId()).isNotNull()
-                                           .isEqualTo(1L);
+                                           .isEqualTo(DEFAULT_ID);
     }
 
     @DisplayName("[테이블 그룹 생성] 생성된 테이블 그룹 번호로 주문 테이블들을 그룹화 하면 성공을 반환 한다.")
@@ -130,14 +141,14 @@ class TableGroupBoTest {
     void isSameTableGroupId() {
         // given
         List<OrderTable> orderTables = new ArrayList<>();
-        orderTables.add(createOrderTable(1L, null, false));
-        orderTables.add(createOrderTable(2L, null, false));
+        orderTables.add(createOrderTable(DEFAULT_ID, null, false));
+        orderTables.add(createOrderTable(SECOND_ORDER_TABLE_ID, null, false));
 
         given(tableGroup.getOrderTables()).willReturn(orderTables);
-        given(orderTableDao.findAllByIdIn(any())).willReturn(orderTables);
+        given(orderTableDao.findAllByIdIn(IDS)).willReturn(orderTables);
 
-        given(tableGroupDao.save(any())).willReturn(tableGroup);
-        given(tableGroup.getId()).willReturn(1L);
+        given(tableGroupDao.save(tableGroup)).willReturn(tableGroup);
+        given(tableGroup.getId()).willReturn(DEFAULT_ID);
 
         // when
         TableGroup savedTableGroup = tableGroupBo.create(tableGroup);
@@ -148,7 +159,7 @@ class TableGroupBoTest {
                 .map(OrderTable::getTableGroupId)
                 .toArray(Long[]::new);
 
-        assertArrayEquals(new Long[]{1L, 1L}, tableGroupIds);
+        assertArrayEquals(new Long[]{DEFAULT_ID, DEFAULT_ID}, tableGroupIds);
     }
 
     @DisplayName("[테이블 그룹 생성] 테이블 그룹을 생성할 수 있다.")
@@ -156,21 +167,23 @@ class TableGroupBoTest {
     void create() {
         // given
         List<OrderTable> orderTables = new ArrayList<>();
-        orderTables.add(createOrderTable(1L, null, false));
-        orderTables.add(createOrderTable(2L, null, false));
+        orderTables.add(createOrderTable(DEFAULT_ID, null, false));
+        orderTables.add(createOrderTable(SECOND_ORDER_TABLE_ID, null, false));
 
         given(tableGroup.getOrderTables()).willReturn(orderTables);
-        given(orderTableDao.findAllByIdIn(any())).willReturn(orderTables);
+        given(orderTableDao.findAllByIdIn(IDS)).willReturn(orderTables);
 
-        given(tableGroupDao.save(any())).willReturn(tableGroup);
-        given(tableGroup.getId()).willReturn(1L);
+        given(tableGroupDao.save(tableGroup)).willReturn(tableGroup);
+        given(tableGroup.getId()).willReturn(DEFAULT_ID);
 
         // when
         TableGroup savedTableGroup = tableGroupBo.create(tableGroup);
 
         // then
-        assertThat(savedTableGroup).isNotNull();
-        assertThat(savedTableGroup.getId()).isEqualTo(1L);
+        assertAll(
+                () -> assertThat(savedTableGroup).isNotNull(),
+                () -> assertThat(savedTableGroup.getId()).isEqualTo(DEFAULT_ID)
+        );
     }
 
     @DisplayName("[테이블 그룹 삭제] 테이블 그룹에 속한 주문 테이블이 존재하면 성공을 반환 한다.")
@@ -178,16 +191,18 @@ class TableGroupBoTest {
     void isExistTableGroupIdInOrderTables() {
         // given
         List<OrderTable> orderTables = new ArrayList<>();
-        orderTables.add(createOrderTable(1L, 1L, false));
-        orderTables.add(createOrderTable(2L, 1L, false));
-        given(orderTableDao.findAllByTableGroupId(any())).willReturn(orderTables);
+        orderTables.add(createOrderTable(DEFAULT_ID, DEFAULT_ID, false));
+        orderTables.add(createOrderTable(SECOND_ORDER_TABLE_ID, DEFAULT_ID, false));
+        given(orderTableDao.findAllByTableGroupId(DEFAULT_ID)).willReturn(orderTables);
 
         // when
-        List<OrderTable> savedOrderTables = orderTableDao.findAllByTableGroupId(any());
+        List<OrderTable> savedOrderTables = orderTableDao.findAllByTableGroupId(DEFAULT_ID);
 
         // then
-        assertThat(savedOrderTables).isNotNull();
-        assertThat(savedOrderTables).allMatch(orderTable -> orderTable.getTableGroupId() == 1L);
+        assertAll(
+                () -> assertThat(savedOrderTables).isNotNull(),
+                () -> assertThat(savedOrderTables).allMatch(orderTable -> orderTable.getTableGroupId() == DEFAULT_ID)
+        );
     }
 
     @DisplayName("[테이블 그룹 삭제] 테이블 그룹에 속해있는 주문 테이블들중 가장 먼저 주문된 주문 테이블을 갖고온다.")
@@ -195,52 +210,47 @@ class TableGroupBoTest {
     void getFirstOrderTable() {
         // given
         List<OrderTable> orderTables = new ArrayList<>();
-        orderTables.add(createOrderTable(2L, 1L, false));
-        orderTables.add(createOrderTable(1L, 1L, false));
-        given(orderTableDao.findAllByTableGroupId(any())).willReturn(orderTables);
+        orderTables.add(createOrderTable(SECOND_ORDER_TABLE_ID, DEFAULT_ID, false));
+        orderTables.add(createOrderTable(DEFAULT_ID, DEFAULT_ID, false));
+        given(orderTableDao.findAllByTableGroupId(DEFAULT_ID)).willReturn(orderTables);
 
         // when
-        List<OrderTable> savedOrderTables = orderTableDao.findAllByTableGroupId(any());
+        List<OrderTable> savedOrderTables = orderTableDao.findAllByTableGroupId(DEFAULT_ID);
         OrderTable orderTable = savedOrderTables.stream()
                 .sorted(Comparator.comparingLong(OrderTable::getId))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
 
         // then
-        assertThat(orderTable).isNotNull();
-        assertThat(orderTable.getId()).isEqualTo(1L);
+        assertAll(
+                () -> assertThat(orderTable).isNotNull(),
+                () -> assertThat(orderTable.getId()).isEqualTo(DEFAULT_ID)
+        );
     }
 
     @DisplayName("[테이블 그룹 삭제] 주문 테이블의 주문 상태를 삭제 할 수 있다.")
     @Test
     void delete() {
         // given
+        final List<String> orderStatuses = Arrays.asList(OrderStatus.COOKING.name(), OrderStatus.MEAL.name());
         List<OrderTable> orderTables = new ArrayList<>();
-        orderTables.add(createOrderTable(2L, 1L, false));
-        orderTables.add(createOrderTable(1L, 1L, false));
-        given(orderTableDao.findAllByTableGroupId(any())).willReturn(orderTables);
-        given(orderDao.existsByOrderTableIdAndOrderStatusIn(any(), any())).willReturn(false);
+        orderTables.add(createOrderTable(SECOND_ORDER_TABLE_ID, DEFAULT_ID, false));
+        orderTables.add(createOrderTable(DEFAULT_ID, DEFAULT_ID, false));
+        given(orderTableDao.findAllByTableGroupId(DEFAULT_ID)).willReturn(orderTables);
+        given(orderDao.existsByOrderTableIdAndOrderStatusIn(DEFAULT_ID, orderStatuses)).willReturn(false);
 
         // when
-        tableGroupBo.delete(1L);
+        tableGroupBo.delete(DEFAULT_ID);
 
         // then
         assertThat(orderTables).allMatch(orderTable -> orderTable.getTableGroupId() == null);
     }
 
-
-
-    @DisplayName("주문 테이블 객체 생성 테스트 픽스쳐")
-    OrderTable createOrderTable(Long id, Long tableGroupId, boolean empty) {
+    private OrderTable createOrderTable(Long id, Long tableGroupId, boolean empty) {
         OrderTable orderTable = new OrderTable();
         orderTable.setId(id);
         orderTable.setTableGroupId(tableGroupId);
         orderTable.setEmpty(empty);
         return orderTable;
     }
-
-
-
-
-
 }
