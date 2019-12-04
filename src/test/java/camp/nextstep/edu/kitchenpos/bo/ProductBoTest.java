@@ -1,12 +1,12 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
+import camp.nextstep.edu.kitchenpos.bo.mock.InMemoryProductDao;
 import camp.nextstep.edu.kitchenpos.dao.ProductDao;
 import camp.nextstep.edu.kitchenpos.model.Product;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -15,21 +15,24 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
 
 @DisplayName("상품 Business Object 테스트 클래스")
 @ExtendWith(MockitoExtension.class)
 class ProductBoTest {
-    @Mock
     private Product product;
 
-    @Mock
-    private ProductDao productDao;
+    private ProductDao productDao = new InMemoryProductDao();
 
-    @InjectMocks
     private ProductBo productBo;
+
+    @BeforeEach
+    void setup() {
+        productBo = new ProductBo(productDao);
+        product = new Product();
+        product.setId(1L);
+        product.setName("후라이드 치킨");
+        product.setPrice(BigDecimal.valueOf(19000L));
+    }
 
     @DisplayName("상품은 상품 번호, 상품명, 상품 가격 속성들을 가지고 있다.")
     @Test
@@ -49,8 +52,7 @@ class ProductBoTest {
     @Test
     void whenPriceIsNull_thenFail() {
         // given
-        BigDecimal price = null;
-        given(product.getPrice()).willReturn(price);
+        product.setPrice(null);
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -61,8 +63,8 @@ class ProductBoTest {
     @Test
     void whenPriceIsLessThanZero_thenFail() {
         // given
-        BigDecimal price = BigDecimal.valueOf(-1);
-        given(product.getPrice()).willReturn(price);
+        BigDecimal productPrice = BigDecimal.valueOf(-1);
+        product.setPrice(productPrice);
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -72,19 +74,15 @@ class ProductBoTest {
     @DisplayName("[상품 생성] 상품을 생성할 수 있다.")
     @Test
     void create() {
-        // given
-        final BigDecimal productPrice = BigDecimal.valueOf(10000);
-        given(product.getPrice()).willReturn(productPrice);
-        given(productDao.save(product)).willReturn(product);
-
         // when
-        Product savedProduct = productBo.create(product);
+        Product actual = productBo.create(product);
 
         // then
         assertAll(
-                () -> assertThat(savedProduct).isNotNull(),
-                () -> assertThat(savedProduct).isEqualTo(product),
-                () -> then(productDao).should().save(product)
+                () -> assertThat(actual).isNotNull(),
+                () -> assertThat(actual.getId()).isEqualTo(product.getId()),
+                () -> assertThat(actual.getName()).isEqualTo(product.getName()),
+                () -> assertThat(actual.getPrice()).isEqualTo(product.getPrice())
         );
     }
 
@@ -92,15 +90,18 @@ class ProductBoTest {
     @Test
     void list() {
         // given
-        final int productsSize = 2;
-        List<Product> products = mock(List.class);
-        given(productDao.findAll()).willReturn(products);
-        given(products.size()).willReturn(productsSize);
+        final Product ohterProduct = new Product();
+        ohterProduct.setId(2L);
+        ohterProduct.setName("양념 치킨");
+        ohterProduct.setPrice(BigDecimal.valueOf(20000L));
+
+        productBo.create(product);
+        productBo.create(ohterProduct);
 
         // when
-        List<Product> savedProducts = productDao.findAll();
+        List<Product> actual = productBo.list();
 
         // then
-        assertThat(savedProducts).hasSize(productsSize);
+        assertThat(actual).containsExactlyInAnyOrder(product, ohterProduct);
     }
 }
