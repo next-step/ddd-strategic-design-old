@@ -1,6 +1,5 @@
-package camp.nextstep.edu.kitchenpos.bo;
+package camp.nextstep.edu.kitchenpos.dao;
 
-import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
 import camp.nextstep.edu.kitchenpos.model.MenuGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

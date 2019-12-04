@@ -1,5 +1,6 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
+import camp.nextstep.edu.kitchenpos.dao.InMemoryProductDao;
 import camp.nextstep.edu.kitchenpos.dao.ProductDao;
 import camp.nextstep.edu.kitchenpos.model.Product;
 import org.assertj.core.api.Assertions;

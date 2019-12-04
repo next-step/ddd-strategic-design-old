@@ -1,6 +1,5 @@
-package camp.nextstep.edu.kitchenpos.bo;
+package camp.nextstep.edu.kitchenpos.dao;
 
-import camp.nextstep.edu.kitchenpos.dao.ProductDao;
 import camp.nextstep.edu.kitchenpos.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-class InMemoryProductDao implements ProductDao {
+public class InMemoryProductDao implements ProductDao {
 
     private static final Logger log = LoggerFactory.getLogger(InMemoryProductDao.class);
 

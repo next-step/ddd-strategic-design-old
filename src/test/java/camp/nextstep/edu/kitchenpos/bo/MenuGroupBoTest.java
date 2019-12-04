@@ -1,5 +1,6 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
+import camp.nextstep.edu.kitchenpos.dao.InMemoryMenuGroupDao;
 import camp.nextstep.edu.kitchenpos.model.MenuGroup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
