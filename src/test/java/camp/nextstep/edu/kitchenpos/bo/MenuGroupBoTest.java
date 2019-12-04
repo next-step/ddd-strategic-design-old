@@ -1,5 +1,6 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
+import camp.nextstep.edu.kitchenpos.bo.mock.InMemoryMenuGroupDao;
 import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
 import camp.nextstep.edu.kitchenpos.model.MenuGroup;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,11 +23,19 @@ import static org.mockito.Mockito.mock;
 @DisplayName("메뉴 그룹 Business Object 테스트 클래스")
 @ExtendWith(MockitoExtension.class)
 class MenuGroupBoTest {
-    @Mock
     private MenuGroup menuGroup;
 
-    @Mock
-    private MenuGroupDao menuGroupDao;
+    private MenuGroupBo menuGroupBo;
+
+    private MenuGroupDao menuGroupDao = new InMemoryMenuGroupDao();
+
+    @BeforeEach
+    void setup() {
+        menuGroupBo = new MenuGroupBo(menuGroupDao);
+        menuGroup = new MenuGroup();
+        menuGroup.setId(1L);
+        menuGroup.setName("치킨류");
+    }
 
     @DisplayName("메뉴 그룹은 메뉴 그룹 번호와 메뉴 그룹명 속성들을 가지고 있다.")
     @Test
@@ -43,48 +52,34 @@ class MenuGroupBoTest {
     @DisplayName("메뉴 그룹을 생성할 수 있다.")
     @Test
     void create() {
-        // given
-        given(menuGroupDao.save(menuGroup)).willReturn(menuGroup);
-
         // when
-        MenuGroup savedMenuGroup = menuGroupDao.save(menuGroup);
+        MenuGroup actual = menuGroupDao.save(menuGroup);
 
         // then
-        assertThat(savedMenuGroup).isNotNull()
-                                  .isEqualTo(menuGroup);
+        assertAll(
+                () -> assertThat(actual).isNotNull(),
+                () -> assertThat(actual).isSameAs(actual)
+        );
     }
 
     @DisplayName("메뉴 그룹들을 조회할 수 있다")
     @Test
     void list() {
         // given
-        final int menuGroupSize = 3;
-        final int menuGroupFirsIndex = 0;
-        final Long DEFAULT_ID = 1L;
-        final String menuGroupName = "치킨";
+        final MenuGroup otherMenuGroup = new MenuGroup();
+        otherMenuGroup.setId(2L);
+        otherMenuGroup.setName("식사류");
 
-        List<MenuGroup> menuGroups = mock(List.class);
-        MenuGroup menuGroup =  new MenuGroup();
-        menuGroup.setId(DEFAULT_ID);
-        menuGroup.setName(menuGroupName);
-
-        menuGroups.add(menuGroup);
-        menuGroups.add(new MenuGroup());
-        menuGroups.add(new MenuGroup());
-
-        given(menuGroupDao.findAll()).willReturn(menuGroups);
-        given(menuGroups.get(menuGroupFirsIndex)).willReturn(menuGroup);
-        given(menuGroups.size()).willReturn(menuGroupSize);
+        menuGroupDao.save(menuGroup);
+        menuGroupDao.save(otherMenuGroup);
 
         // when
-        List<MenuGroup> savedMenuGroups = menuGroupDao.findAll();
+        List<MenuGroup> actual = menuGroupDao.findAll();
 
         // then
         assertAll(
-                () -> assertThat(savedMenuGroups).isNotNull(),
-                () -> assertThat(menuGroups.get(menuGroupFirsIndex).getId()).isEqualTo(DEFAULT_ID),
-                () -> assertThat(menuGroups.get(menuGroupFirsIndex).getName()).isEqualTo(menuGroupName),
-                () -> assertThat(savedMenuGroups).hasSize(menuGroupSize)
+                () -> assertThat(actual).isNotNull(),
+                () -> assertThat(actual).containsExactlyInAnyOrder(menuGroup, otherMenuGroup)
         );
     }
 }
