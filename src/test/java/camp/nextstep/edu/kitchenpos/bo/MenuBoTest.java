@@ -9,6 +9,7 @@ import camp.nextstep.edu.kitchenpos.model.Menu;
 import camp.nextstep.edu.kitchenpos.model.MenuGroup;
 import camp.nextstep.edu.kitchenpos.model.MenuProduct;
 import camp.nextstep.edu.kitchenpos.model.Product;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,13 +23,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(MockitoExtension.class)
 class MenuBoTest {
@@ -49,147 +49,210 @@ class MenuBoTest {
     @Mock
     private ProductDao productDao;
 
+    @BeforeEach
+    void setUp() {
+        menuDao = new InMemoryMenuDao();
+        menuGroupDao = new InMemoryMenuGroupDao();
+        menuProductDao = new InMemoryMenuProductDao();
+        productDao = new InMemoryProductDao();
+
+        menuBo = new MenuBo(menuDao, menuGroupDao, menuProductDao, productDao);
+    }
+
     @DisplayName("메뉴 등록에 성공한다")
     @Test
-    void createOfMenu() {
+    void create() {
         // given
-        long menuGroupId = 1l;
-        Product product = new Product();
-        product.setId(1l);
-        product.setName("후라이드치킨");
-        product.setPrice(BigDecimal.valueOf(5_000));
+        String menuOfName = "후라이드 단품";
+        BigDecimal price = BigDecimal.valueOf(10_000);
 
-        MenuProduct menuProduct = new MenuProduct();
-        menuProduct.setProductId(product.getId());
-        menuProduct.setQuantity(2);
-
-        List<MenuProduct> menuProducts = Arrays.asList(menuProduct);
-
-        Menu menu = new Menu();
-        menu.setName("후라이드+후라이드");
-        menu.setMenuGroupId(menuGroupId);
-        menu.setPrice(BigDecimal.valueOf(10_000));
-        menu.setMenuProducts(menuProducts);
-
-        given(menuGroupDao.existsById(anyLong())).willReturn(Boolean.TRUE);
-        given(productDao.findById(anyLong())).willReturn(Optional.of(product));
-        given(menuDao.save(any())).willReturn(menu);
-        given(menuProductDao.save(any())).willReturn(menuProduct);
+        Product product = createProduct(price);
+        productDao.save(product);
+        MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
+        menuGroupDao.save(menuGroup);
+        List<MenuProduct> menuProducts = createOfMenuProduct(product);
+        Menu menu = createOfMenu(menuOfName, price, menuGroup, menuProducts);
+        menuDao.save(menu);
 
         // when
-        Menu expectedMenu = menuBo.create(menu);
+        Menu actual = menuBo.create(menu);
 
         // then
-        assertThat(expectedMenu.getMenuProducts()).size()
-                                                  .isEqualTo(1);
+        assertAll(
+                () -> assertThat(actual.getName()).isEqualTo(menuOfName),
+                () -> assertThat(actual.getPrice()).isEqualTo(price)
+        );
+        assertThat(actual.getMenuProducts()).hasSize(1);
     }
 
     @DisplayName("메뉴 가격이 0미만인 경우 등록 실패")
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = "-1")
-    void createMenu(BigDecimal wrongPrice) {
-        String nameOfMenuGroup = "추천메뉴";
-        MenuGroup menuGroup = new MenuGroup();
-        menuGroup.setId(1l);
-        menuGroup.setName(nameOfMenuGroup);
+    void createWhenMenuPriceLessThanZero_exception(BigDecimal wrongPrice) {
+        // given
+        Product product = createProduct(BigDecimal.valueOf(10_000));
+        productDao.save(product);
+        Product product2 = createProduct(BigDecimal.valueOf(9_000));
+        productDao.save(product2);
+        MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
+        menuGroupDao.save(menuGroup);
+        List<MenuProduct> menuProducts = createOfMenuProduct(product, product2);
 
-        String nameOfProduct = "후라이드치킨";
-        Product product = new Product();
-        product.setId(1l);
-        product.setName(nameOfProduct);
-        product.setPrice(BigDecimal.valueOf(5_000));
+        Menu menu = createOfMenu("후라이드+양념",
+                                 wrongPrice,
+                                 menuGroup, menuProducts);
+        // exception
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> menuBo.create(menu));
+    }
 
-        MenuProduct menuProduct = new MenuProduct();
-        menuProduct.setProductId(product.getId());
-        menuProduct.setQuantity(2);
+    @DisplayName("미등록된 메뉴그룹일 경우 메뉴 등록에 실패")
+    @Test
+    void createWhenNotRegisteredMenuGroup_fail() {
+        // given
+        long nonMenuGroupId = 9999L;
 
-        List<MenuProduct> menuProducts = Arrays.asList(menuProduct);
+        BigDecimal priceOfProduct = BigDecimal.valueOf(10_000);
+        BigDecimal priceOfProduct2 = BigDecimal.valueOf(9_000);
+        Product product = createProduct(priceOfProduct);
+        productDao.save(product);
+        Product product2 = createProduct(priceOfProduct2);
+        productDao.save(product2);
+        List<MenuProduct> menuProducts = createOfMenuProduct(product, product2);
 
-        String nameOfMenu = "후라이드+후라이드";
         Menu menu = new Menu();
-        menu.setName(nameOfMenu);
+        menu.setName("후라이드+양념");
+        menu.setPrice(priceOfProduct.add(priceOfProduct2));
+        menu.setMenuGroupId(nonMenuGroupId);
+        menu.setMenuProducts(menuProducts);
+
+        // exception
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> menuBo.create(menu));
+    }
+
+
+    @DisplayName("미등록된 상품일 경우 메뉴 등록에 실패")
+    @Test
+    void createWhenNotRegisteredProduct_fail() {
+        // given
+        Product product = createProduct(BigDecimal.valueOf(10_000));
+        MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
+        menuGroupDao.save(menuGroup);
+        List<MenuProduct> menuProducts = createOfMenuProduct(product);
+
+        Menu menu = new Menu();
+        menu.setName("후라이드 단품");
+        menu.setPrice(BigDecimal.valueOf(10_000)
+                                .add(BigDecimal.valueOf(9_000)));
         menu.setMenuGroupId(menuGroup.getId());
-        menu.setPrice(wrongPrice);
         menu.setMenuProducts(menuProducts);
 
+        // exception
+        assertThatNullPointerException()
+                .isThrownBy(() -> menuBo.create(menu));
+    }
+
+    @DisplayName("메뉴의 가격이 메뉴상품의 전체 가격의 합보다 큰 경우 등록에 실패")
+    @Test
+    void failIfMenuPriceEqualsTotalPriceOfMenuItem() {
+        // given
+        BigDecimal priceOfProduct = BigDecimal.valueOf(10_000);
+        BigDecimal priceOfProduct2 = BigDecimal.valueOf(9_000);
+        BigDecimal priceOfMenu = priceOfProduct.add(priceOfProduct2)
+                                               .plus();
+
+        Product product = createProduct(priceOfProduct);
+        productDao.save(product);
+        MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
+        menuGroupDao.save(menuGroup);
+        List<MenuProduct> menuProducts = createOfMenuProduct(product);
+        Menu menu = createOfMenu("후라이드+양념", priceOfMenu, menuGroup, menuProducts);
+
+        // exception
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> menuBo.create(menu));
     }
 
-    @DisplayName("메뉴 그룹에 등록되지 않았을 경우 등록에 실패")
+    @DisplayName("메뉴의 가격이 메뉴상품의 전체 가격의 합과 같은 경우 성공")
     @Test
-    void createWhenPriceLessThanZero_exception() {
-        long menuGroupId = 1l;
+    void successfulIfMenuPriceEqualsTotalPriceOfMenuItem() {
+        // given
+        BigDecimal priceOfProduct = BigDecimal.valueOf(10_000);
+        BigDecimal priceOfProduct2 = BigDecimal.valueOf(9_000);
+        BigDecimal priceOfMenu = priceOfProduct.add(priceOfProduct2);
 
-        String nameOfProduct = "후라이드치킨";
-        Product product = new Product();
-        product.setId(1l);
-        product.setName(nameOfProduct);
-        product.setPrice(BigDecimal.valueOf(5_000));
+        Product product = createProduct(priceOfProduct);
+        productDao.save(product);
+        MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
+        menuGroupDao.save(menuGroup);
+        List<MenuProduct> menuProducts = createOfMenuProduct(product);
+        Menu menu = createOfMenu("후라이드+양념", priceOfMenu, menuGroup, menuProducts);
 
-        MenuProduct menuProduct = new MenuProduct();
-        menuProduct.setProductId(product.getId());
-        menuProduct.setQuantity(2);
-
-        List<MenuProduct> menuProducts = Arrays.asList(menuProduct);
-
-        String nameOfMenu = "후라이드+후라이드";
-        Menu menu = new Menu();
-        menu.setName(nameOfMenu);
-        menu.setMenuGroupId(menuGroupId);
-        menu.setPrice(BigDecimal.ZERO);
-        menu.setMenuProducts(menuProducts);
-
-        given(menuGroupDao.existsById(anyLong())).willReturn(false);
-
+        // exception
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> menuBo.create(menu));
     }
 
-    @DisplayName("미등록된 상품일 시 메뉴 등록 실패")
+    @DisplayName("점주는 등록된 모든 상품을 볼 수 있다")
     @Test
-    void createMenuWhen() {
-        String nameOfMenuGroup = "추천메뉴";
-        MenuGroup menuGroup = new MenuGroup();
-        menuGroup.setId(1l);
-        menuGroup.setName(nameOfMenuGroup);
+    void list() {
+        // given
+        String menuOfName2 = "추천메뉴";
+        Menu menu1 = createMenu("후라이드 단품");
+        Menu menu2 = createMenu(menuOfName2);
 
-        String nameOfProduct = "후라이드치킨";
-        Product product = new Product();
-        product.setId(1l);
-        product.setName(nameOfProduct);
-        product.setPrice(BigDecimal.valueOf(5_000));
+        // when
+        List<Menu> actual = menuBo.list();
 
-        MenuProduct menuProduct = new MenuProduct();
-        menuProduct.setProductId(product.getId());
-        menuProduct.setQuantity(2);
+        // then
+        assertThat(actual).containsExactlyInAnyOrder(menu1, menu2);
+    }
 
-        List<MenuProduct> menuProducts = Arrays.asList(menuProduct);
+    private Menu createMenu(String menuOfName) {
+        Product product = createProduct(BigDecimal.valueOf(10_000));
+        productDao.save(product);
+        MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
+        menuGroupDao.save(menuGroup);
+        List<MenuProduct> menuProducts = createOfMenuProduct(product);
+        Menu menu = createOfMenu(menuOfName, BigDecimal.valueOf(10_000), menuGroup, menuProducts);
+        menuDao.save(menu);
+        return menu;
+    }
 
-        String nameOfMenu = "후라이드+후라이드";
+    private Menu createOfMenu(String name, BigDecimal price, MenuGroup menuGroup, List<MenuProduct> menuProducts) {
         Menu menu = new Menu();
-        menu.setName(nameOfMenu);
+        menu.setName(name);
+        menu.setPrice(price);
         menu.setMenuGroupId(menuGroup.getId());
-        menu.setPrice(BigDecimal.ZERO);
         menu.setMenuProducts(menuProducts);
-
-        given(menuGroupDao.existsById(anyLong())).willReturn(true);
-
-
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> menuBo.create(menu));
+        return menu;
     }
 
-    @DisplayName("메뉴의 가격이 메뉴 상품들의 가격의 총액보다 클 경우 등록 실패")
-    @Test
-    void createMenu2() {
-
+    private List<MenuProduct> createOfMenuProduct(Product... products) {
+        return Arrays.stream(products)
+                     .map(product -> createOfMenuProduct(product, 1L))
+                     .collect(Collectors.toList());
     }
 
-    @DisplayName("전체 메뉴를 보는데 성공한다")
-    @Test
-    void listMenu() {
+    private MenuProduct createOfMenuProduct(Product product, long quantity) {
+        MenuProduct menuProduct = new MenuProduct();
+        menuProduct.setProductId(product.getId());
+        menuProduct.setQuantity(quantity);
+        return menuProduct;
+    }
 
+    private MenuGroup createOfMenuGroup(String name) {
+        MenuGroup menuGroup = new MenuGroup();
+        menuGroup.setName(name);
+        return menuGroup;
+    }
+
+    private Product createProduct(BigDecimal price) {
+        Product product = new Product();
+        product.setName("양념치킨");
+        product.setPrice(price);
+        return product;
     }
 }
