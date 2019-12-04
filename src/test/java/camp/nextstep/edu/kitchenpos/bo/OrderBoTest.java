@@ -12,18 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @DisplayName("주문 Business Object 테스트 클래스")
 @ExtendWith(MockitoExtension.class)
@@ -34,9 +29,6 @@ class OrderBoTest {
     @Mock
     private OrderDao orderDao;
 
-    @InjectMocks
-    private OrderBo orderBo;
-
     @Mock
     private OrderLineItemDao orderLineItemDao;
 
@@ -45,6 +37,11 @@ class OrderBoTest {
 
     @Mock
     private TableGroupDao tableGroupDao;
+
+    @InjectMocks
+    private OrderBo orderBo;
+
+    private final Long DEFAULT_ID = 1L;
 
     @DisplayName("주문은 주문 번호, 주문 테이블 번호, 주문 상태, 주문 시간, 주문 항목 속성들을 가지고 있다.")
     @Test
@@ -55,26 +52,29 @@ class OrderBoTest {
         String orderedTimePropertyName = "orderedTime";
         String orderLineItemsPropertyName = "orderLineItems";
 
-        assertThat(order).hasFieldOrProperty(orderIdPropertyName);
-        assertThat(order).hasFieldOrProperty(orderTableIdPropertyName);
-        assertThat(order).hasFieldOrProperty(orderStatusPropertyName);
-        assertThat(order).hasFieldOrProperty(orderedTimePropertyName);
-        assertThat(order).hasFieldOrProperty(orderLineItemsPropertyName);
+        assertAll(
+                () -> assertThat(order).hasFieldOrProperty(orderIdPropertyName),
+                () -> assertThat(order).hasFieldOrProperty(orderTableIdPropertyName),
+                () -> assertThat(order).hasFieldOrProperty(orderStatusPropertyName),
+                () -> assertThat(order).hasFieldOrProperty(orderedTimePropertyName),
+                () -> assertThat(order).hasFieldOrProperty(orderLineItemsPropertyName)
+        );
     }
 
     @DisplayName("[주문 생성] 주문은 여러 주문 항목을 가질 수 있다")
     @Test
     void hasManyOrderLineItem() {
         // given
+        final int orderLineItemsSize = 3;
         List<OrderLineItem> orderLineItems = mock(List.class);
-        given(orderLineItems.size()).willReturn(3);
+        given(orderLineItems.size()).willReturn(orderLineItemsSize);
 
         // when
         int size = orderLineItems.size();
 
         // then
         assertThat(size).isNotZero()
-                        .isEqualTo(3);
+                        .isEqualTo(orderLineItemsSize);
     }
 
     @DisplayName("[주문 생성] 주문 항목이 없으면 예외를 발생 한다.")
@@ -95,7 +95,8 @@ class OrderBoTest {
         List<OrderLineItem> orderLineItems = new ArrayList<>();
         orderLineItems.add(new OrderLineItem());
         given(order.getOrderLineItems()).willReturn(orderLineItems);
-        given(orderTableDao.findById(any())).willReturn(Optional.empty());
+        given(order.getOrderTableId()).willReturn(DEFAULT_ID);
+        given(orderTableDao.findById(DEFAULT_ID)).willReturn(Optional.empty());
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -106,132 +107,132 @@ class OrderBoTest {
     @Test
     void whenTableGroupExist_thenSuccess() {
         // given
+        final int orderTablesFirstIndex = 0;
         OrderTable orderTable = new OrderTable();
-        orderTable.setTableGroupId(1L);
+        TableGroup tableGroup = new TableGroup();
+        tableGroup.setId(DEFAULT_ID);
+        tableGroup.setOrderTables(Arrays.asList(orderTable));
 
-        given(orderTableDao.findById(any()))
-                           .willReturn(Optional.of(orderTable));
-        given(tableGroupDao.findById(any()))
-                           .willReturn(Optional.of(new TableGroup()));
+        given(tableGroupDao.findById(DEFAULT_ID)).willReturn(Optional.of(tableGroup));
 
         // when
-        OrderTable savedOrderTable = orderTableDao.findById(any()).get();
-        TableGroup tableGroup = tableGroupDao.findById(any()).get();
+        TableGroup actualTableGroup = tableGroupDao.findById(DEFAULT_ID).get();
 
         // then
-        assertThat(tableGroup).isNotNull();
+        assertAll(
+                () -> assertThat(actualTableGroup).isNotNull(),
+                () -> assertThat(actualTableGroup.getOrderTables()
+                                                 .get(orderTablesFirstIndex)).isEqualTo(orderTable)
+        );
     }
 
     @DisplayName("[주문 생성] 테이블 그룹에 속해있는 주문 테이블들 중에서 가장 먼저 생성된 주문 테이블을 갖고오면 성공을 반환한다.")
     @Test
     void getFirstOrderTableInTableGroup() {
         // given
+        final Long SECOND_ORDER_TABLE_ID = 2L;
+        final Long THIRD_ORDER_TABLE_ID = 3L;
+
         List<OrderTable> mockOrderTables = new ArrayList<>();
-        OrderTable latestOrderTable = null;
         OrderTable firstOrderTable = new OrderTable();
         OrderTable secondOrderTable = new OrderTable();
         OrderTable thirdOrderTable = new OrderTable();
 
-        firstOrderTable.setId(1L);
-        secondOrderTable.setId(2L);
-        thirdOrderTable.setId(3L);
+        firstOrderTable.setId(DEFAULT_ID);
+        secondOrderTable.setId(SECOND_ORDER_TABLE_ID);
+        thirdOrderTable.setId(THIRD_ORDER_TABLE_ID);
 
         mockOrderTables.add(secondOrderTable);
         mockOrderTables.add(thirdOrderTable);
         mockOrderTables.add(firstOrderTable);
 
-        given(orderTableDao.findAllByTableGroupId(any())).willReturn(mockOrderTables);
+        given(orderTableDao.findAllByTableGroupId(DEFAULT_ID)).willReturn(mockOrderTables);
 
         // when
-        List<OrderTable> orderTables = orderTableDao.findAllByTableGroupId(any());
-
-        latestOrderTable = orderTables.stream()
-                                      .sorted(Comparator.comparingLong(OrderTable::getId))
-                                      .findFirst()
-                                      .orElseThrow(IllegalArgumentException::new);
+        List<OrderTable> orderTables = orderTableDao.findAllByTableGroupId(DEFAULT_ID);
+        final OrderTable actual = orderTables.stream()
+                                             .sorted(Comparator.comparingLong(OrderTable::getId))
+                                             .findFirst()
+                                             .orElseThrow(IllegalArgumentException::new);
 
         // then
-        assertThat(latestOrderTable).isNotNull();
-        assertThat(latestOrderTable.getId()).isEqualTo(1L);
+        assertAll(
+                () -> assertThat(actual).isNotNull(),
+                () -> assertThat(actual.getId()).isEqualTo(DEFAULT_ID)
+        );
     }
 
     @DisplayName("[주문 생성] 주문이 생성시 주문 번호가 생성 되면 성공을 반환 한다.")
     @Test
     void whenOrderCreateWithOrderNumber_thenSuccess() {
         // given
-        given(orderDao.save(any())).willReturn(order);
+        given(orderDao.save(order)).willReturn(order);
+        given(order.getId()).willReturn(DEFAULT_ID);
 
         // when
-        Order savedOrder = orderDao.save(any());
-        when(savedOrder.getId()).thenReturn(1L);
+        Order savedOrder = orderDao.save(order);
 
         // then
         assertThat(savedOrder.getId()).isNotNull()
-                                      .isEqualTo(1L);
+                                      .isEqualTo(DEFAULT_ID);
     }
 
     @DisplayName("[주문 생성] 생성된 주문 번호로 주문 항복들이 생성 되면 성공을 반환 한다.")
     @Test
     void whenOrderLineItemsAreCreated_withCreatedOrderNumber_thenSuccess() {
         // given
-        long orderId = 1L;
         OrderLineItem orderLineItem = mock(OrderLineItem.class);
         OrderLineItem ohterOrderLineItem = mock(OrderLineItem.class);
 
-        given(orderLineItemDao.save(any())).willReturn(orderLineItem);
-        given(orderLineItemDao.save(any())).willReturn(ohterOrderLineItem);
+        given(orderLineItemDao.save(orderLineItem)).willReturn(orderLineItem);
+        given(orderLineItemDao.save(ohterOrderLineItem)).willReturn(ohterOrderLineItem);
 
-        given(orderLineItemDao.save(any()).getOrderId()).willReturn(orderId);
-        given(orderLineItemDao.save(any()).getOrderId()).willReturn(orderId);
+        given(orderLineItemDao.save(orderLineItem).getOrderId()).willReturn(DEFAULT_ID);
+        given(orderLineItemDao.save(ohterOrderLineItem).getOrderId()).willReturn(DEFAULT_ID);
 
         // when
-        long orderLineItemId = orderLineItemDao.save(any()).getOrderId();
-        long otherOrderLineItemId = orderLineItemDao.save(any()).getOrderId();
+        long orderLineItemId = orderLineItemDao.save(orderLineItem).getOrderId();
+        long otherOrderLineItemId = orderLineItemDao.save(ohterOrderLineItem).getOrderId();
 
         // then
-        assertThat(orderLineItemId).isEqualTo(otherOrderLineItemId);
-        assertThat(orderId).isEqualTo(orderLineItemId);
-        assertThat(orderId).isEqualTo(otherOrderLineItemId);
+        assertAll(
+                () -> assertThat(orderLineItemId).isEqualTo(otherOrderLineItemId),
+                () -> assertThat(DEFAULT_ID).isEqualTo(orderLineItemId),
+                () -> assertThat(DEFAULT_ID).isEqualTo(otherOrderLineItemId)
+        );
     }
 
     @DisplayName("[주문 생성] 주문을 생성할 수 있다.")
     @Test
     void create() {
         // given - 주문 객체 setting
-        long id = 1L;
-
         OrderTable orderTable = new OrderTable();
-        orderTable.setId(id);
-        orderTable.setTableGroupId(id);
-
-        OrderTable otherOrderTable = new OrderTable();
-        otherOrderTable.setId(2L);
-        otherOrderTable.setTableGroupId(id);
+        orderTable.setId(DEFAULT_ID);
+        orderTable.setTableGroupId(DEFAULT_ID);
 
         List<OrderTable> orderTables = new ArrayList<>();
-        orderTables.add(otherOrderTable);
         orderTables.add(orderTable);
 
-        OrderLineItem orderLineItem = createOrderLineItem();
-
         List<OrderLineItem> orderLineItems = new ArrayList<>();
+        OrderLineItem orderLineItem = createOrderLineItem();
         orderLineItems.add(orderLineItem);
 
         TableGroup tableGroup = new TableGroup();
-        tableGroup.setId(id);
+        tableGroup.setId(DEFAULT_ID);
 
         Order mockOrder = createOrder();
         mockOrder.setOrderLineItems(orderLineItems);
 
-        given(orderTableDao.findById(any())).willReturn(Optional.of(orderTable));
-        given(tableGroupDao.findById(any())).willReturn(Optional.of(tableGroup));
-        given(orderTableDao.findAllByTableGroupId(any())).willReturn(orderTables);
-        given(orderDao.save(any())).willReturn(mockOrder);
-        given(orderLineItemDao.save(any())).willReturn(orderLineItem);
+        given(orderTableDao.findById(DEFAULT_ID)).willReturn(Optional.of(orderTable));
+        given(tableGroupDao.findById(DEFAULT_ID)).willReturn(Optional.of(tableGroup));
+        given(orderTableDao.findAllByTableGroupId(DEFAULT_ID)).willReturn(orderTables);
+        given(orderDao.save(mockOrder)).willReturn(mockOrder);
+        given(orderLineItemDao.save(orderLineItem)).willReturn(orderLineItem);
 
         // when
         Order savedOrder = orderBo.create(mockOrder);
 
+        // then
         assertThat(savedOrder).isNotNull()
                               .isEqualTo(mockOrder);
     }
@@ -240,42 +241,44 @@ class OrderBoTest {
     @Test
     void whenOrderCanSelect_thenSuccess() {
         // given
+        final int ordersSize = 2;
         List<Order> orders = mock(List.class);
         given(orderDao.findAll()).willReturn(orders);
-        given(orders.size()).willReturn(2);
+        given(orders.size()).willReturn(ordersSize);
 
         // when
         List<Order> allMenu = orderDao.findAll();
 
         //then
-        assertThat(allMenu.size()).isEqualTo(2);
+        assertThat(allMenu.size()).isEqualTo(ordersSize);
     }
 
     @DisplayName("[주문 조회] 주문의 주문 항목들을 조회할 수 있다.")
     @Test
     void whenOrderLineItemsCanSelect_thenSuccess() {
         // given
+        final int ordersSize = 2;
         List<OrderLineItem> orderLineItems = mock(List.class);
-        given(orderLineItemDao.findAllByOrderId(any())).willReturn(orderLineItems);
-        given(orderLineItems.size()).willReturn(2);
+        given(orderLineItemDao.findAllByOrderId(DEFAULT_ID)).willReturn(orderLineItems);
+        given(orderLineItems.size()).willReturn(ordersSize);
 
         // when
-        List<OrderLineItem> allOrderLineItems = orderLineItemDao.findAllByOrderId(any());
+        List<OrderLineItem> allOrderLineItems = orderLineItemDao.findAllByOrderId(DEFAULT_ID);
 
         //then
-        assertThat(allOrderLineItems.size()).isEqualTo(2);
+        assertThat(allOrderLineItems.size()).isEqualTo(ordersSize);
     }
 
     @DisplayName("[주문 상태 변경] 주문 상태가 완료일경우 예외를 발생 한다.")
     @Test
     void whenOrderStatusIsComplete_thenFail() {
         // given
-        given(orderDao.findById(any())).willReturn(Optional.of(order));
+        given(orderDao.findById(DEFAULT_ID)).willReturn(Optional.of(order));
         given(order.getOrderStatus()).willReturn(OrderStatus.COMPLETION.name());
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> orderBo.changeOrderStatus(1L, order));
+                .isThrownBy(() -> orderBo.changeOrderStatus(DEFAULT_ID, order));
     }
 
     @DisplayName("[주문 상태 변경] 주문 상태를 Cooking에서 meal로 변경할 수 있다.")
@@ -283,32 +286,29 @@ class OrderBoTest {
     void changeOrderStatus() {
         // given
         Order savedOrder = createOrder();
-
-        given(orderDao.findById(any())).willReturn(Optional.of(savedOrder));
+        given(orderDao.findById(DEFAULT_ID)).willReturn(Optional.of(savedOrder));
         given(order.getOrderStatus()).willReturn(OrderStatus.MEAL.name());
-        given(orderLineItemDao.findAllByOrderId(any())).willReturn(new ArrayList<>());
+        given(orderLineItemDao.findAllByOrderId(DEFAULT_ID)).willReturn(new ArrayList<>());
 
         // when
-        Order changedOrder = orderBo.changeOrderStatus(1L, order);
+        Order changedOrder = orderBo.changeOrderStatus(DEFAULT_ID, order);
 
         // then
         assertThat(changedOrder.getOrderStatus()).isEqualTo(OrderStatus.MEAL.name());
     }
 
-    @DisplayName("Order 객체 생성 테스트 픽스쳐")
-    Order createOrder() {
+    private Order createOrder() {
         Order order = new Order();
-        order.setId(1l);
+        order.setId(DEFAULT_ID);
         order.setOrderStatus(OrderStatus.COOKING.name());
-        order.setOrderTableId(1l);
+        order.setOrderTableId(DEFAULT_ID);
         return order;
     }
 
-    @DisplayName("OrderLineItem 객체 생성 테스트 픽스쳐")
-    OrderLineItem createOrderLineItem() {
+    private OrderLineItem createOrderLineItem() {
         OrderLineItem orderLineItem = new OrderLineItem();
-        orderLineItem.setMenuId(1l);
-        orderLineItem.setOrderId(1l);
+        orderLineItem.setMenuId(DEFAULT_ID);
+        orderLineItem.setOrderId(DEFAULT_ID);
         return orderLineItem;
     }
 }
