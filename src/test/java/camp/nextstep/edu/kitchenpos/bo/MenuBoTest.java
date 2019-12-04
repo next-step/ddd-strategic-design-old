@@ -80,8 +80,7 @@ class MenuBoTest {
         int size = menuProducts.size();
 
         // then
-        assertThat(menuProducts.size()).isNotZero()
-                                       .isEqualTo(menuProductSize);
+        assertThat(menuProducts).hasSize(menuProductSize);
     }
 
     @DisplayName("[메뉴 생성] 메뉴의 금액은 0 원 이상이면 성공을 반환 한다.")
@@ -342,6 +341,6 @@ class MenuBoTest {
         List<MenuProduct> allMenuProducts = menuProductDao.findAllByMenuId(DEFAULT_ID);
 
         //then
-        assertThat(allMenuProducts.size()).isEqualTo(menuProductSize);
+        assertThat(allMenuProducts).hasSize(menuProductSize);
     }
 }

@@ -84,7 +84,7 @@ class MenuGroupBoTest {
                 () -> assertThat(savedMenuGroups).isNotNull(),
                 () -> assertThat(menuGroups.get(menuGroupFirsIndex).getId()).isEqualTo(DEFAULT_ID),
                 () -> assertThat(menuGroups.get(menuGroupFirsIndex).getName()).isEqualTo(menuGroupName),
-                () -> assertThat(savedMenuGroups.size()).isEqualTo(menuGroupSize)
+                () -> assertThat(savedMenuGroups).hasSize(menuGroupSize)
         );
     }
 }

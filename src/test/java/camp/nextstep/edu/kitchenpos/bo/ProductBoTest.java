@@ -101,6 +101,6 @@ class ProductBoTest {
         List<Product> savedProducts = productDao.findAll();
 
         // then
-        assertThat(savedProducts.size()).isEqualTo(productsSize);
+        assertThat(savedProducts).hasSize(productsSize);
     }
 }

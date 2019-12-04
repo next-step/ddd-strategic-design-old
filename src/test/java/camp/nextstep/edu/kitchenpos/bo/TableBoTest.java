@@ -86,7 +86,7 @@ class TableBoTest {
         // then
         assertAll(
                 () -> assertThat(allOrderTables).isNotNull(),
-                () -> assertThat(allOrderTables.size()).isEqualTo(orderTablesSize)
+                () -> assertThat(allOrderTables).hasSize(orderTablesSize)
         );
     }
 

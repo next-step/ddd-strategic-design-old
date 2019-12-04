@@ -250,7 +250,7 @@ class OrderBoTest {
         List<Order> allMenu = orderDao.findAll();
 
         //then
-        assertThat(allMenu.size()).isEqualTo(ordersSize);
+        assertThat(allMenu).hasSize(ordersSize);
     }
 
     @DisplayName("[주문 조회] 주문의 주문 항목들을 조회할 수 있다.")
@@ -266,7 +266,7 @@ class OrderBoTest {
         List<OrderLineItem> allOrderLineItems = orderLineItemDao.findAllByOrderId(DEFAULT_ID);
 
         //then
-        assertThat(allOrderLineItems.size()).isEqualTo(ordersSize);
+        assertThat(allOrderLineItems).hasSize(ordersSize);
     }
 
     @DisplayName("[주문 상태 변경] 주문 상태가 완료일경우 예외를 발생 한다.")
