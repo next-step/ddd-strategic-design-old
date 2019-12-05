@@ -59,17 +59,22 @@
 | 한글명 | 영문명 | 설명 |
 | --- | --- | --- |
 | 사용자 | Guest | 매장에 방문하는 대상을 이야기하며 메뉴를 주문할 수 있다. |
+| --- | --- | --- |
 | 상품 | Product | 명칭과 가격을 갖는 대상을 말한다. |
 | 상품ID | Product ID | 상품의 고유 ID |
+| --- | --- | --- |
 | 메뉴상품 | Menu Product | 상품정보와 수량을 포함하며 메뉴에 속해 있는 대상을 말한다. |
 | 메뉴 | Menu | 주문이 가능한 대상을 말한다. |
 | 메뉴ID | Menu ID | 메뉴의 고유 ID |
 | 메뉴그룹 | Menu Group | 메뉴의 묶음을 말한다. |
 | 메뉴그룹ID | Menu Group ID | 메뉴묶음의 고유 ID |
+| --- | --- | --- |
 | 주문테이블 | Order Table | 사용자들에게 부여되는 공간(단위)를 말하며 해당 공간에서 주문할 수 있다. |
 | 주문테이블ID | Order Table ID | 주문테이블의 고유 ID |
+| --- | --- | --- |
 | 테이블그룹 | Table Group | 주문테이블의 묶음을 말한다. |
 | 테이블그룹ID | Table Group ID | 주문테이블묶음의 고유 ID |
+| --- | --- | --- |
 | 주문상품 | OrderLineItem | 주문한 메뉴와 수량을 포함한 대상을 말한다. |
 | 주문 | Order | 사용자가 상품을 얻기 위한 행위를 말한다. |
 | 주문ID | OrderID | 주문의 공유 ID |
@@ -79,16 +84,31 @@
 
 - `Product`은 고유한 `Product ID`를 가지고 있다.
 - `Product`은 명칭, 가격을 가지고 있다.
+- `Product`은 생성시 0이상의 가격을 갖을때만 생성할 수 있다.
+- `Product`의 전체목록을 볼 수 있다.
 
 - `Menu`는 고유한 `Menu ID`를 가진다.
-- `Menu`는 `Menu Group ID` 및 다수의 `Menu Product`을 가진다.
+- `Menu`는 `Menu Group ID`, 가격 및 다수의 `Menu Product`을 가진다. ( 0이상의 가격을 갖는다. )
+- `Menu`생성 시 `Order Table ID`를 포함해야하며 다수의 `OrderLineItem`를 등록할 수 있다.
+- `Menu`전체목록을 확인하면 `Menu`에 속한 다수의 `Menu Product`를 확인할 수 있다.
 
 - `Menu Product`은 `Menu ID`, `Menu Group ID`, 수량을 가진다.
 
 - `Order`은 고유한 `OrderID`를 가진다.
 - `Order`은 `Order Table ID`, `OrderStatus`, 주문시간 및 다수의 `OrderLineItem`을 가진다.
+- `Order`는 `OrderStatus`가 `COMPLETION`일때는 변경할 수 없다.
+- `Order`전체목록을 확인하면 `Order`에 속한 다수의 `OrderLineItem`를 확인할 수 있다.
 
 - `OrderLineItem`은 `Menu ID`, 수량, `OrderID`을 가진다.
-- `Order Table`은 `Table Group ID`, `Guest`, 현재 상태를 가진다.
 
+- `Order Table`은 `Table Group ID`, `Guest`, 현재 상태를 가진다.
+- `Order Table`를 비어있는 상태로 변경할 시 `Order Table`이 없거나 `OrderStatus`가 `COMPLETION`이면 불가능하다.
+- `Order Table`를 `Guest` 수를 변경할 시 `Order Table`이 비어있는 상태면 불가능하다.
+- `Order Table`의 전체목록을 볼 수 있다.
+
+- `Table Group`은 고유한 `Table Group ID`을 가진다.
 - `Table Group`은 생성시간 및 다수의 `Order Table`을 가진다.
+- `Table Group` 생성시 다수의 `Order Table`을 포함하며 `Order Table`은 `Table Group ID`을 가진다.
+- `Table Group`삭제시 `Order Table`의 `OrderStatus`가 `COMPLETION`이면 불가능하다.
+
+- `OrderStatus`는 `COOKING`, `MEAL`, `COMPLETION`의 상태를 갖는다.
