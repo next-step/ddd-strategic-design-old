@@ -5,7 +5,6 @@ import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.model.OrderTable;
 import camp.nextstep.edu.kitchenpos.model.TableGroup;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -108,7 +108,7 @@ class TableGroupBoTest {
 
         // when
         assertThatIllegalArgumentException().isThrownBy(() -> {
-           tableGroupBo.create(tableGroup);
+            tableGroupBo.create(tableGroup);
         });
     }
 
@@ -168,20 +168,50 @@ class TableGroupBoTest {
         // then
         assertThat(orderTables.stream()
                 .filter(orderTable -> orderTable.getTableGroupId() == null).count())
-                .isEqualTo(0);
+                .isEqualTo(2);
     }
 
     @DisplayName("테이블그룹에 속한 주문테이블 중 번호가 제일 빠른 테이블이 존재하지 않으면 테이블그룹을 삭제할 수 없다")
     @Test
     void deleteFail_firstOrderTableNotExist() {
+        given(orderTableDao.findAllByTableGroupId(any())).willReturn(Arrays.asList());
+        given(orderDao.existsByOrderTableIdAndOrderStatusIn(any(Long.class), any(List.class)))
+                .willReturn(false);
+
+        // when
+        assertThatIllegalArgumentException().isThrownBy(() -> {
+            tableGroupBo.delete(any());
+        });
     }
 
     @DisplayName("주문테이블의 상태가 요리중이거나 식사중인 경우는 테이블그룹을 삭제할 수 없다")
     @Test
     void deleteFail_CookingOrMeal() {
+        // given
+        OrderTable orderTable1 = new OrderTable();
+        orderTable1.setId(0L);
+        orderTable1.setTableGroupId(0L);
+        orderTable1.setEmpty(false);
+
+        OrderTable orderTable2 = new OrderTable();
+        orderTable2.setId(1L);
+        orderTable2.setTableGroupId(0L);
+        orderTable2.setEmpty(false);
+
+        List<OrderTable> orderTables = Arrays.asList(orderTable1, orderTable2);
+
+        given(orderTableDao.findAllByTableGroupId(any())).willReturn(orderTables);
+        given(orderDao.existsByOrderTableIdAndOrderStatusIn(any(Long.class), any(List.class)))
+                .willReturn(true);
+
+        // when
+        assertThatIllegalArgumentException().isThrownBy(() -> {
+            tableGroupBo.delete(any());
+        });
     }
 
-    private TableGroup makeTableGroup(Long id, LocalDateTime localDateTime, List<OrderTable> orderTables) {
+    private TableGroup makeTableGroup(Long id, LocalDateTime localDateTime,
+                                      List<OrderTable> orderTables) {
         TableGroup tableGroup = new TableGroup();
         tableGroup.setId(0L);
         tableGroup.setOrderTables(orderTables);
