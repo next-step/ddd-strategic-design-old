@@ -54,18 +54,15 @@
 
 | 한글명 | 영문명 | 설명 |
 | --- | --- | --- |
-| 메뉴상품 | MenuProduct | 메뉴 내 상세 품목들 |
-| 메뉴묶음 | MenuGroup |  |
-| 주문품목명 | OrderLineItem |  |
-| 주문테이블 | OrderTable |  |
-| 주문상태 | OrderStatus |  |
-| 주문 | Order |  |
-| 요리중 | COOKING |  |
-| 식사중 | MEAL |  |
-| 완료 | COMPLETION |  |
-| 테이블묶음 | TableGroup |  |
-| 손님 | Guest |  |
-| 상품 | Product |  |
+| 메뉴상품 | MenuProduct | 메뉴, 상품과 수량을 관리하는 용도 |
+| 메뉴묶음 | MenuGroup | 여러 메뉴를 하나로 묶는다 |
+| 주문품목명 | OrderLineItem | 주문 받은 메뉴와 수량 |
+| 주문테이블 | OrderTable | 주문 받은 테이블의 손님 인원과 빈 테이블 여부를 체크할 때 사용 |
+| 주문상태 | OrderStatus | 요리중(COOKING), 식사중(MEAL), 완료(COMPLETION) 상태를 갖는다 |
+| 주문 | Order | 주문 테이블, 주문 상태, 주문 품목명을 갖는다 |
+| 테이블묶음 | TableGroup | 단체 손님 받을 때 사용. 주문테이블 여러 개를 하나로 묶는 용도 |
+| 손님 | Guest | 메뉴를 주문한 손님 |
+| 상품 | Product | 메뉴를 구성하는 상품명, 가격 표시 |
 
 ## 모델링
 
