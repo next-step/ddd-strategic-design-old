@@ -1,12 +1,13 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
-import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
-import camp.nextstep.edu.kitchenpos.dao.MenuProductDao;
-import camp.nextstep.edu.kitchenpos.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.model.Menu;
-import camp.nextstep.edu.kitchenpos.model.MenuGroup;
-import camp.nextstep.edu.kitchenpos.model.MenuProduct;
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.menu.bo.MenuBo;
+import camp.nextstep.edu.kitchenpos.menu.model.Menu;
+import camp.nextstep.edu.kitchenpos.menugroup.dao.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menugroup.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menuproduct.dao.MenuProductDao;
+import camp.nextstep.edu.kitchenpos.menuproduct.model.MenuProduct;
+import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.model.Product;
 import camp.nextstep.edu.kitchenpos.support.dao.InMemoryMenuDao;
 import camp.nextstep.edu.kitchenpos.support.dao.InMemoryMenuGroupDao;
 import camp.nextstep.edu.kitchenpos.support.dao.InMemoryMenuProductDao;

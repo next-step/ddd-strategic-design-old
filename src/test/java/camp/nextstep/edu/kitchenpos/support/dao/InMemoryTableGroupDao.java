@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.support.dao;
 
-import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
-import camp.nextstep.edu.kitchenpos.model.TableGroup;
+import camp.nextstep.edu.kitchenpos.tablegroup.dao.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.model.TableGroup;
 
 import java.util.ArrayList;
 import java.util.List;

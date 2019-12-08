@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.support.dao;
 
-import camp.nextstep.edu.kitchenpos.dao.MenuProductDao;
-import camp.nextstep.edu.kitchenpos.model.MenuProduct;
+import camp.nextstep.edu.kitchenpos.menuproduct.dao.MenuProductDao;
+import camp.nextstep.edu.kitchenpos.menuproduct.model.MenuProduct;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.product.bo.ProductBo;
+import camp.nextstep.edu.kitchenpos.product.model.Product;
 import camp.nextstep.edu.kitchenpos.support.dao.InMemoryProductDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

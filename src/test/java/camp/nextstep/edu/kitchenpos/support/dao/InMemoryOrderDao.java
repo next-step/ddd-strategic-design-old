@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.support.dao;
 
-import camp.nextstep.edu.kitchenpos.dao.OrderDao;
-import camp.nextstep.edu.kitchenpos.model.Order;
+import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.model.Order;
 
 import java.util.ArrayList;
 import java.util.List;
