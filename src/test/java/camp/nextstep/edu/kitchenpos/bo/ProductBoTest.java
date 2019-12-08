@@ -56,9 +56,6 @@ class ProductBoTest {
   @Test
   public void findAllProduct() throws Exception {
     //given
-    Product product = createProduct(1000);
-    Product product2 = createProduct(2000);
-
     List<Product> products = Arrays.asList(createProduct(1000), createProduct(2000));
 
     given(productDao.findAll()).willReturn(products);
