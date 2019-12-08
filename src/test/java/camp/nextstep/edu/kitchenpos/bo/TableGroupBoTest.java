@@ -6,12 +6,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import camp.nextstep.edu.kitchenpos.order.infra.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.infra.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.tablegroup.bo.TableGroupBo;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
-import camp.nextstep.edu.kitchenpos.tablegroup.infra.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

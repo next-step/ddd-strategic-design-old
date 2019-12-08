@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.ordertable.infra;
 
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,14 +17,14 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderTableDao {
+public class OrderTableRDB implements OrderTableDao {
     private static final String TABLE_NAME = "order_table";
     private static final String KEY_COLUMN_NAME = "id";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public OrderTableDao(final DataSource dataSource) {
+    public OrderTableRDB(final DataSource dataSource) {
         jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
@@ -31,6 +32,7 @@ public class OrderTableDao {
         ;
     }
 
+    @Override
     public OrderTable save(final OrderTable entity) {
         if (Objects.isNull(entity.getId())) {
             final SqlParameterSource parameters = new BeanPropertySqlParameterSource(entity);
@@ -41,6 +43,7 @@ public class OrderTableDao {
         return entity;
     }
 
+    @Override
     public Optional<OrderTable> findById(final Long id) {
         try {
             return Optional.of(select(id));
@@ -49,11 +52,13 @@ public class OrderTableDao {
         }
     }
 
+    @Override
     public List<OrderTable> findAll() {
         final String sql = "SELECT id, table_group_id, number_of_guests, empty FROM order_table";
         return jdbcTemplate.query(sql, (resultSet, rowNumber) -> toEntity(resultSet));
     }
 
+    @Override
     public List<OrderTable> findAllByIdIn(final List<Long> ids) {
         final String sql = "SELECT id, table_group_id, number_of_guests, empty FROM order_table WHERE id IN (:ids)";
         final SqlParameterSource parameters = new MapSqlParameterSource()
@@ -61,6 +66,7 @@ public class OrderTableDao {
         return jdbcTemplate.query(sql, parameters, (resultSet, rowNumber) -> toEntity(resultSet));
     }
 
+    @Override
     public List<OrderTable> findAllByTableGroupId(final Long tableGroupId) {
         final String sql = "SELECT id, table_group_id, number_of_guests, empty" +
                 " FROM order_table WHERE table_group_id = (:tableGroupId)";

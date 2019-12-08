@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.product.bo;
 
 import camp.nextstep.edu.kitchenpos.product.domain.Product;
-import camp.nextstep.edu.kitchenpos.product.infra.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.domain.ProductDao;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;

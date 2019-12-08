@@ -1,6 +1,7 @@
-package camp.nextstep.edu.kitchenpos.product.infra;
+package camp.nextstep.edu.kitchenpos.menu.infra;
 
-import camp.nextstep.edu.kitchenpos.product.domain.Product;
+import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuDao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -15,14 +16,14 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProductDao {
-    private static final String TABLE_NAME = "product";
+public class MenuRDB implements MenuDao {
+    private static final String TABLE_NAME = "menu";
     private static final String KEY_COLUMN_NAME = "id";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ProductDao(final DataSource dataSource) {
+    public MenuRDB(final DataSource dataSource) {
         jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
@@ -30,13 +31,15 @@ public class ProductDao {
         ;
     }
 
-    public Product save(final Product entity) {
-        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(entity);
+    @Override
+    public Menu save(final Menu menu) {
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(menu);
         final Number key = jdbcInsert.executeAndReturnKey(parameters);
         return select(key.longValue());
     }
 
-    public Optional<Product> findById(final Long id) {
+    @Override
+    public Optional<Menu> findById(final Long id) {
         try {
             return Optional.of(select(id));
         } catch (final EmptyResultDataAccessException e) {
@@ -44,23 +47,25 @@ public class ProductDao {
         }
     }
 
-    public List<Product> findAll() {
-        final String sql = "SELECT id, name, price FROM product";
+    @Override
+    public List<Menu> findAll() {
+        final String sql = "SELECT id, name, price, menu_group_id FROM menu ";
         return jdbcTemplate.query(sql, (resultSet, rowNumber) -> toEntity(resultSet));
     }
 
-    private Product select(final Long id) {
-        final String sql = "SELECT id, name, price FROM product WHERE id = (:id)";
+    private Menu select(final Long id) {
+        final String sql = "SELECT id, name, price, menu_group_id FROM menu WHERE id = (:id)";
         final SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("id", id);
         return jdbcTemplate.queryForObject(sql, parameters, (resultSet, rowNumber) -> toEntity(resultSet));
     }
 
-    private Product toEntity(final ResultSet resultSet) throws SQLException {
-        final Product entity = new Product();
-        entity.setId(resultSet.getLong(KEY_COLUMN_NAME));
+    private Menu toEntity(final ResultSet resultSet) throws SQLException {
+        final Menu entity = new Menu();
+        entity.setId(resultSet.getLong("id"));
         entity.setName(resultSet.getString("name"));
         entity.setPrice(resultSet.getBigDecimal("price"));
+        entity.setMenuGroupId(resultSet.getLong("menu_group_id"));
         return entity;
     }
 }

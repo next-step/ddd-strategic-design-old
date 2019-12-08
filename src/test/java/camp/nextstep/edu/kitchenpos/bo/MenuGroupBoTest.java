@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import camp.nextstep.edu.kitchenpos.menugroup.bo.MenuGroupBo;
 import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroup;
-import camp.nextstep.edu.kitchenpos.menugroup.infra.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupDao;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

@@ -8,12 +8,12 @@ import static org.mockito.Mockito.when;
 
 import camp.nextstep.edu.kitchenpos.menu.bo.MenuBo;
 import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuDao;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
-import camp.nextstep.edu.kitchenpos.menu.infra.MenuDao;
-import camp.nextstep.edu.kitchenpos.menu.infra.MenuProductDao;
-import camp.nextstep.edu.kitchenpos.menugroup.infra.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductDao;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupDao;
 import camp.nextstep.edu.kitchenpos.product.domain.Product;
-import camp.nextstep.edu.kitchenpos.product.infra.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.domain.ProductDao;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;

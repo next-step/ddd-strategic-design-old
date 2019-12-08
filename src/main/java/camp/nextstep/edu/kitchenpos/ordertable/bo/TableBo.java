@@ -1,10 +1,10 @@
 package camp.nextstep.edu.kitchenpos.ordertable.bo;
 
+import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderStatus;
-import camp.nextstep.edu.kitchenpos.order.infra.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.infra.OrderTableDao;
-import camp.nextstep.edu.kitchenpos.tablegroup.infra.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;

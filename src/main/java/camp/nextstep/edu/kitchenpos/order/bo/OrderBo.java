@@ -1,14 +1,14 @@
 package camp.nextstep.edu.kitchenpos.order.bo;
 
 import camp.nextstep.edu.kitchenpos.order.domain.Order;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItem;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItemDao;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderStatus;
-import camp.nextstep.edu.kitchenpos.order.infra.OrderDao;
-import camp.nextstep.edu.kitchenpos.order.infra.OrderLineItemDao;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.infra.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
-import camp.nextstep.edu.kitchenpos.tablegroup.infra.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;

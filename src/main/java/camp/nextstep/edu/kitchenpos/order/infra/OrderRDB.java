@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.order.infra;
 
 import camp.nextstep.edu.kitchenpos.order.domain.Order;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -17,14 +18,14 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderDao {
+public class OrderRDB implements OrderDao {
     private static final String TABLE_NAME = "orders";
     private static final String KEY_COLUMN_NAME = "id";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public OrderDao(final DataSource dataSource) {
+    public OrderRDB(final DataSource dataSource) {
         jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
@@ -32,6 +33,7 @@ public class OrderDao {
         ;
     }
 
+    @Override
     public Order save(final Order entity) {
         if (Objects.isNull(entity.getId())) {
             final SqlParameterSource parameters = new BeanPropertySqlParameterSource(entity);
@@ -42,6 +44,7 @@ public class OrderDao {
         return entity;
     }
 
+    @Override
     public Optional<Order> findById(final Long id) {
         try {
             return Optional.of(select(id));
@@ -50,11 +53,13 @@ public class OrderDao {
         }
     }
 
+    @Override
     public List<Order> findAll() {
         final String sql = "SELECT id, order_table_id, order_status, ordered_time FROM orders";
         return jdbcTemplate.query(sql, (resultSet, rowNumber) -> toEntity(resultSet));
     }
 
+    @Override
     public boolean existsByOrderTableIdAndOrderStatusIn(final Long orderTableId, final List<String> orderStatuses) {
         final String sql = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END" +
                 " FROM orders WHERE order_table_id = (:orderTableId) AND order_status IN (:orderStatuses)";
