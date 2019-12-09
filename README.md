@@ -84,6 +84,8 @@
 
 - `Menu`는 고유한 `Menu ID`를 가진다.
 - `Menu`는 `Menu Group ID`, 가격 및 다수의 `Menu Product`을 가진다. ( 0이상의 가격을 갖는다. )
+- `Menu`는 `Menu Group ID`가 없는 경우 생성할 수 없다.
+- `Menu`의 가격은 다수의 `Menu Product` 합산보다 크거나 같을 수 없다.
 - `Menu`생성 시 `Order Table ID`를 포함해야하며 다수의 `OrderLineItem`를 등록할 수 있다.
 - `Menu`전체목록을 확인하면 `Menu`에 속한 다수의 `Menu Product`를 확인할 수 있다.
 
@@ -91,18 +93,24 @@
 
 - `Order`은 고유한 `OrderID`를 가진다.
 - `Order`은 `Order Table ID`, `OrderStatus`, 주문시간 및 다수의 `OrderLineItem`을 가진다.
+- `Order`은 `Order Table ID`이 참조하는 `Order Table`이 없는 경우 생성할 수 없다.
+- `Order`은 `OrderLineItem`를 포함하지 않을 경우 생성할 수 없다.
+- `Order`의 `OrderLineItem`는 `OrderID`를 참조한다.
 - `Order`는 `OrderStatus`가 `COMPLETION`일때는 변경할 수 없다.
 - `Order`전체목록을 확인하면 `Order`에 속한 다수의 `OrderLineItem`를 확인할 수 있다.
 
 - `OrderLineItem`은 `Menu ID`, 수량, `OrderID`을 가진다.
 
 - `Order Table`은 `Table Group ID`, `Guest`, 현재 상태를 가진다.
+- `Order Table`은 `Table Group ID`를 참조할 경우 상태변경을 할 수 없다.
 - `Order Table`를 비어있는 상태로 변경할 시 `Order Table`이 없거나 `OrderStatus`가 `COMPLETION`이면 불가능하다.
 - `Order Table`를 `Guest` 수를 변경할 시 `Order Table`이 비어있는 상태면 불가능하다.
+- `Order Table`를 변경인원이 0보다 작은 경우 `Guest` 수를 변경할 수 없다.
 - `Order Table`의 전체목록을 볼 수 있다.
 
 - `Table Group`은 고유한 `Table Group ID`을 가진다.
-- `Table Group`은 생성시간 및 다수의 `Order Table`을 가진다.
+- `Table Group`은 `Order Table`이 2개 미만인 경우 생성할 수 없다.
+- `Table Group`은 고유한 `Table Group ID`을 가진다.
 - `Table Group` 생성시 다수의 `Order Table`을 포함하며 `Order Table`은 `Table Group ID`을 가진다.
 - `Table Group`삭제시 `Order Table`의 `OrderStatus`가 `COMPLETION`이면 불가능하다.
 
