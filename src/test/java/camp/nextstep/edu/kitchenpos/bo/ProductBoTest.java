@@ -30,7 +30,8 @@ class ProductBoTest {
   @Test
   public void create() throws Exception {
     //given
-    Product product = createProduct(5000);
+    int price = 5000;
+    Product product = createProduct(price);
 
     given(productDao.save(product)).willReturn(product);
 
@@ -45,9 +46,9 @@ class ProductBoTest {
   @Test
   public void negativePriceWillReturnException() throws Exception {
     //given
-    Product product = createProduct(-5000);
+    int price = -5000;
+    Product product = createProduct(price);
 
-    //when
     //then
     assertThrows(IllegalArgumentException.class, () -> productBo.create(product));
   }
@@ -56,7 +57,8 @@ class ProductBoTest {
   @Test
   public void findAllProduct() throws Exception {
     //given
-    List<Product> products = Arrays.asList(createProduct(1000), createProduct(2000));
+    int price = 1000;
+    List<Product> products = Arrays.asList(createProduct(price), createProduct(price));
 
     given(productDao.findAll()).willReturn(products);
 

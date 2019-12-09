@@ -60,8 +60,6 @@ class TableGroupBoTest {
     List<OrderTable> orderTables = Arrays.asList(createOrderTable(1L, 1L));
     TableGroup tableGroup = createTableGroup(1L, orderTables);
 
-    //when
-
     //then
     assertThrows(IllegalArgumentException.class,
         () -> tableGroupBo.create(tableGroup));
@@ -80,7 +78,6 @@ class TableGroupBoTest {
     TableGroup tableGroup = createTableGroup(1L, orderTables);
 
     given(orderTableDao.findAllByIdIn(any())).willReturn(orderTables);
-    //when
 
     //then
     assertThrows(IllegalArgumentException.class,

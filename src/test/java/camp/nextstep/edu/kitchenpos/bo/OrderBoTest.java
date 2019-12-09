@@ -6,7 +6,9 @@ import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.model.Order;
 import camp.nextstep.edu.kitchenpos.model.OrderLineItem;
+import camp.nextstep.edu.kitchenpos.model.OrderStatus;
 import camp.nextstep.edu.kitchenpos.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.model.TableGroup;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +63,7 @@ class OrderBoTest {
   public void changeOrderStatus() throws Exception {
     //given
     Order order = createOrder(1L);
-    order.setOrderStatus("COOKING");
+    order.setOrderStatus(OrderStatus.COOKING.name());
 
     given(orderDao.findById(order.getId())).willReturn(Optional.of(order));
     given(orderDao.save(order)).willReturn(order);
@@ -78,11 +80,9 @@ class OrderBoTest {
   public void OrderStatusMustNotBeCompleted() throws Exception {
     //given
     Order order = createOrder(1L);
-    order.setOrderStatus("COMPLETION");
+    order.setOrderStatus(OrderStatus.COMPLETION.name());
 
     given(orderDao.findById(order.getId())).willReturn(Optional.of(order));
-
-    //when
 
     //then
     assertThrows(IllegalArgumentException.class,
@@ -112,11 +112,6 @@ class OrderBoTest {
   @DisplayName("주문 등록 시 주문 내역 목록이 비어 있어서는 안 된다.")
   @Test
   public void orderLineItemListShouldNotBeEmpty() throws Exception {
-    //given
-
-    //when
-
-    //then
     assertThrows(IllegalArgumentException.class,
         () -> orderBo.create(new Order()));
   }
@@ -132,8 +127,6 @@ class OrderBoTest {
 
     given(orderTableDao.findById(any())).willReturn(Optional.of(orderTable));
 
-    //when
-
     //then
     assertThrows(IllegalArgumentException.class,
         () -> orderBo.create(order));
@@ -145,10 +138,18 @@ class OrderBoTest {
     // given
     Order order = createOrder(1L);
     order.setOrderLineItems(Arrays.asList(createOrderLineItem()));
+    order.setOrderTableId(1L);
 
     OrderTable orderTable = createOrderTable(1L, false);
+    orderTable.setTableGroupId(1L);
+    OrderTable orderTable2 = createOrderTable(2L, false);
+
+    TableGroup tableGroup = new TableGroup();
+    tableGroup.setId(1L);
 
     given(orderTableDao.findById(order.getOrderTableId())).willReturn(Optional.of(orderTable));
+    given(tableGroupDao.findById(orderTable.getTableGroupId())).willReturn(Optional.of(tableGroup));
+    given(orderTableDao.findAllByTableGroupId(tableGroup.getId())).willReturn(Arrays.asList(orderTable, orderTable2));
     given(orderDao.save(order)).willReturn(order);
 
     // when
@@ -174,7 +175,7 @@ class OrderBoTest {
     Order actual = orderBo.create(order);
 
     //then
-    assertThat(actual.getOrderStatus()).isEqualTo("COOKING");
+    assertThat(actual.getOrderStatus()).isEqualTo(OrderStatus.COOKING.name());
   }
 
   private Order createOrder(Long id) {

@@ -2,6 +2,7 @@ package camp.nextstep.edu.kitchenpos.bo;
 
 import camp.nextstep.edu.kitchenpos.dao.MenuDao;
 import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.dao.MenuProductDao;
 import camp.nextstep.edu.kitchenpos.dao.ProductDao;
 import camp.nextstep.edu.kitchenpos.model.Menu;
 import camp.nextstep.edu.kitchenpos.model.MenuProduct;
@@ -34,6 +35,9 @@ class MenuBoTest {
   @Mock
   private ProductDao productDao;
 
+  @Mock
+  private MenuProductDao menuProductDao;
+
   @InjectMocks
   private MenuBo menuBo;
 
@@ -41,7 +45,11 @@ class MenuBoTest {
   @Test
   public void create() throws Exception {
     //given
-    Menu menu = createMenu(1L, 0, 1L);
+    long id = 1L;
+    long menuGroupId = 1L;
+    int price = 0;
+
+    Menu menu = createMenu(id, price, menuGroupId);
 
     given(menuGroupDao.existsById(any(Long.class))).willReturn(true);
     given(menuDao.save(any())).willReturn(menu);
@@ -58,7 +66,9 @@ class MenuBoTest {
   public void list() throws Exception {
     //given
     List<Menu> menus = Arrays.asList(new Menu(), new Menu());
+    List<MenuProduct> menuProducts = Arrays.asList(new MenuProduct(), new MenuProduct());
     given(menuDao.findAll()).willReturn(menus);
+    given(menuProductDao.findAllByMenuId(any())).willReturn(menuProducts);
 
     //when
     final List<Menu> actual = menuBo.list();
@@ -72,9 +82,11 @@ class MenuBoTest {
   @Test
   public void menuPriceMoreZero() throws Exception {
     //given
-    Menu menu = createMenu(1L, -1, 1L);
+    long id = 1L;
+    long menuGroupId = 1L;
+    int price = -1;
 
-    //when
+    Menu menu = createMenu(id, price, menuGroupId);
 
     //then
     assertThrows(IllegalArgumentException.class,
@@ -85,10 +97,12 @@ class MenuBoTest {
   @Test
   public void hasMenuGroup() throws Exception {
     //given
-    Menu menu = createMenu(1L, 0, 1L);
-    given(menuGroupDao.existsById(any(Long.class))).willReturn(false);
+    long id = 1L;
+    long menuGroupId = 1L;
+    int price = 0;
 
-    //when
+    Menu menu = createMenu(id, price, menuGroupId);
+    given(menuGroupDao.existsById(any(Long.class))).willReturn(false);
 
     //then
     assertThrows(IllegalArgumentException.class,
@@ -103,7 +117,11 @@ class MenuBoTest {
     menuProduct.setProductId(1L);
     menuProduct.setQuantity(1);
 
-    final Menu menu = createMenu(1L, 1001, 1L, menuProduct);
+    long id = 1L;
+    long menuGroupId = 1L;
+    int price = 1001;
+
+    final Menu menu = createMenu(id, price, menuGroupId, menuProduct);
 
     Product product = new Product();
     product.setId(1L);
