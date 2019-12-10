@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.bo;
+package camp.nextstep.edu.kitchenpos.menugroup.bo;
 
-import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
-import camp.nextstep.edu.kitchenpos.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menugroup.dao.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menugroup.model.MenuGroup;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,4 +1,4 @@
-package camp.nextstep.edu.kitchenpos.model;
+package camp.nextstep.edu.kitchenpos.menugroup.model;
 
 public class MenuGroup {
     private Long id;

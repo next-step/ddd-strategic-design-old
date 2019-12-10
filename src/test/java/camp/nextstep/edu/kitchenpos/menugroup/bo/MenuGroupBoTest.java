@@ -1,15 +1,13 @@
-package camp.nextstep.edu.kitchenpos.bo;
+package camp.nextstep.edu.kitchenpos.menugroup.bo;
 
-import camp.nextstep.edu.kitchenpos.bo.mock.InMemoryMenuGroupDao;
-import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
-import camp.nextstep.edu.kitchenpos.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menugroup.dao.InMemoryMenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menugroup.bo.MenuGroupBo;
+import camp.nextstep.edu.kitchenpos.menugroup.dao.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menugroup.model.MenuGroup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @DisplayName("메뉴 그룹 Business Object 테스트 클래스")

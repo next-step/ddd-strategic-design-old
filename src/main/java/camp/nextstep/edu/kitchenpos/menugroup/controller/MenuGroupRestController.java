@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.controller;
+package camp.nextstep.edu.kitchenpos.menugroup.controller;
 
-import camp.nextstep.edu.kitchenpos.bo.MenuGroupBo;
-import camp.nextstep.edu.kitchenpos.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menugroup.bo.MenuGroupBo;
+import camp.nextstep.edu.kitchenpos.menugroup.model.MenuGroup;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
