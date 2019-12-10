@@ -1,5 +1,7 @@
 package camp.nextstep.edu.kitchenpos.model;
 
+import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
