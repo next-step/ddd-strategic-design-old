@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.controller;
+package camp.nextstep.edu.kitchenpos.tablegroup.controller;
 
-import camp.nextstep.edu.kitchenpos.bo.TableGroupBo;
-import camp.nextstep.edu.kitchenpos.model.TableGroup;
+import camp.nextstep.edu.kitchenpos.tablegroup.bo.TableGroupBo;
+import camp.nextstep.edu.kitchenpos.tablegroup.model.TableGroup;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

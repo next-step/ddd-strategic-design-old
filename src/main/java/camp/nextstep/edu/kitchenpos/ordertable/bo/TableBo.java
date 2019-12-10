@@ -2,7 +2,7 @@ package camp.nextstep.edu.kitchenpos.ordertable.bo;
 
 import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.dao.OrderTableDao;
-import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
 import org.springframework.stereotype.Component;
