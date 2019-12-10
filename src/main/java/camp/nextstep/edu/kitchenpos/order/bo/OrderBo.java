@@ -1,10 +1,13 @@
-package camp.nextstep.edu.kitchenpos.bo;
+package camp.nextstep.edu.kitchenpos.order.bo;
 
-import camp.nextstep.edu.kitchenpos.dao.OrderDao;
-import camp.nextstep.edu.kitchenpos.dao.OrderLineItemDao;
+import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.dao.OrderLineItemDao;
 import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.model.*;
+import camp.nextstep.edu.kitchenpos.order.model.Order;
+import camp.nextstep.edu.kitchenpos.order.model.OrderLineItem;
+import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

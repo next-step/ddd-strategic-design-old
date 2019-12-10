@@ -1,4 +1,4 @@
-package camp.nextstep.edu.kitchenpos.model;
+package camp.nextstep.edu.kitchenpos.order.model;
 
 public class OrderLineItem {
     private Long seq;

@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.controller;
+package camp.nextstep.edu.kitchenpos.order.controller;
 
-import camp.nextstep.edu.kitchenpos.bo.OrderBo;
-import camp.nextstep.edu.kitchenpos.model.Order;
+import camp.nextstep.edu.kitchenpos.order.bo.OrderBo;
+import camp.nextstep.edu.kitchenpos.order.model.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
