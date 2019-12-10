@@ -55,7 +55,7 @@ class MenuGroupBoTest {
   }
 
   private MenuGroup createMenuGroup(String menuName) {
-    MenuGroup menuGroup = new MenuGroup();
+    final MenuGroup menuGroup = new MenuGroup();
     menuGroup.setName(menuName);
     return menuGroup;
   }

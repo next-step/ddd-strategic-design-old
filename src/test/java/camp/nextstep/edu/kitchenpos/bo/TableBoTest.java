@@ -85,8 +85,6 @@ class TableBoTest {
     orderTable.setTableGroupId(1L);
     given(orderTableDao.findById(orderTable.getId())).willReturn(Optional.of(orderTable));
 
-    //when
-
     //then
     assertThrows(IllegalArgumentException.class,
         () -> tableBo.changeEmpty(orderTable.getId(), orderTable));
@@ -108,13 +106,12 @@ class TableBoTest {
     assertThat(actual).isNotNull();
   }
 
-  @DisplayName("인원수가 0명보다 작아서는 안 된다.")
+  @DisplayName("인원수가 0명 이상이어야 한다.")
   @Test
   public void numberOfGuestsShouldNotBeZero() throws Exception {
     //given
     OrderTable orderTable = createOrderTable(1L, false);
     orderTable.setNumberOfGuests(-1);
-    //when
 
     //then
     assertThrows(IllegalArgumentException.class,
