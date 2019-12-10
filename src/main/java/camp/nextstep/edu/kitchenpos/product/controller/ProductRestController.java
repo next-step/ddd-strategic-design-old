@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.controller;
+package camp.nextstep.edu.kitchenpos.product.controller;
 
-import camp.nextstep.edu.kitchenpos.bo.ProductBo;
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.product.bo.ProductBo;
+import camp.nextstep.edu.kitchenpos.product.model.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.bo.mock;
+package camp.nextstep.edu.kitchenpos.product.dao;
 
-import camp.nextstep.edu.kitchenpos.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.model.Product;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;

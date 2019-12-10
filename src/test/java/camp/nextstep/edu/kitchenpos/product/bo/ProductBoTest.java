@@ -1,8 +1,9 @@
-package camp.nextstep.edu.kitchenpos.bo;
+package camp.nextstep.edu.kitchenpos.product.bo;
 
-import camp.nextstep.edu.kitchenpos.bo.mock.InMemoryProductDao;
-import camp.nextstep.edu.kitchenpos.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.product.dao.InMemoryProductDao;
+import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.model.Product;
+import camp.nextstep.edu.kitchenpos.product.bo.ProductBo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
