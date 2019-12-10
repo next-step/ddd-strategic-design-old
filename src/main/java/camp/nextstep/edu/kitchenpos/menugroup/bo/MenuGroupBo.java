@@ -8,18 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class MenuGroupBo {
-    private final MenuGroupRepository menuGroupDao;
+    private final MenuGroupRepository menuGroupRepository;
 
-    public MenuGroupBo(final MenuGroupRepository menuGroupDao) {
-        this.menuGroupDao = menuGroupDao;
+    public MenuGroupBo(final MenuGroupRepository menuGroupRepository) {
+        this.menuGroupRepository = menuGroupRepository;
     }
 
     @Transactional
     public MenuGroup create(final MenuGroup menuGroup) {
-        return menuGroupDao.save(menuGroup);
+        return menuGroupRepository.save(menuGroup);
     }
 
     public List<MenuGroup> list() {
-        return menuGroupDao.findAll();
+        return menuGroupRepository.findAll();
     }
 }

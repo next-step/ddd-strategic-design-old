@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MenuGroupBoTest {
 
     @Mock
-    private MenuGroupRepository menuGroupDao;
+    private MenuGroupRepository menuGroupRepository;
 
     @InjectMocks
     private MenuGroupBo menuGroupBo;
@@ -30,7 +30,7 @@ class MenuGroupBoTest {
     void add(){
 
         MenuGroup menuGroup = this.createMenuGroup();
-        when(menuGroupDao.save(any())).thenReturn(menuGroup);
+        when(menuGroupRepository.save(any())).thenReturn(menuGroup);
 
 
         MenuGroup actual = menuGroupBo.create(menuGroup);
@@ -45,7 +45,7 @@ class MenuGroupBoTest {
     void menugroup_list(){
 
         MenuGroup menuGroup = this.createMenuGroup();
-        when(menuGroupDao.findAll()).thenReturn(Arrays.asList(menuGroup));
+        when(menuGroupRepository.findAll()).thenReturn(Arrays.asList(menuGroup));
 
 
         List<MenuGroup> menuGroups = menuGroupBo.list();

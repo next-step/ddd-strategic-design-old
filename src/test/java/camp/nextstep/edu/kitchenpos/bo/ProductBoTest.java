@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ProductBoTest {
 
     @Mock
-    private ProductRepository productDao;
+    private ProductRepository productRepository;
 
     @InjectMocks
     private ProductBo productBo;
@@ -34,7 +34,7 @@ class ProductBoTest {
     void add(){
 
         Product product = this.createProduct(DEFAULT_PRICE);
-        when(productDao.save(any())).thenReturn(product);
+        when(productRepository.save(any())).thenReturn(product);
 
 
         Product actual = productBo.create(product);
@@ -58,7 +58,7 @@ class ProductBoTest {
     void product_list(){
 
         List<Product> products = Arrays.asList(this.createProduct(DEFAULT_PRICE), this.createProduct(DEFAULT_PRICE));
-        when(productDao.findAll()).thenReturn(products);
+        when(productRepository.findAll()).thenReturn(products);
 
 
         List<Product> actual = productBo.list();

@@ -30,16 +30,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class OrderBoTest {
 
     @Mock
-    private OrderRepository orderDao;
+    private OrderRepository orderRepository;
 
     @Mock
-    private OrderLineItemRepository orderLineItemDao;
+    private OrderLineItemRepository orderLineItemRepository;
 
     @Mock
-    private OrderTableRepository orderTableDao;
+    private OrderTableRepository orderTableRepository;
 
     @Mock
-    private TableGroupRepository tableGroupDao;
+    private TableGroupRepository tableGroupRepository;
 
     @InjectMocks
     private OrderBo orderBo;
@@ -49,8 +49,8 @@ class OrderBoTest {
     void add(){
 
         Order order = this.createOrder(1L, Arrays.asList(this.createOrderLine(1L, 2), this.createOrderLine(1L, 3)));
-        when(orderTableDao.findById(anyLong())).thenReturn(this.createOrderTable(1L, null, false));
-        when(orderDao.save(any())).thenReturn(order);
+        when(orderTableRepository.findById(anyLong())).thenReturn(this.createOrderTable(1L, null, false));
+        when(orderRepository.save(any())).thenReturn(order);
 
         Order actual = orderBo.create(order);
 
@@ -64,7 +64,7 @@ class OrderBoTest {
     void is_not_empty(){
 
         Order order = this.createOrder(1L, Arrays.asList(this.createOrderLine(1L, 2), this.createOrderLine(1L, 3)));
-        when(orderTableDao.findById(anyLong())).thenReturn(this.createOrderTable(1L, 1L, true));
+        when(orderTableRepository.findById(anyLong())).thenReturn(this.createOrderTable(1L, 1L, true));
 
 
         assertThrows(IllegalArgumentException.class, () -> orderBo.create(order));
@@ -75,10 +75,10 @@ class OrderBoTest {
     void table_group_add(){
 
         Order order = this.createOrder(1L, Arrays.asList(this.createOrderLine(1L, 2), this.createOrderLine(1L, 3)));
-        when(orderTableDao.findById(anyLong())).thenReturn(this.createOrderTable(1L, 1L, false));
-        when(tableGroupDao.findById(anyLong())).thenReturn(this.createTableGroup(null));
-        when(orderTableDao.findAllByTableGroupId(anyLong())).thenReturn(Arrays.asList(this.createOrderTable(1L, 1L, false).get(), this.createOrderTable(2L, 1L, false).get()));
-        when(orderDao.save(any())).thenReturn(order);
+        when(orderTableRepository.findById(anyLong())).thenReturn(this.createOrderTable(1L, 1L, false));
+        when(tableGroupRepository.findById(anyLong())).thenReturn(this.createTableGroup(null));
+        when(orderTableRepository.findAllByTableGroupId(anyLong())).thenReturn(Arrays.asList(this.createOrderTable(1L, 1L, false).get(), this.createOrderTable(2L, 1L, false).get()));
+        when(orderRepository.save(any())).thenReturn(order);
 
         Order actual = orderBo.create(order);
 
@@ -91,9 +91,9 @@ class OrderBoTest {
     void order_list(){
 
         List<Order> orderList = Arrays.asList(this.createOrder(1L, null));
-        when(orderDao.findAll()).thenReturn(orderList);
+        when(orderRepository.findAll()).thenReturn(orderList);
         List<OrderLineItem> orderLineItemList =  Arrays.asList(this.createOrderLine(1L, 2), this.createOrderLine(1L, 3));
-        when(orderLineItemDao.findAllByOrderId(anyLong())).thenReturn(orderLineItemList);
+        when(orderLineItemRepository.findAllByOrderId(anyLong())).thenReturn(orderLineItemList);
 
 
         List<Order> actual = orderBo.list();
@@ -108,9 +108,9 @@ class OrderBoTest {
     void change_status(){
 
         Optional<Order> order = this.createStatusOrder(1L, OrderStatus.COOKING, Arrays.asList(this.createOrderLine(1L, 2), this.createOrderLine(1L, 3)));
-        when(orderDao.findById(anyLong())).thenReturn(order);
+        when(orderRepository.findById(anyLong())).thenReturn(order);
         List<OrderLineItem> orderLineItemList =  Arrays.asList(this.createOrderLine(1L, 2), this.createOrderLine(1L, 3));
-        when(orderLineItemDao.findAllByOrderId(anyLong())).thenReturn(orderLineItemList);
+        when(orderLineItemRepository.findAllByOrderId(anyLong())).thenReturn(orderLineItemList);
 
 
         Order actual = orderBo.changeOrderStatus(1L, order.get());
@@ -124,7 +124,7 @@ class OrderBoTest {
     @DisplayName("요리 준비, 식사  상태의 경우만 변경할 수 있다.")
     void not_completion_status(){
         Optional<Order> order = this.createStatusOrder(1L, OrderStatus.COMPLETION, Arrays.asList(this.createOrderLine(1L, 2), this.createOrderLine(1L, 3)));
-        when(orderDao.findById(anyLong())).thenReturn(order);
+        when(orderRepository.findById(anyLong())).thenReturn(order);
 
         
         assertThrows(IllegalArgumentException.class, () -> orderBo.changeOrderStatus(1L, order.get()));

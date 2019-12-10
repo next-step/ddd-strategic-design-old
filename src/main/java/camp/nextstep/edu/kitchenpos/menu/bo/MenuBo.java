@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.menu.bo;
 
 import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
-import camp.nextstep.edu.kitchenpos.menu.domain.MenuDao;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuRepository;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductRepository;
 import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupRepository;
@@ -16,21 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class MenuBo {
-    private final MenuDao menuDao;
-    private final MenuGroupRepository menuGroupDao;
+    private final MenuRepository menuRepository;
+    private final MenuGroupRepository menuGroupRepository;
     private final MenuProductRepository menuProductDao;
-    private final ProductRepository productDao;
+    private final ProductRepository productRepository;
 
     public MenuBo(
-            final MenuDao menuDao,
-            final MenuGroupRepository menuGroupDao,
-            final MenuProductRepository menuProductDao,
-            final ProductRepository productDao
+            final MenuRepository menuRepository,
+            final MenuGroupRepository menuGroupRepository,
+            final MenuProductRepository menuProductRepository,
+            final ProductRepository productRepository
     ) {
-        this.menuDao = menuDao;
-        this.menuGroupDao = menuGroupDao;
-        this.menuProductDao = menuProductDao;
-        this.productDao = productDao;
+        this.menuRepository = menuRepository;
+        this.menuGroupRepository = menuGroupRepository;
+        this.menuProductDao = menuProductRepository;
+        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -41,7 +41,7 @@ public class MenuBo {
             throw new IllegalArgumentException();
         }
 
-        if (!menuGroupDao.existsById(menu.getMenuGroupId())) {
+        if (!menuGroupRepository.existsById(menu.getMenuGroupId())) {
             throw new IllegalArgumentException();
         }
 
@@ -49,7 +49,7 @@ public class MenuBo {
 
         BigDecimal sum = BigDecimal.ZERO;
         for (final MenuProduct menuProduct : menuProducts) {
-            final Product product = productDao.findById(menuProduct.getProductId())
+            final Product product = productRepository.findById(menuProduct.getProductId())
                     .orElseThrow(IllegalArgumentException::new);
             sum = sum.add(product.getPrice().multiply(BigDecimal.valueOf(menuProduct.getQuantity())));
         }
@@ -58,7 +58,7 @@ public class MenuBo {
             throw new IllegalArgumentException();
         }
 
-        final Menu savedMenu = menuDao.save(menu);
+        final Menu savedMenu = menuRepository.save(menu);
 
         final Long menuId = savedMenu.getId();
         final List<MenuProduct> savedMenuProducts = new ArrayList<>();
@@ -72,7 +72,7 @@ public class MenuBo {
     }
 
     public List<Menu> list() {
-        final List<Menu> menus = menuDao.findAll();
+        final List<Menu> menus = menuRepository.findAll();
 
         for (final Menu menu : menus) {
             menu.setMenuProducts(menuProductDao.findAllByMenuId(menu.getId()));

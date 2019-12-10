@@ -25,13 +25,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class TableGroupBoTest {
 
     @Mock
-    private OrderRepository orderDao;
+    private OrderRepository orderRepository;
 
     @Mock
-    private OrderTableRepository orderTableDao;
+    private OrderTableRepository orderTableRepository;
 
     @Mock
-    private TableGroupRepository tableGroupDao;
+    private TableGroupRepository tableGroupRepository;
 
     @InjectMocks
     private TableGroupBo tableGroupBo;
@@ -43,8 +43,8 @@ class TableGroupBoTest {
 
         List<OrderTable> orderTables = Arrays.asList(this.createOrderTable(null, null), this.createOrderTable(null, null));
         TableGroup tableGroup = this.createTableGroup(orderTables);
-        when(orderTableDao.findAllByIdIn(any())).thenReturn(orderTables);
-        when(tableGroupDao.save(any())).thenReturn(tableGroup);
+        when(orderTableRepository.findAllByIdIn(any())).thenReturn(orderTables);
+        when(tableGroupRepository.save(any())).thenReturn(tableGroup);
 
 
         TableGroup actual = tableGroupBo.create(tableGroup);
@@ -73,7 +73,7 @@ class TableGroupBoTest {
 
         List<OrderTable> orderTables = Arrays.asList(this.createOrderTable(null, null), this.createOrderTable(1L, 1L));
         TableGroup tableGroup = this.createTableGroup(orderTables);
-        when(orderTableDao.findAllByIdIn(any())).thenReturn(orderTables);
+        when(orderTableRepository.findAllByIdIn(any())).thenReturn(orderTables);
 
         assertThrows(IllegalArgumentException.class, () -> tableGroupBo.create(tableGroup));
     }
@@ -83,8 +83,8 @@ class TableGroupBoTest {
     void delete(){
 
         List<OrderTable> orderTables = Arrays.asList(this.createOrderTable(1L, 1L), this.createOrderTable(2L, 1L));
-        when(orderTableDao.findAllByTableGroupId(anyLong())).thenReturn(orderTables);
-        when(orderDao.existsByOrderTableIdAndOrderStatusIn(anyLong(), any())).thenReturn(false);
+        when(orderTableRepository.findAllByTableGroupId(anyLong())).thenReturn(orderTables);
+        when(orderRepository.existsByOrderTableIdAndOrderStatusIn(anyLong(), any())).thenReturn(false);
 
 
         tableGroupBo.delete(1L);
@@ -98,8 +98,8 @@ class TableGroupBoTest {
     void delete_status_check(){
 
         List<OrderTable> orderTables = Arrays.asList(this.createOrderTable(1L, 1L), this.createOrderTable(2L, 1L));
-        when(orderTableDao.findAllByTableGroupId(anyLong())).thenReturn(orderTables);
-        when(orderDao.existsByOrderTableIdAndOrderStatusIn(anyLong(), any())).thenReturn(true);
+        when(orderTableRepository.findAllByTableGroupId(anyLong())).thenReturn(orderTables);
+        when(orderRepository.existsByOrderTableIdAndOrderStatusIn(anyLong(), any())).thenReturn(true);
 
         assertThrows(IllegalArgumentException.class, () -> tableGroupBo.delete(1L));
     }

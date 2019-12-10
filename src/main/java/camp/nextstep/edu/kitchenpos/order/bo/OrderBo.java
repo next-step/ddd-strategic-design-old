@@ -20,21 +20,21 @@ import org.springframework.util.CollectionUtils;
 
 @Component
 public class OrderBo {
-    private final OrderRepository orderDao;
-    private final OrderLineItemRepository orderLineItemDao;
-    private final OrderTableRepository orderTableDao;
-    private final TableGroupRepository tableGroupDao;
+    private final OrderRepository orderRepository;
+    private final OrderLineItemRepository orderLineItemRepository;
+    private final OrderTableRepository orderTableRepository;
+    private final TableGroupRepository tableGroupRepository;
 
     public OrderBo(
-            final OrderRepository orderDao,
-            final OrderLineItemRepository orderLineItemDao,
-            final OrderTableRepository orderTableDao,
-            final TableGroupRepository tableGroupDao
+            final OrderRepository orderRepository,
+            final OrderLineItemRepository orderLineItemRepository,
+            final OrderTableRepository orderTableRepository,
+            final TableGroupRepository tableGroupRepository
     ) {
-        this.orderDao = orderDao;
-        this.orderLineItemDao = orderLineItemDao;
-        this.orderTableDao = orderTableDao;
-        this.tableGroupDao = tableGroupDao;
+        this.orderRepository = orderRepository;
+        this.orderLineItemRepository = orderLineItemRepository;
+        this.orderTableRepository = orderTableRepository;
+        this.tableGroupRepository = tableGroupRepository;
     }
 
     @Transactional
@@ -47,7 +47,7 @@ public class OrderBo {
 
         order.setId(null);
 
-        OrderTable orderTable = orderTableDao.findById(order.getOrderTableId())
+        OrderTable orderTable = orderTableRepository.findById(order.getOrderTableId())
                 .orElseThrow(IllegalArgumentException::new);
 
         if (orderTable.isEmpty()) {
@@ -55,10 +55,10 @@ public class OrderBo {
         }
 
         if (Objects.nonNull(orderTable.getTableGroupId())) {
-            final TableGroup tableGroup = tableGroupDao.findById(orderTable.getTableGroupId())
+            final TableGroup tableGroup = tableGroupRepository.findById(orderTable.getTableGroupId())
                     .orElseThrow(IllegalArgumentException::new);
 
-            final List<OrderTable> orderTables = orderTableDao.findAllByTableGroupId(tableGroup.getId());
+            final List<OrderTable> orderTables = orderTableRepository.findAllByTableGroupId(tableGroup.getId());
             orderTable = orderTables.stream()
                     .sorted(Comparator.comparingLong(OrderTable::getId))
                     .findFirst()
@@ -70,13 +70,13 @@ public class OrderBo {
         order.setOrderStatus(OrderStatus.COOKING.name());
         order.setOrderedTime(LocalDateTime.now());
 
-        final Order savedOrder = orderDao.save(order);
+        final Order savedOrder = orderRepository.save(order);
 
         final Long orderId = savedOrder.getId();
         final List<OrderLineItem> savedOrderLineItems = new ArrayList<>();
         for (final OrderLineItem orderLineItem : orderLineItems) {
             orderLineItem.setOrderId(orderId);
-            savedOrderLineItems.add(orderLineItemDao.save(orderLineItem));
+            savedOrderLineItems.add(orderLineItemRepository.save(orderLineItem));
         }
         savedOrder.setOrderLineItems(savedOrderLineItems);
 
@@ -84,10 +84,10 @@ public class OrderBo {
     }
 
     public List<Order> list() {
-        final List<Order> orders = orderDao.findAll();
+        final List<Order> orders = orderRepository.findAll();
 
         for (final Order order : orders) {
-            order.setOrderLineItems(orderLineItemDao.findAllByOrderId(order.getId()));
+            order.setOrderLineItems(orderLineItemRepository.findAllByOrderId(order.getId()));
         }
 
         return orders;
@@ -95,7 +95,7 @@ public class OrderBo {
 
     @Transactional
     public Order changeOrderStatus(final long orderId, final Order order) {
-        final Order savedOrder = orderDao.findById(orderId)
+        final Order savedOrder = orderRepository.findById(orderId)
                 .orElseThrow(IllegalArgumentException::new);
 
         if (OrderStatus.COMPLETION.name().equals(savedOrder.getOrderStatus())) {
@@ -105,9 +105,9 @@ public class OrderBo {
         final OrderStatus orderStatus = OrderStatus.valueOf(order.getOrderStatus());
         savedOrder.setOrderStatus(orderStatus.name());
 
-        orderDao.save(savedOrder);
+        orderRepository.save(savedOrder);
 
-        savedOrder.setOrderLineItems(orderLineItemDao.findAllByOrderId(orderId));
+        savedOrder.setOrderLineItems(orderLineItemRepository.findAllByOrderId(orderId));
 
         return savedOrder;
     }

@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProductBo {
-    private final ProductRepository productDao;
+    private final ProductRepository productRepository;
 
     public ProductBo(final ProductRepository productDao) {
-        this.productDao = productDao;
+        this.productRepository = productDao;
     }
 
     @Transactional
@@ -24,10 +24,10 @@ public class ProductBo {
             throw new IllegalArgumentException();
         }
 
-        return productDao.save(product);
+        return productRepository.save(product);
     }
 
     public List<Product> list() {
-        return productDao.findAll();
+        return productRepository.findAll();
     }
 }
