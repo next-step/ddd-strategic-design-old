@@ -1,11 +1,11 @@
 package camp.nextstep.edu.kitchenpos.tablegroup.bo;
 
-import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderRepository;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableRepository;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
-import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -18,14 +18,14 @@ import org.springframework.util.CollectionUtils;
 
 @Component
 public class TableGroupBo {
-    private final OrderDao orderDao;
-    private final OrderTableDao orderTableDao;
-    private final TableGroupDao tableGroupDao;
+    private final OrderRepository orderRepository;
+    private final OrderTableRepository orderTableRepository;
+    private final TableGroupRepository tableGroupRepository;
 
-    public TableGroupBo(final OrderDao orderDao, final OrderTableDao orderTableDao, final TableGroupDao tableGroupDao) {
-        this.orderDao = orderDao;
-        this.orderTableDao = orderTableDao;
-        this.tableGroupDao = tableGroupDao;
+    public TableGroupBo(final OrderRepository orderRepository, final OrderTableRepository orderTableRepository, final TableGroupRepository tableGroupRepository) {
+        this.orderRepository = orderRepository;
+        this.orderTableRepository = orderTableRepository;
+        this.tableGroupRepository = tableGroupRepository;
     }
 
     @Transactional
@@ -41,7 +41,7 @@ public class TableGroupBo {
                 .map(OrderTable::getId)
                 .collect(Collectors.toList());
 
-        final List<OrderTable> savedOrderTables = orderTableDao.findAllByIdIn(orderTableIds);
+        final List<OrderTable> savedOrderTables = orderTableRepository.findAllByIdIn(orderTableIds);
         for (final OrderTable savedOrderTable : savedOrderTables) {
             if (savedOrderTable.isEmpty() || Objects.nonNull(savedOrderTable.getTableGroupId())) {
                 throw new IllegalArgumentException();
@@ -50,12 +50,12 @@ public class TableGroupBo {
 
         tableGroup.setCreatedDate(LocalDateTime.now());
 
-        final TableGroup savedTableGroup = tableGroupDao.save(tableGroup);
+        final TableGroup savedTableGroup = tableGroupRepository.save(tableGroup);
 
         final Long tableGroupId = savedTableGroup.getId();
         for (final OrderTable savedOrderTable : savedOrderTables) {
             savedOrderTable.setTableGroupId(tableGroupId);
-            orderTableDao.save(savedOrderTable);
+            orderTableRepository.save(savedOrderTable);
         }
         savedTableGroup.setOrderTables(savedOrderTables);
 
@@ -64,20 +64,20 @@ public class TableGroupBo {
 
     @Transactional
     public void delete(final Long tableGroupId) {
-        final List<OrderTable> savedOrderTables = orderTableDao.findAllByTableGroupId(tableGroupId);
+        final List<OrderTable> savedOrderTables = orderTableRepository.findAllByTableGroupId(tableGroupId);
         final OrderTable orderTable = savedOrderTables.stream()
                 .sorted(Comparator.comparingLong(OrderTable::getId))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
 
-        if (orderDao.existsByOrderTableIdAndOrderStatusIn(
+        if (orderRepository.existsByOrderTableIdAndOrderStatusIn(
                 orderTable.getId(), Arrays.asList(OrderStatus.COOKING.name(), OrderStatus.MEAL.name()))) {
             throw new IllegalArgumentException();
         }
 
         for (final OrderTable savedOrderTable : savedOrderTables) {
             savedOrderTable.setTableGroupId(null);
-            orderTableDao.save(savedOrderTable);
+            orderTableRepository.save(savedOrderTable);
         }
     }
 }

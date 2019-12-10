@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import camp.nextstep.edu.kitchenpos.menugroup.bo.MenuGroupBo;
 import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroup;
-import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupRepository;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MenuGroupBoTest {
 
     @Mock
-    private MenuGroupDao menuGroupDao;
+    private MenuGroupRepository menuGroupRepository;
 
     @InjectMocks
     private MenuGroupBo menuGroupBo;
@@ -30,7 +30,7 @@ class MenuGroupBoTest {
     void add(){
 
         MenuGroup menuGroup = this.createMenuGroup();
-        when(menuGroupDao.save(any())).thenReturn(menuGroup);
+        when(menuGroupRepository.save(any())).thenReturn(menuGroup);
 
 
         MenuGroup actual = menuGroupBo.create(menuGroup);
@@ -45,7 +45,7 @@ class MenuGroupBoTest {
     void menugroup_list(){
 
         MenuGroup menuGroup = this.createMenuGroup();
-        when(menuGroupDao.findAll()).thenReturn(Arrays.asList(menuGroup));
+        when(menuGroupRepository.findAll()).thenReturn(Arrays.asList(menuGroup));
 
 
         List<MenuGroup> menuGroups = menuGroupBo.list();

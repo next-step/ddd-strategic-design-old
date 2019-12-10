@@ -6,11 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderRepository;
 import camp.nextstep.edu.kitchenpos.ordertable.bo.TableBo;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
-import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableRepository;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +23,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class TableBoTest {
 
     @Mock
-    private OrderDao orderDao;
+    private OrderRepository orderRepository;
 
     @Mock
-    private OrderTableDao orderTableDao;
+    private OrderTableRepository orderTableRepository;
 
     @Mock
-    private TableGroupDao tableGroupDao;
+    private TableGroupRepository tableGroupRepository;
 
     @InjectMocks
     private TableBo tableBo;
@@ -39,7 +39,7 @@ class TableBoTest {
     void add(){
 
         OrderTable orderTable = this.createOrderTable(2, false);
-        when(orderTableDao.save(any())).thenReturn(orderTable);
+        when(orderTableRepository.save(any())).thenReturn(orderTable);
 
 
         OrderTable actual = tableBo.create(orderTable);
@@ -54,9 +54,9 @@ class TableBoTest {
     void ordertable_status_change(){
 
         OrderTable emptyTable = this.createEmptyOrderTable();
-        when(orderDao.existsByOrderTableIdAndOrderStatusIn(anyLong(), any())).thenReturn(false);
-        when(orderTableDao.findById(any())).thenReturn(Optional.of(emptyTable));
-        when(orderTableDao.save(any())).thenReturn(emptyTable);
+        when(orderRepository.existsByOrderTableIdAndOrderStatusIn(anyLong(), any())).thenReturn(false);
+        when(orderTableRepository.findById(any())).thenReturn(Optional.of(emptyTable));
+        when(orderTableRepository.save(any())).thenReturn(emptyTable);
 
 
         OrderTable actual = tableBo.changeEmpty(1L, emptyTable);
@@ -72,7 +72,7 @@ class TableBoTest {
     void ordertable_in_table_group(){
 
         OrderTable orderTable = this.createOrderTable(2, false);
-        when(orderTableDao.findById(any())).thenReturn(Optional.of(orderTable));
+        when(orderTableRepository.findById(any())).thenReturn(Optional.of(orderTable));
 
         assertThrows(IllegalArgumentException.class, () -> tableBo.changeEmpty(1L, orderTable));
     }
@@ -82,8 +82,8 @@ class TableBoTest {
     void ordertable_completion_status(){
 
         OrderTable emptyTable = this.createEmptyOrderTable();
-        when(orderDao.existsByOrderTableIdAndOrderStatusIn(anyLong(), any())).thenReturn(true);
-        when(orderTableDao.findById(any())).thenReturn(Optional.of(emptyTable));
+        when(orderRepository.existsByOrderTableIdAndOrderStatusIn(anyLong(), any())).thenReturn(true);
+        when(orderTableRepository.findById(any())).thenReturn(Optional.of(emptyTable));
 
         assertThrows(IllegalArgumentException.class, () -> tableBo.changeEmpty(1L, emptyTable));
     }
@@ -102,7 +102,7 @@ class TableBoTest {
     void ordertable_change_number_isEmpty(){
 
         OrderTable orderTable = this.createOrderTable(0, true);
-        when(orderTableDao.findById(any())).thenReturn(Optional.of(orderTable));
+        when(orderTableRepository.findById(any())).thenReturn(Optional.of(orderTable));
 
         assertThrows(IllegalArgumentException.class, () -> tableBo.changeNumberOfGuests(1L, orderTable));
     }

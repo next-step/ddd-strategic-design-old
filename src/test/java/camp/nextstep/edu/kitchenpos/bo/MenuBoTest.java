@@ -8,12 +8,12 @@ import static org.mockito.Mockito.when;
 
 import camp.nextstep.edu.kitchenpos.menu.bo.MenuBo;
 import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
-import camp.nextstep.edu.kitchenpos.menu.domain.MenuDao;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuRepository;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
-import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductDao;
-import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductRepository;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupRepository;
 import camp.nextstep.edu.kitchenpos.product.domain.Product;
-import camp.nextstep.edu.kitchenpos.product.domain.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.domain.ProductRepository;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -30,16 +30,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MenuBoTest {
 
     @Mock
-    private MenuDao menuDao;
+    private MenuRepository menuRepository;
 
     @Mock
-    private MenuGroupDao menuGroupDao;
+    private MenuGroupRepository menuGroupRepository;
 
     @Mock
-    private MenuProductDao menuProductDao;
+    private MenuProductRepository menuProductRepository;
 
     @Mock
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @InjectMocks
     private MenuBo menuBo;
@@ -51,9 +51,9 @@ class MenuBoTest {
     void add(){
 
         Menu menu = this.createMenu();
-        when(menuGroupDao.existsById(anyLong())).thenReturn(true);
-        when(menuDao.save(any())).thenReturn(menu);
-        when(productDao.findById(anyLong())).thenReturn(this.createProduct(DEFAULT_MENU_PRICE));
+        when(menuGroupRepository.existsById(anyLong())).thenReturn(true);
+        when(menuRepository.save(any())).thenReturn(menu);
+        when(productRepository.findById(anyLong())).thenReturn(this.createProduct(DEFAULT_MENU_PRICE));
 
 
         Menu result = menuBo.create(menu);
@@ -77,7 +77,7 @@ class MenuBoTest {
     void menu_group(){
 
         Menu menu = this.createMenu();
-        when(menuGroupDao.existsById(anyLong())).thenReturn(false);
+        when(menuGroupRepository.existsById(anyLong())).thenReturn(false);
 
         assertThrows(IllegalArgumentException.class, () -> menuBo.create(menu));
 
@@ -90,8 +90,8 @@ class MenuBoTest {
         long priceOfProduct =  DEFAULT_MENU_PRICE - 2000L;
 
         Menu menu = this.createMenu();
-        when(menuGroupDao.existsById(anyLong())).thenReturn(true);
-        when(productDao.findById(anyLong())).thenReturn(this.createProduct(priceOfProduct));
+        when(menuGroupRepository.existsById(anyLong())).thenReturn(true);
+        when(productRepository.findById(anyLong())).thenReturn(this.createProduct(priceOfProduct));
 
 
         assertThrows(IllegalArgumentException.class, () -> menuBo.create(menu));
@@ -102,8 +102,8 @@ class MenuBoTest {
     void menu_list(){
 
         List<MenuProduct> menuProducts = Arrays.asList(this.createMenuProduct(3));
-        when(menuProductDao.findAllByMenuId(anyLong())).thenReturn(menuProducts);
-        when(menuDao.findAll()).thenReturn(Arrays.asList(this.createMenu()));
+        when(menuProductRepository.findAllByMenuId(anyLong())).thenReturn(menuProducts);
+        when(menuRepository.findAll()).thenReturn(Arrays.asList(this.createMenu()));
 
 
         List<Menu> menus = menuBo.list();

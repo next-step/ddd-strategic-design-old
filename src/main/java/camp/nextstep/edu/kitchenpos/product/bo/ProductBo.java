@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.product.bo;
 
 import camp.nextstep.edu.kitchenpos.product.domain.Product;
-import camp.nextstep.edu.kitchenpos.product.domain.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.domain.ProductRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProductBo {
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductBo(final ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductBo(final ProductRepository productDao) {
+        this.productRepository = productDao;
     }
 
     @Transactional
@@ -24,10 +24,10 @@ public class ProductBo {
             throw new IllegalArgumentException();
         }
 
-        return productDao.save(product);
+        return productRepository.save(product);
     }
 
     public List<Product> list() {
-        return productDao.findAll();
+        return productRepository.findAll();
     }
 }

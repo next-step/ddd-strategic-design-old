@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.ordertable.infra;
 
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderTableRDB implements OrderTableDao {
+public class OrderTableRDB implements OrderTableRepository {
     private static final String TABLE_NAME = "order_table";
     private static final String KEY_COLUMN_NAME = "id";
 

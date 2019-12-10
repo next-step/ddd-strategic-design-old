@@ -3,7 +3,7 @@ package camp.nextstep.edu.kitchenpos.ordertable.domain;
 import java.util.List;
 import java.util.Optional;
 
-public interface OrderTableDao {
+public interface OrderTableRepository {
 
     OrderTable save(final OrderTable entity);
 

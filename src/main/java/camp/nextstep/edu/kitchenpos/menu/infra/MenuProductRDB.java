@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.menu.infra;
 
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
-import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductDao;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MenuProductRDB implements MenuProductDao {
+public class MenuProductRDB implements MenuProductRepository {
     private static final String TABLE_NAME = "menu_product";
     private static final String KEY_COLUMN_NAME = "seq";
 
