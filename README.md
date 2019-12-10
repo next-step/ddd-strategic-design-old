@@ -113,49 +113,42 @@
 ## 모델링
 
 - `메뉴 (Menu)`
-    - `메뉴 번호(Menu ID)`, `메뉴 그룹 번호(Menu Group ID)`, `메뉴 상품(Menu Product)`, 메뉴 명, 금액으로 구성된다.
+    - `메뉴 번호(Menu ID)`, `메뉴 그룹 번호(Menu Group ID)`, `메뉴 상품(Menu Product)`, 메뉴 명(Menu Name), 금액(Price)으로 구성된다.
     - `메뉴 번호(Menu ID)`라는 __주 식별자__ 를 가진다.
     - 하나의 `메뉴(Menu)`는 여러 `메뉴 상품(Menu Product)`을 가질 수 있다.
     - `메뉴(Menu)`를 생성한다.
-        - 데이터베이스와 연동 되어야 한다.
         - `메뉴(Menu)`는 `메뉴 그룹(Menu Group)`에 포함되어 있어야 한다.
         - `메뉴(Menu)`의 금액은 0원 이상이며 각 `상품(Product)`의 가격에 구매 개수를 곱한 값이다.
         - `매뉴(Menu)`가 생성되면 `메뉴 번호(Menu ID)`가 생성된다.
         - `메뉴 번호(Menu ID)`를 가진 `메뉴 상품(Menu Product)`들이 생성된다.
     - `메뉴(Menu)`를 조회한다.
-        - 데이터베이스와 연동 되어야 한다.
         - 해당 `메뉴(Menu)`에 포함된 `메뉴 상품(Menu Product)`들도 같이 조회한다.
 
 - `메뉴 그룹 (Menu Group)`
-    - `메뉴 그룹 번호(Menu Group ID)`와 메뉴 그룹 명으로 구성된다.
+    - `메뉴 그룹 번호(Menu Group ID)`와 메뉴 그룹 명(Menu Group Name)으로 구성된다.
     - `메뉴 그룹 번호(Menu Group ID)`라는 __주 식별자__ 를 가진다.
     - `메뉴 그룹(Menu Group)`을 생성한다.
-        - 데이터베이스와 연동 되어야 한다.
     - `메뉴 그룹(Menu Group)`을 조회한다.
-        - 데이터베이스와 연동 되어야 한다.
 
 - `메뉴 상품 (Menu Product)`
-    - 메뉴 상품 순서, `메뉴 번호(Menu ID)`, `상품 번호(Product ID)`, 상품 수량으로 구성된다.
+    - 메뉴 상품 순서(SEQ), `메뉴 번호(Menu ID)`, `상품 번호(Product ID)`, 상품 수량(Quantity)으로 구성된다.
     - 하나의 `메뉴 상품(Menu Product)`은 여러 `메뉴(Menu)`에 포함 될 수 있다.
 
 - `상품 (Product)`
-    - `상품 번호(Product ID)`, 상품 명, 상품 금액으로 구성된다.
+    - `상품 번호(Product ID)`, 상품 명(Product Name), 상품 금액(Price)으로 구성된다.
     - `상품 번호(Product ID)`라는 __주 식별자__ 를 가진다.
     - `상품(Product)`을 생성한다.
-        - 데이터베이스와 연동 되어야 한다.
         - `상품(Product)`의 금액은 0원 이상이다.
     - `상품(Product)`을 조회한다.
-        - 데이터베이스와 연동 되어야 한다.
 
 <br>
 <br>
 
 - `주문 (Order)`
-    - `주문 번호(Order ID)`, `주문 테이블 번호(Order Table ID)`, `주문 상태(Order Status)`,  `주문 항목(Order Line Item)`, 주문 시간으로 구성된다.
+    - `주문 번호(Order ID)`, `주문 테이블 번호(Order Table ID)`, `주문 상태(Order Status)`,  `주문 항목(Order Line Item)`, 주문 시간(Order Time)으로 구성된다.
     - `주문 번호(Order ID)`라는 __주 식별자__ 를 가진다.
     - 하나의 `주문(Order)`은 여러 `주문 항목(Order Line Item)`을 가질 수 있다.
     - `주문(Order)`을 생성한다.
-        - 데이터베이스와 연동 되어야 한다.
         - 최소 한 종류 이상의 `메뉴(Menu)`를 `주문(Order)` 해야 한다.
         - `고객(Guest)`이 `주문 테이블(Order Table)`에 앉아 있어야 한다. 
         - `테이블 그룹(Table Group`)이 존재하는 `주문 테이블(Order Table)`일 경우<br>
@@ -165,46 +158,39 @@
         - `주문(Order)`이 생성되면 `주문 번호(Order Id)`가 생성된다.
         - `주문 번호(Order ID)`를 가진 `주문 항목(Order Line Item)`들이 생성된다.
     - `주문(Order)`을 조회한다.
-        - 데이터베이스와 연동 되어야 한다.
         - 해당 `주문(Order)`에 포함된 `주문 항목(Order Line Item)`들도 같이 조회한다.
     - `주문 상태(Order Status)`를 변경한다.
-        - 데이터베이스와 연동 되어야 한다.
         - 생성된 `주문(Order)`만 변경이 가능하다.
         - `주문 상태(Order Status)`가 완료일 경우 변경할 수 없다.
 
 - `주문 항목 (Order Line Item)`
-    - 주문 항목 순서, `주문 번호(Order ID)`, `메뉴 번호(Menu ID)`, 메뉴 수량으로 구성된다.
+    - 주문 항목 순서(SEQ), `주문 번호(Order ID)`, `메뉴 번호(Menu ID)`, 메뉴 수량(Quantity)으로 구성된다.
     
 - `주문 테이블 (Order Table)`
-    - `주문 테이블 번호(Order Table ID)`, `테이블 그룹 번호(Table Group ID)`, `고객(Guest)` 수, 빈 테이블 여부로 구성된다.
+    - `주문 테이블 번호(Order Table ID)`, `테이블 그룹 번호(Table Group ID)`, 고객 수(Number of Guest), 빈 테이블 여부(Is Empty)로 구성된다.
     - `주문 테이블 번호(Order Table ID)`라는 __주 식별자__ 를 가진다.
     - `주문 테이블(Order Table)`을 생성한다.
-        - 데이터베이스와 연동 되어야 한다.
     - `주문 테이블(Order Table)`을 조회한다.
-        - 데이터베이스와 연동 되어야 한다.
     - 빈 테이블 여부를 변경 한다.
-        - 데이터베이스와 연동 되어야 한다.
         - `테이블 그룹(Table Group)`에 속해 있으면 안된다.
         - `주문 상태(Order Status)`가 요리중, 식사중일 경우 변경할 수 없다.
-    - `고객(Guest)` 수를 변경한다.
-        - 데이터베이스와 연동 되어야 한다.
-        - `고객(Guest)` 수는 음수일 수 없다.
+    - 고객 수를 변경한다.
+        - 고객 수는 음수일 수 없다.
         - `고객(Guest)`이 `주문 테이블(Order Table)`에 앉아 있어야 한다. 
 
 -  `테이블 그룹 (Table Group)`
-    - `테이블 그룹 번호(Table Group ID)`, `주문 테이블(Order Table)`들, 생성 시간으로 구성된다.
+    - `테이블 그룹 번호(Table Group ID)`, `주문 테이블(Order Table)`들, 생성 시간(Create Time)으로 구성된다.
     - `테이블 그룹 번호(Table Group ID)`라는 __주 식별자__ 를 가진다.
     - 하나의 `테이블 그룹(Table Group)`은 여러 `주문 테이블(Order Table)`을 가질 수 있다.
     - `테이블 그룹(Table Group)`을 생성한다.
-        - 데이터베이스와 연동 되어야 한다.
         - `테이블 그룹(Table Group)`이 없는 `주문 테이블(Order Table)`이 2개 이상 존재 해야 한다.
         - `테이블 그룹(Table Group)` 생성시 현재 시간으로 주문 시간이 설정된다.
         - `테이블 그룹(Table Group)`이 생성되면 `테이블 그룹 번호(Table Group Id)`가 생성된다.
         - `테이블 그룹 번호(Table Group Id)`를 가진 `주문 테이블(Order Table)`로 변경된다.
     - `테이블 그룹(Table Group)`을 삭제한다.
-        - 데이터베이스와 연동 되어야 한다.
         - `테이블 그룹(Table Group)`에 속한 `주문 테이블(Order Table)`이 존재해야 한다.
         - 가장 먼저 생성된 `주문 테이블(Order Table)`의 `주문 상태(Order Status)`가 요리중, 식사중일 경우 삭제할 수 없다.
+        - `테이블 그룹(Table Group)`이 삭제되는 경우 `주문 테이블(Order Table)`의 `테이블 그룹 번호(Table Group ID)`정보를 삭제한다.
        
 - `주문 상태 (Order Status)`
     - 요리중(Cooking), 식사중(Meal), 식사 완료(Complete) 총 3가지를 가지고 있다.
