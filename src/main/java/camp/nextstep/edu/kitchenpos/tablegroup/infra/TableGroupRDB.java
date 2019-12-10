@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.tablegroup.infra;
 
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
-import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TableGroupRDB implements TableGroupDao {
+public class TableGroupRDB implements TableGroupRepository {
     private static final String TABLE_NAME = "table_group";
     private static final String KEY_COLUMN_NAME = "id";
 

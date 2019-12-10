@@ -3,10 +3,10 @@ package camp.nextstep.edu.kitchenpos.menu.bo;
 import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuDao;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
-import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductDao;
-import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductRepository;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupRepository;
 import camp.nextstep.edu.kitchenpos.product.domain.Product;
-import camp.nextstep.edu.kitchenpos.product.domain.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.domain.ProductRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class MenuBo {
     private final MenuDao menuDao;
-    private final MenuGroupDao menuGroupDao;
-    private final MenuProductDao menuProductDao;
-    private final ProductDao productDao;
+    private final MenuGroupRepository menuGroupDao;
+    private final MenuProductRepository menuProductDao;
+    private final ProductRepository productDao;
 
     public MenuBo(
             final MenuDao menuDao,
-            final MenuGroupDao menuGroupDao,
-            final MenuProductDao menuProductDao,
-            final ProductDao productDao
+            final MenuGroupRepository menuGroupDao,
+            final MenuProductRepository menuProductDao,
+            final ProductRepository productDao
     ) {
         this.menuDao = menuDao;
         this.menuGroupDao = menuGroupDao;

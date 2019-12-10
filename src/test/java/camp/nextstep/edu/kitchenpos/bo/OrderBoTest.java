@@ -8,14 +8,14 @@ import static org.mockito.Mockito.when;
 
 import camp.nextstep.edu.kitchenpos.order.bo.OrderBo;
 import camp.nextstep.edu.kitchenpos.order.domain.Order;
-import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderRepository;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItem;
-import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItemDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItemRepository;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableRepository;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
-import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,16 +30,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class OrderBoTest {
 
     @Mock
-    private OrderDao orderDao;
+    private OrderRepository orderDao;
 
     @Mock
-    private OrderLineItemDao orderLineItemDao;
+    private OrderLineItemRepository orderLineItemDao;
 
     @Mock
-    private OrderTableDao orderTableDao;
+    private OrderTableRepository orderTableDao;
 
     @Mock
-    private TableGroupDao tableGroupDao;
+    private TableGroupRepository tableGroupDao;
 
     @InjectMocks
     private OrderBo orderBo;

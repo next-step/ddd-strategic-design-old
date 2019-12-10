@@ -10,10 +10,10 @@ import camp.nextstep.edu.kitchenpos.menu.bo.MenuBo;
 import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuDao;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
-import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductDao;
-import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuProductRepository;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroupRepository;
 import camp.nextstep.edu.kitchenpos.product.domain.Product;
-import camp.nextstep.edu.kitchenpos.product.domain.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.domain.ProductRepository;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -33,13 +33,13 @@ class MenuBoTest {
     private MenuDao menuDao;
 
     @Mock
-    private MenuGroupDao menuGroupDao;
+    private MenuGroupRepository menuGroupDao;
 
     @Mock
-    private MenuProductDao menuProductDao;
+    private MenuProductRepository menuProductDao;
 
     @Mock
-    private ProductDao productDao;
+    private ProductRepository productDao;
 
     @InjectMocks
     private MenuBo menuBo;

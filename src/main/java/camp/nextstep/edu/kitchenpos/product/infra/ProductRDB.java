@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.product.infra;
 
 import camp.nextstep.edu.kitchenpos.product.domain.Product;
-import camp.nextstep.edu.kitchenpos.product.domain.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.domain.ProductRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProductRDB implements ProductDao {
+public class ProductRDB implements ProductRepository {
     private static final String TABLE_NAME = "product";
     private static final String KEY_COLUMN_NAME = "id";
 

@@ -1,14 +1,14 @@
 package camp.nextstep.edu.kitchenpos.order.bo;
 
 import camp.nextstep.edu.kitchenpos.order.domain.Order;
-import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderRepository;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItem;
-import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItemDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItemRepository;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableRepository;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
-import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,16 +20,16 @@ import org.springframework.util.CollectionUtils;
 
 @Component
 public class OrderBo {
-    private final OrderDao orderDao;
-    private final OrderLineItemDao orderLineItemDao;
-    private final OrderTableDao orderTableDao;
-    private final TableGroupDao tableGroupDao;
+    private final OrderRepository orderDao;
+    private final OrderLineItemRepository orderLineItemDao;
+    private final OrderTableRepository orderTableDao;
+    private final TableGroupRepository tableGroupDao;
 
     public OrderBo(
-            final OrderDao orderDao,
-            final OrderLineItemDao orderLineItemDao,
-            final OrderTableDao orderTableDao,
-            final TableGroupDao tableGroupDao
+            final OrderRepository orderDao,
+            final OrderLineItemRepository orderLineItemDao,
+            final OrderTableRepository orderTableDao,
+            final TableGroupRepository tableGroupDao
     ) {
         this.orderDao = orderDao;
         this.orderLineItemDao = orderLineItemDao;

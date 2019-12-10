@@ -3,7 +3,7 @@ package camp.nextstep.edu.kitchenpos.order.domain;
 import java.util.List;
 import java.util.Optional;
 
-public interface OrderLineItemDao {
+public interface OrderLineItemRepository {
 
     OrderLineItem save(final OrderLineItem entity);
 

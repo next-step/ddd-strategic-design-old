@@ -3,7 +3,7 @@ package camp.nextstep.edu.kitchenpos.menu.domain;
 import java.util.List;
 import java.util.Optional;
 
-public interface MenuProductDao {
+public interface MenuProductRepository {
 
     MenuProduct save(final MenuProduct entity);
 

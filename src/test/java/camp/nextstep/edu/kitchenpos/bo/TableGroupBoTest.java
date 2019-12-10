@@ -6,12 +6,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderRepository;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableRepository;
 import camp.nextstep.edu.kitchenpos.tablegroup.bo.TableGroupBo;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
-import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupRepository;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -25,13 +25,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class TableGroupBoTest {
 
     @Mock
-    private OrderDao orderDao;
+    private OrderRepository orderDao;
 
     @Mock
-    private OrderTableDao orderTableDao;
+    private OrderTableRepository orderTableDao;
 
     @Mock
-    private TableGroupDao tableGroupDao;
+    private TableGroupRepository tableGroupDao;
 
     @InjectMocks
     private TableGroupBo tableGroupBo;

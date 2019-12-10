@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import camp.nextstep.edu.kitchenpos.product.bo.ProductBo;
 import camp.nextstep.edu.kitchenpos.product.domain.Product;
-import camp.nextstep.edu.kitchenpos.product.domain.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.domain.ProductRepository;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ProductBoTest {
 
     @Mock
-    private ProductDao productDao;
+    private ProductRepository productDao;
 
     @InjectMocks
     private ProductBo productBo;

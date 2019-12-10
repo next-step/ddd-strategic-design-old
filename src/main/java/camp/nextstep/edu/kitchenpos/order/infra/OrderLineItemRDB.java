@@ -1,7 +1,7 @@
 package camp.nextstep.edu.kitchenpos.order.infra;
 
 import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItem;
-import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItemDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItemRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderLineItemRDB implements OrderLineItemDao {
+public class OrderLineItemRDB implements OrderLineItemRepository {
     private static final String TABLE_NAME = "order_line_item";
     private static final String KEY_COLUMN_NAME = "seq";
 

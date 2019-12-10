@@ -1,10 +1,10 @@
 package camp.nextstep.edu.kitchenpos.ordertable.bo;
 
-import camp.nextstep.edu.kitchenpos.order.domain.OrderDao;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderRepository;
 import camp.nextstep.edu.kitchenpos.order.domain.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableDao;
-import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTableRepository;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroupRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class TableBo {
-    private final OrderDao orderDao;
-    private final OrderTableDao orderTableDao;
-    private final TableGroupDao tableGroupDao;
+    private final OrderRepository orderDao;
+    private final OrderTableRepository orderTableDao;
+    private final TableGroupRepository tableGroupDao;
 
-    public TableBo(final OrderDao orderDao, final OrderTableDao orderTableDao, final TableGroupDao tableGroupDao) {
+    public TableBo(final OrderRepository orderDao, final OrderTableRepository orderTableDao, final TableGroupRepository tableGroupDao) {
         this.orderDao = orderDao;
         this.orderTableDao = orderTableDao;
         this.tableGroupDao = tableGroupDao;
