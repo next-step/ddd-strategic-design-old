@@ -1,10 +1,10 @@
-package camp.nextstep.edu.kitchenpos.ordertable.bo;
+package camp.nextstep.edu.kitchenpos.ordertable.application;
 
 import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.tablegroup.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
-import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class TableBo {
+public class OrderTableService {
     private final OrderDao orderDao;
     private final OrderTableDao orderTableDao;
     private final TableGroupDao tableGroupDao;
 
-    public TableBo(final OrderDao orderDao, final OrderTableDao orderTableDao, final TableGroupDao tableGroupDao) {
+    public OrderTableService(final OrderDao orderDao, final OrderTableDao orderTableDao, final TableGroupDao tableGroupDao) {
         this.orderDao = orderDao;
         this.orderTableDao = orderTableDao;
         this.tableGroupDao = tableGroupDao;

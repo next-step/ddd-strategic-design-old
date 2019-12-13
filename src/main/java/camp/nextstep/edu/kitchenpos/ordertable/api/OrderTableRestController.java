@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.ordertable.controller;
+package camp.nextstep.edu.kitchenpos.ordertable.api;
 
-import camp.nextstep.edu.kitchenpos.ordertable.bo.TableBo;
-import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.ordertable.application.OrderTableService;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,16 +9,16 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-public class TableRestController {
-    private final TableBo tableBo;
+public class OrderTableRestController {
+    private final OrderTableService orderTableService;
 
-    public TableRestController(final TableBo tableBo) {
-        this.tableBo = tableBo;
+    public OrderTableRestController(final OrderTableService orderTableService) {
+        this.orderTableService = orderTableService;
     }
 
     @PutMapping("/api/tables")
     public ResponseEntity<OrderTable> create(@RequestBody final OrderTable orderTable) {
-        final OrderTable created = tableBo.create(orderTable);
+        final OrderTable created = orderTableService.create(orderTable);
         final URI uri = URI.create("/api/tables/" + created.getId());
         return ResponseEntity.created(uri)
                 .body(created)
@@ -28,7 +28,7 @@ public class TableRestController {
     @GetMapping("/api/tables")
     public ResponseEntity<List<OrderTable>> list() {
         return ResponseEntity.ok()
-                .body(tableBo.list())
+                .body(orderTableService.list())
                 ;
     }
 
@@ -38,7 +38,7 @@ public class TableRestController {
             @RequestBody final OrderTable orderTable
     ) {
         return ResponseEntity.ok()
-                .body(tableBo.changeEmpty(orderTableId, orderTable))
+                .body(orderTableService.changeEmpty(orderTableId, orderTable))
                 ;
     }
 
@@ -48,7 +48,7 @@ public class TableRestController {
             @RequestBody final OrderTable orderTable
     ) {
         return ResponseEntity.ok()
-                .body(tableBo.changeNumberOfGuests(orderTableId, orderTable))
+                .body(orderTableService.changeNumberOfGuests(orderTableId, orderTable))
                 ;
     }
 }

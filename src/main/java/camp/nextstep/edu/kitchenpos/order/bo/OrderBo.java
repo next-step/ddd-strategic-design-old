@@ -7,7 +7,7 @@ import camp.nextstep.edu.kitchenpos.tablegroup.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.order.model.Order;
 import camp.nextstep.edu.kitchenpos.order.model.OrderLineItem;
 import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
-import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

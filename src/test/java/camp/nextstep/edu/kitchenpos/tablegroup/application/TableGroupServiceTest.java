@@ -4,7 +4,7 @@ import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.tablegroup.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
-import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

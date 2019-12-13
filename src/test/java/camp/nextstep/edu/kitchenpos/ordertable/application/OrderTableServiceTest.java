@@ -1,10 +1,9 @@
-package camp.nextstep.edu.kitchenpos.ordertable.bo;
+package camp.nextstep.edu.kitchenpos.ordertable.application;
 
 import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
-import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
-import camp.nextstep.edu.kitchenpos.ordertable.bo.TableBo;
+import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("테이블 Business Object 테스트 클래스")
 @ExtendWith(MockitoExtension.class)
-class TableBoTest {
+class OrderTableServiceTest {
     @Mock
     private OrderDao orderDao;
 
@@ -35,7 +34,7 @@ class TableBoTest {
     private OrderTable orderTable;
 
     @InjectMocks
-    private TableBo tableBo;
+    private OrderTableService orderTableService;
 
     private final Long DEFAULT_ID = 1L;
 
@@ -63,7 +62,7 @@ class TableBoTest {
         given(orderTableDao.save(orderTable)).willReturn(orderTable);
 
         // when
-        OrderTable savedOrderTable = tableBo.create(orderTable);
+        OrderTable savedOrderTable = orderTableService.create(orderTable);
 
         // then
         assertAll(
@@ -82,7 +81,7 @@ class TableBoTest {
         given(orderTableDao.findAll()).willReturn(orderTables);
 
         // when
-        List<OrderTable> allOrderTables = tableBo.list();
+        List<OrderTable> allOrderTables = orderTableService.list();
 
         // then
         assertAll(
@@ -113,7 +112,7 @@ class TableBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableBo.changeEmpty(DEFAULT_ID, orderTable));
+                .isThrownBy(() -> orderTableService.changeEmpty(DEFAULT_ID, orderTable));
     }
 
     @DisplayName("[주문 테이블 상태 변경] 주문 테이블의 테이블 이용 여부를 변경 한다.")
@@ -129,7 +128,7 @@ class TableBoTest {
         given(orderTableDao.save(savedOrderTable)).willReturn(savedOrderTable);
 
         // when
-        OrderTable changedOrderTable = tableBo.changeEmpty(DEFAULT_ID, beforeOrderTable);
+        OrderTable changedOrderTable = orderTableService.changeEmpty(DEFAULT_ID, beforeOrderTable);
 
         // then
         assertAll(
@@ -148,7 +147,7 @@ class TableBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableBo.changeNumberOfGuests(DEFAULT_ID, orderTable));
+                .isThrownBy(() -> orderTableService.changeNumberOfGuests(DEFAULT_ID, orderTable));
     }
 
     @DisplayName("[주문 테이블 인원수 변경] 테이블이 비워져 있으면 예외를 발생 한다")
@@ -161,7 +160,7 @@ class TableBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableBo.changeNumberOfGuests(DEFAULT_ID, orderTable));
+                .isThrownBy(() -> orderTableService.changeNumberOfGuests(DEFAULT_ID, orderTable));
     }
 
     @DisplayName("[주문 테이블 인원수 변경] 주문 테이블 인원수를 1명으로 변경할 수 있다.")
@@ -174,7 +173,7 @@ class TableBoTest {
         when(orderTableDao.save(savedOrderTable)).thenReturn(savedOrderTable);
 
         // when
-        OrderTable changedOrder = tableBo.changeNumberOfGuests(DEFAULT_ID, orderTable);
+        OrderTable changedOrder = orderTableService.changeNumberOfGuests(DEFAULT_ID, orderTable);
 
         // then
         assertAll(

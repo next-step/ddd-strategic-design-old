@@ -1,4 +1,4 @@
-package camp.nextstep.edu.kitchenpos.ordertable.model;
+package camp.nextstep.edu.kitchenpos.ordertable.domain;
 
 public class OrderTable {
     private Long id;
