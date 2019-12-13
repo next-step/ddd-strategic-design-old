@@ -1,6 +1,6 @@
 package camp.nextstep.edu.kitchenpos.product.dao;
 
-import camp.nextstep.edu.kitchenpos.product.model.Product;
+import camp.nextstep.edu.kitchenpos.product.domain.Product;
 
 import java.util.List;
 import java.util.Optional;

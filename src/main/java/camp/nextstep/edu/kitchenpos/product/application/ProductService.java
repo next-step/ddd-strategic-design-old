@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.product.bo;
+package camp.nextstep.edu.kitchenpos.product.application;
 
 import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.product.model.Product;
+import camp.nextstep.edu.kitchenpos.product.domain.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class ProductBo {
+public class ProductService {
     private final ProductDao productDao;
 
-    public ProductBo(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 

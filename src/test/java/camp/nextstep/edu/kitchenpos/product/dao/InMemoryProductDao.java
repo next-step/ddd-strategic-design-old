@@ -1,7 +1,6 @@
 package camp.nextstep.edu.kitchenpos.product.dao;
 
-import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.product.model.Product;
+import camp.nextstep.edu.kitchenpos.product.domain.Product;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;

@@ -6,7 +6,7 @@ import camp.nextstep.edu.kitchenpos.menu.dao.MenuProductDao;
 import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
 import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
 import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
-import camp.nextstep.edu.kitchenpos.product.model.Product;
+import camp.nextstep.edu.kitchenpos.product.domain.Product;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
