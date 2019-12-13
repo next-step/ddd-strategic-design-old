@@ -2,7 +2,7 @@ package camp.nextstep.edu.kitchenpos.ordertable.application;
 
 import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.dao.OrderTableDao;
-import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

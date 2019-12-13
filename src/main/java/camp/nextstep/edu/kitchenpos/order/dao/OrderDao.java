@@ -1,6 +1,6 @@
 package camp.nextstep.edu.kitchenpos.order.dao;
 
-import camp.nextstep.edu.kitchenpos.order.model.Order;
+import camp.nextstep.edu.kitchenpos.order.domain.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

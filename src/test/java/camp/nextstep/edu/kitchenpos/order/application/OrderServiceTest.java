@@ -1,12 +1,12 @@
-package camp.nextstep.edu.kitchenpos.order.bo;
+package camp.nextstep.edu.kitchenpos.order.application;
 
 import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.order.dao.OrderLineItemDao;
 import camp.nextstep.edu.kitchenpos.ordertable.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.tablegroup.dao.TableGroupDao;
-import camp.nextstep.edu.kitchenpos.order.model.Order;
-import camp.nextstep.edu.kitchenpos.order.model.OrderLineItem;
-import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
+import camp.nextstep.edu.kitchenpos.order.domain.Order;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderLineItem;
+import camp.nextstep.edu.kitchenpos.order.domain.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.domain.OrderTable;
 import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 
 @DisplayName("주문 Business Object 테스트 클래스")
 @ExtendWith(MockitoExtension.class)
-class OrderBoTest {
+class OrderServiceTest {
     @Mock
     private Order order;
 
@@ -43,7 +43,7 @@ class OrderBoTest {
     private TableGroupDao tableGroupDao;
 
     @InjectMocks
-    private OrderBo orderBo;
+    private OrderService orderService;
 
     private final Long DEFAULT_ID = 1L;
 
@@ -89,7 +89,7 @@ class OrderBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> orderBo.create(order));
+                .isThrownBy(() -> orderService.create(order));
     }
 
     @DisplayName("[주문 생성] 주문 테이블이 존재하지 않으면 예외를 발생한다.")
@@ -104,7 +104,7 @@ class OrderBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> orderBo.create(order));
+                .isThrownBy(() -> orderService.create(order));
     }
 
     @DisplayName("[주문 생성] 주문 테이블이 특정 테이블 그룹에 속해 있으면 성공을 반환환다.")
@@ -234,7 +234,7 @@ class OrderBoTest {
         given(orderLineItemDao.save(orderLineItem)).willReturn(orderLineItem);
 
         // when
-        Order savedOrder = orderBo.create(mockOrder);
+        Order savedOrder = orderService.create(mockOrder);
 
         // then
         assertThat(savedOrder).isNotNull()
@@ -282,7 +282,7 @@ class OrderBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> orderBo.changeOrderStatus(DEFAULT_ID, order));
+                .isThrownBy(() -> orderService.changeOrderStatus(DEFAULT_ID, order));
     }
 
     @DisplayName("[주문 상태 변경] 주문 상태를 Cooking에서 meal로 변경할 수 있다.")
@@ -295,7 +295,7 @@ class OrderBoTest {
         given(orderLineItemDao.findAllByOrderId(DEFAULT_ID)).willReturn(new ArrayList<>());
 
         // when
-        Order changedOrder = orderBo.changeOrderStatus(DEFAULT_ID, order);
+        Order changedOrder = orderService.changeOrderStatus(DEFAULT_ID, order);
 
         // then
         assertThat(changedOrder.getOrderStatus()).isEqualTo(OrderStatus.MEAL.name());
