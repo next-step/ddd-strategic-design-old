@@ -1,7 +1,6 @@
 package camp.nextstep.edu.kitchenpos.menugroup.dao;
 
-import camp.nextstep.edu.kitchenpos.menugroup.dao.MenuGroupDao;
-import camp.nextstep.edu.kitchenpos.menugroup.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroup;
 
 import java.util.*;
 

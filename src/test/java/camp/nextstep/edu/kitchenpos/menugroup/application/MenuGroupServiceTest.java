@@ -1,9 +1,8 @@
-package camp.nextstep.edu.kitchenpos.menugroup.bo;
+package camp.nextstep.edu.kitchenpos.menugroup.application;
 
 import camp.nextstep.edu.kitchenpos.menugroup.dao.InMemoryMenuGroupDao;
-import camp.nextstep.edu.kitchenpos.menugroup.bo.MenuGroupBo;
 import camp.nextstep.edu.kitchenpos.menugroup.dao.MenuGroupDao;
-import camp.nextstep.edu.kitchenpos.menugroup.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,16 +18,16 @@ import static org.mockito.Mockito.mock;
 
 @DisplayName("메뉴 그룹 Business Object 테스트 클래스")
 @ExtendWith(MockitoExtension.class)
-class MenuGroupBoTest {
+class MenuGroupServiceTest {
     private MenuGroup menuGroup;
 
-    private MenuGroupBo menuGroupBo;
+    private MenuGroupService menuGroupService;
 
     private MenuGroupDao menuGroupDao = new InMemoryMenuGroupDao();
 
     @BeforeEach
     void setup() {
-        menuGroupBo = new MenuGroupBo(menuGroupDao);
+        menuGroupService = new MenuGroupService(menuGroupDao);
         menuGroup = new MenuGroup();
         menuGroup.setId(1L);
         menuGroup.setName("치킨류");

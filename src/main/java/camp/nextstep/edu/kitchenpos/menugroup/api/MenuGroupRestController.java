@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.menugroup.controller;
+package camp.nextstep.edu.kitchenpos.menugroup.api;
 
-import camp.nextstep.edu.kitchenpos.menugroup.bo.MenuGroupBo;
-import camp.nextstep.edu.kitchenpos.menugroup.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menugroup.application.MenuGroupService;
+import camp.nextstep.edu.kitchenpos.menugroup.domain.MenuGroup;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,15 +13,15 @@ import java.util.List;
 
 @RestController
 public class MenuGroupRestController {
-    private final MenuGroupBo menuGroupBo;
+    private final MenuGroupService menuGroupService;
 
-    public MenuGroupRestController(final MenuGroupBo menuGroupBo) {
-        this.menuGroupBo = menuGroupBo;
+    public MenuGroupRestController(final MenuGroupService menuGroupService) {
+        this.menuGroupService = menuGroupService;
     }
 
     @PostMapping("/api/menu-groups")
     public ResponseEntity<MenuGroup> create(@RequestBody final MenuGroup menuGroup) {
-        final MenuGroup created = menuGroupBo.create(menuGroup);
+        final MenuGroup created = menuGroupService.create(menuGroup);
         final URI uri = URI.create("/api/menu-groups/" + created.getId());
         return ResponseEntity.created(uri)
                 .body(created)
@@ -31,7 +31,7 @@ public class MenuGroupRestController {
     @GetMapping("/api/menus-groups")
     public ResponseEntity<List<MenuGroup>> list() {
         return ResponseEntity.ok()
-                .body(menuGroupBo.list())
+                .body(menuGroupService.list())
                 ;
     }
 }
