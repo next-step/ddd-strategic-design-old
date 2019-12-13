@@ -1,11 +1,11 @@
-package camp.nextstep.edu.kitchenpos.menu.bo;
+package camp.nextstep.edu.kitchenpos.menu.application;
 
 import camp.nextstep.edu.kitchenpos.menu.dao.MenuDao;
 import camp.nextstep.edu.kitchenpos.menugroup.dao.MenuGroupDao;
 import camp.nextstep.edu.kitchenpos.menu.dao.MenuProductDao;
 import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.menu.model.Menu;
-import camp.nextstep.edu.kitchenpos.menu.model.MenuProduct;
+import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
 import camp.nextstep.edu.kitchenpos.product.model.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class MenuBo {
+public class MenuService {
     private final MenuDao menuDao;
     private final MenuGroupDao menuGroupDao;
     private final MenuProductDao menuProductDao;
     private final ProductDao productDao;
 
-    public MenuBo(
+    public MenuService(
             final MenuDao menuDao,
             final MenuGroupDao menuGroupDao,
             final MenuProductDao menuProductDao,

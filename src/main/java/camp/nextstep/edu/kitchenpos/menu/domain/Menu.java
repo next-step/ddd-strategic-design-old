@@ -1,4 +1,4 @@
-package camp.nextstep.edu.kitchenpos.menu.model;
+package camp.nextstep.edu.kitchenpos.menu.domain;
 
 import java.math.BigDecimal;
 import java.util.List;

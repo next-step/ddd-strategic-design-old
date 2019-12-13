@@ -1,6 +1,6 @@
 package camp.nextstep.edu.kitchenpos.menu.dao;
 
-import camp.nextstep.edu.kitchenpos.menu.model.Menu;
+import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

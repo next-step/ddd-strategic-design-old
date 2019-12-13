@@ -1,11 +1,12 @@
 package camp.nextstep.edu.kitchenpos.menu.bo;
 
+import camp.nextstep.edu.kitchenpos.menu.application.MenuService;
 import camp.nextstep.edu.kitchenpos.menu.dao.MenuDao;
 import camp.nextstep.edu.kitchenpos.menugroup.dao.MenuGroupDao;
 import camp.nextstep.edu.kitchenpos.menu.dao.MenuProductDao;
 import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.menu.model.Menu;
-import camp.nextstep.edu.kitchenpos.menu.model.MenuProduct;
+import camp.nextstep.edu.kitchenpos.menu.domain.Menu;
+import camp.nextstep.edu.kitchenpos.menu.domain.MenuProduct;
 import camp.nextstep.edu.kitchenpos.product.model.Product;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("메뉴 Business Object 테스트 클래스")
 @ExtendWith(MockitoExtension.class)
-class MenuBoTest {
+class MenuServiceTest {
     @Mock
     private Menu menu;
 
@@ -46,7 +47,7 @@ class MenuBoTest {
     private ProductDao productDao;
 
     @InjectMocks
-    private MenuBo menuBo;
+    private MenuService menuService;
 
     private final Long DEFAULT_ID = 1L;
 
@@ -111,7 +112,7 @@ class MenuBoTest {
         // when then
         assertAll(
                 () -> assertThatExceptionOfType(IllegalArgumentException.class)
-                        .isThrownBy(() -> menuBo.create(menu)),
+                        .isThrownBy(() -> menuService.create(menu)),
                 () -> assertThat(menu.getPrice()).isLessThan(BigDecimal.ZERO),
                 () -> verify(menu, atLeastOnce()).getPrice()
         );
@@ -129,7 +130,7 @@ class MenuBoTest {
         // then
         assertAll(
                 () -> assertThatExceptionOfType(IllegalArgumentException.class)
-                        .isThrownBy(() -> menuBo.create(menu)),
+                        .isThrownBy(() -> menuService.create(menu)),
                 () -> then(menu).should().getPrice()
         );
     }
@@ -158,7 +159,7 @@ class MenuBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> menuBo.create(menu));
+                .isThrownBy(() -> menuService.create(menu));
     }
 
     @DisplayName("[메뉴 생성] 메뉴상품이 존재하면 성공을 반환 한다.")
@@ -305,7 +306,7 @@ class MenuBoTest {
         given(menuDao.save(mockMenu)).willReturn(mockMenu);
 
         // when
-        final Menu savedMenu = menuBo.create(mockMenu);
+        final Menu savedMenu = menuService.create(mockMenu);
 
         // then
         assertThat(savedMenu).isNotNull()
