@@ -1,12 +1,11 @@
-package camp.nextstep.edu.kitchenpos.tablegroup.bo;
+package camp.nextstep.edu.kitchenpos.tablegroup.application;
 
 import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.tablegroup.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
-import camp.nextstep.edu.kitchenpos.tablegroup.model.TableGroup;
-import camp.nextstep.edu.kitchenpos.tablegroup.bo.TableGroupBo;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 @DisplayName("테이블 그룹 Business Object 테스트 클래스")
 @ExtendWith(MockitoExtension.class)
-class TableGroupBoTest {
+class TableGroupServiceTest {
     @Mock
     private TableGroup tableGroup;
 
@@ -44,7 +43,7 @@ class TableGroupBoTest {
     private TableGroupDao tableGroupDao;
 
     @InjectMocks
-    private TableGroupBo tableGroupBo;
+    private TableGroupService tableGroupService;
 
     private final Long DEFAULT_ID = 1L;
 
@@ -74,7 +73,7 @@ class TableGroupBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableGroupBo.create(tableGroup));
+                .isThrownBy(() -> tableGroupService.create(tableGroup));
     }
 
     @DisplayName("[테이블 그룹 생성] 주문 테이블 갯수가 2개 미만일 경우 예외를 발생 한다.")
@@ -88,7 +87,7 @@ class TableGroupBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableGroupBo.create(tableGroup));
+                .isThrownBy(() -> tableGroupService.create(tableGroup));
     }
 
     @DisplayName("[테이블 그룹 생성] 주문 테이블의 비어있으면 예외를 발생 한다.")
@@ -104,7 +103,7 @@ class TableGroupBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableGroupBo.create(tableGroup));
+                .isThrownBy(() -> tableGroupService.create(tableGroup));
     }
 
     @DisplayName("[테이블 그룹 생성] 주문 테이블의 테이블 그룹이 존재하면 예외를 발생 한다.")
@@ -119,7 +118,7 @@ class TableGroupBoTest {
 
         // when then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> tableGroupBo.create(tableGroup));
+                .isThrownBy(() -> tableGroupService.create(tableGroup));
     }
 
     @DisplayName("[테이블 그룹 생성] 테이블 그룹 생성시 테이블 그룹 번호가 생성 되면 성공을 반환 한다.")
@@ -152,7 +151,7 @@ class TableGroupBoTest {
         given(tableGroup.getId()).willReturn(DEFAULT_ID);
 
         // when
-        TableGroup savedTableGroup = tableGroupBo.create(tableGroup);
+        TableGroup savedTableGroup = tableGroupService.create(tableGroup);
 
         // then
         final Long[] tableGroupIds = savedTableGroup.getOrderTables()
@@ -178,7 +177,7 @@ class TableGroupBoTest {
         given(tableGroup.getId()).willReturn(DEFAULT_ID);
 
         // when
-        TableGroup savedTableGroup = tableGroupBo.create(tableGroup);
+        TableGroup savedTableGroup = tableGroupService.create(tableGroup);
 
         // then
         assertAll(
@@ -241,7 +240,7 @@ class TableGroupBoTest {
         given(orderDao.existsByOrderTableIdAndOrderStatusIn(DEFAULT_ID, orderStatuses)).willReturn(false);
 
         // when
-        tableGroupBo.delete(DEFAULT_ID);
+        tableGroupService.delete(DEFAULT_ID);
 
         // then
         assertThat(orderTables).allMatch(orderTable -> orderTable.getTableGroupId() == null);

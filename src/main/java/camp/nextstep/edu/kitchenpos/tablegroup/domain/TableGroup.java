@@ -1,4 +1,4 @@
-package camp.nextstep.edu.kitchenpos.tablegroup.model;
+package camp.nextstep.edu.kitchenpos.tablegroup.domain;
 
 import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
 

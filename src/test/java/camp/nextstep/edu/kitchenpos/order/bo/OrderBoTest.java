@@ -8,7 +8,7 @@ import camp.nextstep.edu.kitchenpos.order.model.Order;
 import camp.nextstep.edu.kitchenpos.order.model.OrderLineItem;
 import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
-import camp.nextstep.edu.kitchenpos.tablegroup.model.TableGroup;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

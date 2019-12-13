@@ -1,7 +1,7 @@
-package camp.nextstep.edu.kitchenpos.tablegroup.controller;
+package camp.nextstep.edu.kitchenpos.tablegroup.api;
 
-import camp.nextstep.edu.kitchenpos.tablegroup.bo.TableGroupBo;
-import camp.nextstep.edu.kitchenpos.tablegroup.model.TableGroup;
+import camp.nextstep.edu.kitchenpos.tablegroup.application.TableGroupService;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,15 +9,15 @@ import java.net.URI;
 
 @RestController
 public class TableGroupRestController {
-    private final TableGroupBo tableGroupBo;
+    private final TableGroupService tableGroupService;
 
-    public TableGroupRestController(final TableGroupBo tableGroupBo) {
-        this.tableGroupBo = tableGroupBo;
+    public TableGroupRestController(final TableGroupService tableGroupService) {
+        this.tableGroupService = tableGroupService;
     }
 
     @PostMapping("/api/table-groups")
     public ResponseEntity<TableGroup> create(@RequestBody final TableGroup tableGroup) {
-        final TableGroup created = tableGroupBo.create(tableGroup);
+        final TableGroup created = tableGroupService.create(tableGroup);
         final URI uri = URI.create("/api/table-groups/" + created.getId());
         return ResponseEntity.created(uri)
                 .body(created)
@@ -26,7 +26,7 @@ public class TableGroupRestController {
 
     @DeleteMapping("/api/table-groups/{tableGroupId}")
     public ResponseEntity<Void> delete(@PathVariable final Long tableGroupId) {
-        tableGroupBo.delete(tableGroupId);
+        tableGroupService.delete(tableGroupId);
         return ResponseEntity.noContent()
                 .build()
                 ;

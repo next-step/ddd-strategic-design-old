@@ -1,11 +1,11 @@
-package camp.nextstep.edu.kitchenpos.tablegroup.bo;
+package camp.nextstep.edu.kitchenpos.tablegroup.application;
 
 import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
 import camp.nextstep.edu.kitchenpos.ordertable.dao.OrderTableDao;
 import camp.nextstep.edu.kitchenpos.tablegroup.dao.TableGroupDao;
 import camp.nextstep.edu.kitchenpos.order.model.OrderStatus;
 import camp.nextstep.edu.kitchenpos.ordertable.model.OrderTable;
-import camp.nextstep.edu.kitchenpos.tablegroup.model.TableGroup;
+import camp.nextstep.edu.kitchenpos.tablegroup.domain.TableGroup;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -18,12 +18,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
-public class TableGroupBo {
+public class TableGroupService {
     private final OrderDao orderDao;
     private final OrderTableDao orderTableDao;
     private final TableGroupDao tableGroupDao;
 
-    public TableGroupBo(final OrderDao orderDao, final OrderTableDao orderTableDao, final TableGroupDao tableGroupDao) {
+    public TableGroupService(final OrderDao orderDao, final OrderTableDao orderTableDao, final TableGroupDao tableGroupDao) {
         this.orderDao = orderDao;
         this.orderTableDao = orderTableDao;
         this.tableGroupDao = tableGroupDao;
