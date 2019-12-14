@@ -30,12 +30,16 @@ class OrderBoTest {
 
     @InjectMocks
     private OrderBo orderBo;
+
     @Mock
     private OrderDao orderDao;
+
     @Mock
     private OrderLineItemDao orderLineItemDao;
+
     @Mock
     private OrderTableDao orderTableDao;
+
     @Mock
     private TableGroupDao tableGroupDao;
 

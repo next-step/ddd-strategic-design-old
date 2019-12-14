@@ -27,10 +27,13 @@ class TableGroupBoTest {
 
     @InjectMocks
     private TableGroupBo tableGroupBo;
+
     @Mock
     private OrderTableDao orderTableDao;
+
     @Mock
     private TableGroupDao tableGroupDao;
+
     @Mock
     private OrderDao orderDao;
 

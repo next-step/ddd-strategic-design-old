@@ -30,20 +30,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @ExtendWith(MockitoExtension.class)
 class MenuBoTest {
 
-
-    @InjectMocks
     private MenuBo menuBo;
 
-    @Mock
     private MenuDao menuDao;
 
-    @Mock
     private MenuGroupDao menuGroupDao;
 
-    @Mock
     private MenuProductDao menuProductDao;
 
-    @Mock
     private ProductDao productDao;
 
     @BeforeEach
@@ -52,7 +46,6 @@ class MenuBoTest {
         menuGroupDao = new InMemoryMenuGroupDao();
         menuProductDao = new InMemoryMenuProductDao();
         productDao = new InMemoryProductDao();
-
         menuBo = new MenuBo(menuDao, menuGroupDao, menuProductDao, productDao);
     }
 

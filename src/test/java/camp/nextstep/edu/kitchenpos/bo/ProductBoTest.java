@@ -11,8 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -25,10 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @ExtendWith(MockitoExtension.class)
 class ProductBoTest {
 
-    @InjectMocks
     private ProductBo productBo;
 
-    @Mock
     private ProductDao productDao;
 
     @BeforeEach
@@ -42,7 +38,7 @@ class ProductBoTest {
     void create() {
         // given
         BigDecimal price = BigDecimal.valueOf(10_000);
-        Product product = createProduct(1l, BigDecimal.valueOf(10_000));
+        Product product = createProduct(1L, BigDecimal.valueOf(10_000));
 
         // when
         Product actual = productBo.create(product);
@@ -72,8 +68,8 @@ class ProductBoTest {
     @Test
     void list() {
         // given
-        List<Product> products = Arrays.asList(createProduct(1l, BigDecimal.valueOf(10_000)),
-                                               createProduct(2l, BigDecimal.valueOf(8_000)));
+        List<Product> products = Arrays.asList(createProduct(1L, BigDecimal.valueOf(10_000)),
+                                               createProduct(2L, BigDecimal.valueOf(8_000)));
 
         // when
         List<Product> actual = productBo.list();

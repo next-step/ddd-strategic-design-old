@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import camp.nextstep.edu.kitchenpos.dao.InMemoryMenuGroupDao;
+import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
 import camp.nextstep.edu.kitchenpos.model.MenuGroup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ class MenuGroupBoTest {
 
     private MenuGroupBo menuGroupBo;
 
-    private InMemoryMenuGroupDao menuGroupDao;
+    private MenuGroupDao menuGroupDao;
 
     @BeforeEach
     void setUp() {
@@ -30,7 +31,7 @@ class MenuGroupBoTest {
     @Test
     void createMenuGroup() {
         // given
-        MenuGroup menuGroup = createMenuGroup(1l, "추천메뉴");
+        MenuGroup menuGroup = createMenuGroup(1L, "추천메뉴");
 
         // when
         MenuGroup actual = menuGroupBo.create(menuGroup);
@@ -43,8 +44,8 @@ class MenuGroupBoTest {
     @Test
     void list() {
         // given
-        List<MenuGroup> menuGroups = Arrays.asList(createMenuGroup(1l, "추천 메뉴"),
-                                                   createMenuGroup(2l, "사이드 메뉴"));
+        List<MenuGroup> menuGroups = Arrays.asList(createMenuGroup(1L, "추천 메뉴"),
+                                                   createMenuGroup(2L, "사이드 메뉴"));
         menuGroups.forEach(menuGroup -> menuGroupDao.save(menuGroup));
 
         // when
@@ -59,7 +60,6 @@ class MenuGroupBoTest {
         MenuGroup menuGroup = new MenuGroup();
         menuGroup.setId(id);
         menuGroup.setName(nameOfCategory);
-        menuGroupDao.save(menuGroup);
         return menuGroup;
     }
 }
