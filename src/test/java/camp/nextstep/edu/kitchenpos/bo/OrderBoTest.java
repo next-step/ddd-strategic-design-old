@@ -100,7 +100,7 @@ class OrderBoTest {
 
     @DisplayName("주문 테이블의 정보가 없을 경우 주문 등록을 할 수 없다")
     @Test
-    void create2() {
+    void createWhenNonOrderTable_exception() {
         // given
         OrderLineItem orderLineItem = new OrderLineItem();
         orderLineItem.setMenuId(1L);
@@ -119,7 +119,7 @@ class OrderBoTest {
 
     @DisplayName("주문한 테이블이 빈 테이블인 경우 주문 등록을 할 수 없다")
     @Test
-    void create3() {
+    void createWhenOrderTableEmpty_exception() {
         // given
         OrderTable emptyOrderTable = new OrderTable();
         emptyOrderTable.setId(1L);
@@ -142,7 +142,7 @@ class OrderBoTest {
 
     @DisplayName("주문한 단체 테이블이 그룹 테이블로 등록이 되지 않은 경우 주문 등록을 할 수 없다")
     @Test
-    void create4() {
+    void createWhenNonTableGroup_exception() {
         // given
         OrderLineItem orderLineItem = new OrderLineItem();
         orderLineItem.setMenuId(1l);
