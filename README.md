@@ -106,6 +106,7 @@
 - 주문내역(OrderLineItem)
     - [ ] 자동으로 생성된 순번과 주문 id, 메뉴 id, 수량을 가진다.
 - 주문(Order)
+    - [ ] 식별 가능한 id, 주문테이블(OrderTable) id, 주문상태(OrderStatus), 주문시간, 주문내역(OrderLineItem) 목록을 가진다.
     - [ ] 주문 목록을 조회할 수 있다.
     - [ ] 주문을 생성할 수 있다.
         - [ ] 주문내역(OrderLineItem) 목록이 비어 있어서는 안 된다.
