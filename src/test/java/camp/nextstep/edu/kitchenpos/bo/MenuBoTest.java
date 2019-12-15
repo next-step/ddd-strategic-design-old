@@ -1,12 +1,13 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
-import camp.nextstep.edu.kitchenpos.dao.MenuDao;
-import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
-import camp.nextstep.edu.kitchenpos.dao.MenuProductDao;
-import camp.nextstep.edu.kitchenpos.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.model.Menu;
-import camp.nextstep.edu.kitchenpos.model.MenuProduct;
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.menu.dao.MenuDao;
+import camp.nextstep.edu.kitchenpos.menu.dao.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menu.dao.MenuProductDao;
+import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
+import camp.nextstep.edu.kitchenpos.menu.bo.MenuBo;
+import camp.nextstep.edu.kitchenpos.menu.model.Menu;
+import camp.nextstep.edu.kitchenpos.menu.model.MenuProduct;
+import camp.nextstep.edu.kitchenpos.product.model.Product;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;

@@ -4,8 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
-import camp.nextstep.edu.kitchenpos.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.product.bo.ProductBo;
+import camp.nextstep.edu.kitchenpos.product.dao.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.model.Product;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;

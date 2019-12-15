@@ -3,8 +3,9 @@ package camp.nextstep.edu.kitchenpos.bo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
-import camp.nextstep.edu.kitchenpos.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menu.dao.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menu.bo.MenuGroupBo;
+import camp.nextstep.edu.kitchenpos.menu.model.MenuGroup;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
