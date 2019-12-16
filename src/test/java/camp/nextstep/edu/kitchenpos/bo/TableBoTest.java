@@ -1,8 +1,9 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
-import camp.nextstep.edu.kitchenpos.dao.OrderDao;
-import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
-import camp.nextstep.edu.kitchenpos.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.order.dao.OrderDao;
+import camp.nextstep.edu.kitchenpos.table.dao.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.table.model.OrderTable;
+import camp.nextstep.edu.kitchenpos.table.bo.TableBo;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
