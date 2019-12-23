@@ -57,7 +57,7 @@ class ProductBoTest {
     @ValueSource(strings = "-1")
     void createWhenPriceLessThanZero_exception(BigDecimal wrongPrice) {
         // given
-        Product registeredProduct = createProduct(1l, wrongPrice);
+        Product registeredProduct = createProduct(1L, wrongPrice);
 
         // exception
         Assertions.assertThatIllegalArgumentException()

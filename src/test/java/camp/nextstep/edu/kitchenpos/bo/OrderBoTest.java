@@ -145,7 +145,7 @@ class OrderBoTest {
     void createWhenNonTableGroup_exception() {
         // given
         OrderLineItem orderLineItem = new OrderLineItem();
-        orderLineItem.setMenuId(1l);
+        orderLineItem.setMenuId(1L);
         orderLineItem.setQuantity(4);
 
         Order order = new Order();
@@ -153,8 +153,8 @@ class OrderBoTest {
         order.setOrderTableId(null);
 
         OrderTable groupOrderTable = new OrderTable();
-        groupOrderTable.setId(1l);
-        groupOrderTable.setTableGroupId(2l);
+        groupOrderTable.setId(1L);
+        groupOrderTable.setTableGroupId(2L);
 
         given(orderTableDao.findById(order.getOrderTableId())).willReturn(Optional.of(groupOrderTable));
         given(tableGroupDao.findById(any())).willReturn(Optional.empty());

@@ -184,8 +184,8 @@ class TableGroupBoTest {
     void deleteWhenOrderTableStatusIsNotComplete_exception() {
         // given
         long tableGroupId = 1L;
-        List<OrderTable> orderTables = Arrays.asList(ofOrderTable(tableGroupId, 1l, 4),
-                                                     ofOrderTable(tableGroupId, 2l, 4));
+        List<OrderTable> orderTables = Arrays.asList(ofOrderTable(tableGroupId, 1L, 4),
+                                                     ofOrderTable(tableGroupId, 2L, 4));
 
         given(orderTableDao.findAllByTableGroupId(tableGroupId)).willReturn(orderTables);
         given(orderDao.existsByOrderTableIdAndOrderStatusIn(1l,
