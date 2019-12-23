@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -51,9 +50,7 @@ class OrderBoTest {
         long orderTableId = 1L;
         long tableGroupId = 2L;
 
-        OrderLineItem orderLineItem = new OrderLineItem();
-        orderLineItem.setMenuId(menuId);
-        orderLineItem.setQuantity(4);
+        OrderLineItem orderLineItem = ofOrderLineItem(1L, menuId);
 
         OrderTable orderTable = new OrderTable();
         orderTable.setId(orderTableId);
@@ -67,6 +64,7 @@ class OrderBoTest {
         TableGroup tableGroup = new TableGroup();
         tableGroup.setId(2L);
         List<OrderTable> orderTables = Arrays.asList(orderTable);
+
         given(orderTableDao.findById(any())).willReturn(Optional.of(orderTable));
         given(tableGroupDao.findById(any())).willReturn(Optional.of(tableGroup));
         given(orderDao.save(any())).willReturn(order);
@@ -91,7 +89,7 @@ class OrderBoTest {
     void createWhenOrderLineItemIsNull_exception() {
         // given
         Order order = new Order();
-        order.setOrderLineItems(new ArrayList<>());
+        order.setOrderLineItems(Arrays.asList());
 
         // exception
         Assertions.assertThatIllegalArgumentException()
@@ -102,9 +100,7 @@ class OrderBoTest {
     @Test
     void createWhenNonOrderTable_exception() {
         // given
-        OrderLineItem orderLineItem = new OrderLineItem();
-        orderLineItem.setMenuId(1L);
-        orderLineItem.setQuantity(4);
+        OrderLineItem orderLineItem = ofOrderLineItem(1L, 1L);
 
         Order order = new Order();
         order.setOrderLineItems(Arrays.asList(orderLineItem));
@@ -125,9 +121,7 @@ class OrderBoTest {
         emptyOrderTable.setId(1L);
         emptyOrderTable.setEmpty(true);
 
-        OrderLineItem orderLineItem = new OrderLineItem();
-        orderLineItem.setMenuId(1L);
-        orderLineItem.setQuantity(4);
+        OrderLineItem orderLineItem = ofOrderLineItem(1L, 1L);
 
         Order order = new Order();
         order.setOrderLineItems(Arrays.asList(orderLineItem));
@@ -144,19 +138,15 @@ class OrderBoTest {
     @Test
     void createWhenNonTableGroup_exception() {
         // given
-        OrderLineItem orderLineItem = new OrderLineItem();
-        orderLineItem.setMenuId(1L);
-        orderLineItem.setQuantity(4);
-
         Order order = new Order();
-        order.setOrderLineItems(Arrays.asList(orderLineItem));
+        order.setOrderLineItems(Arrays.asList(ofOrderLineItem(1L, 1L)));
         order.setOrderTableId(null);
 
         OrderTable groupOrderTable = new OrderTable();
         groupOrderTable.setId(1L);
         groupOrderTable.setTableGroupId(2L);
 
-        given(orderTableDao.findById(order.getOrderTableId())).willReturn(Optional.of(groupOrderTable));
+        given(orderTableDao.findById(any())).willReturn(Optional.of(groupOrderTable));
         given(tableGroupDao.findById(any())).willReturn(Optional.empty());
 
         // exception
@@ -168,21 +158,11 @@ class OrderBoTest {
     @Test
     void list() {
         // given
-        Order order = new Order();
-        order.setId(1L);
-        order.setOrderTableId(1L);
+        Order order = ofOrder(1L, 1L);
+        Order order2 = ofOrder(2L, 2L);
 
-        Order order2 = new Order();
-        order.setId(2L);
-        order.setOrderTableId(2L);
-
-        OrderLineItem orderLineItem = new OrderLineItem();
-        orderLineItem.setOrderId(1L);
-        orderLineItem.setMenuId(1L);
-
-        OrderLineItem orderLineItem2 = new OrderLineItem();
-        orderLineItem.setOrderId(2L);
-        orderLineItem.setMenuId(2L);
+        OrderLineItem orderLineItem = ofOrderLineItem(1L, 1L);
+        OrderLineItem orderLineItem2 = ofOrderLineItem(2L, 2L);
 
         List<Order> orders = Arrays.asList(order, order2);
         given(orderDao.findAll()).willReturn(orders);
@@ -242,5 +222,20 @@ class OrderBoTest {
         // exception
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> orderBo.changeOrderStatus(nonOrderId, order));
+    }
+
+    private Order ofOrder(long orderId, long orderTableId) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setOrderTableId(orderTableId);
+        return order;
+    }
+
+    private OrderLineItem ofOrderLineItem(long orderId, long menuId) {
+        OrderLineItem orderLineItem = new OrderLineItem();
+        orderLineItem.setOrderId(orderId);
+        orderLineItem.setMenuId(menuId);
+        orderLineItem.setQuantity(4L);
+        return orderLineItem;
     }
 }

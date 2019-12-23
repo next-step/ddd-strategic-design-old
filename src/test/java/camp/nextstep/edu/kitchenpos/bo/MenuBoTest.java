@@ -50,7 +50,7 @@ class MenuBoTest {
     void create() {
         // given
         String menuOfName = "후라이드 단품";
-        BigDecimal price = BigDecimal.valueOf(10_000);
+        int price = 10_000;
 
         Product product = createProduct(price);
         productDao.save(product);
@@ -77,16 +77,16 @@ class MenuBoTest {
     @ValueSource(strings = "-1")
     void createWhenMenuPriceLessThanZero_exception(BigDecimal wrongPrice) {
         // given
-        Product product = createProduct(BigDecimal.valueOf(10_000));
+        Product product = createProduct(10_000);
         productDao.save(product);
-        Product product2 = createProduct(BigDecimal.valueOf(9_000));
+        Product product2 = createProduct(9_000);
         productDao.save(product2);
         MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
         menuGroupDao.save(menuGroup);
         List<MenuProduct> menuProducts = createOfMenuProduct(product, product2);
 
         Menu menu = createOfMenu("후라이드+양념",
-                                 wrongPrice,
+                                 wrongPrice.intValue(),
                                  menuGroup, menuProducts);
         // exception
         assertThatIllegalArgumentException()
@@ -99,8 +99,8 @@ class MenuBoTest {
         // given
         long nonMenuGroupId = 9999L;
 
-        BigDecimal priceOfProduct = BigDecimal.valueOf(10_000);
-        BigDecimal priceOfProduct2 = BigDecimal.valueOf(9_000);
+        int priceOfProduct = 10_000;
+        int priceOfProduct2 = 9_000;
         Product product = createProduct(priceOfProduct);
         productDao.save(product);
         Product product2 = createProduct(priceOfProduct2);
@@ -109,7 +109,7 @@ class MenuBoTest {
 
         Menu menu = new Menu();
         menu.setName("후라이드+양념");
-        menu.setPrice(priceOfProduct.add(priceOfProduct2));
+        menu.setPrice(BigDecimal.valueOf(priceOfProduct + priceOfProduct2));
         menu.setMenuGroupId(nonMenuGroupId);
         menu.setMenuProducts(menuProducts);
 
@@ -123,7 +123,7 @@ class MenuBoTest {
     @Test
     void createWhenNotRegisteredProduct_fail() {
         // given
-        Product product = createProduct(BigDecimal.valueOf(10_000));
+        Product product = createProduct(10_000);
         MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
         menuGroupDao.save(menuGroup);
         List<MenuProduct> menuProducts = createOfMenuProduct(product);
@@ -144,10 +144,9 @@ class MenuBoTest {
     @Test
     void failIfMenuPriceEqualsTotalPriceOfMenuItem() {
         // given
-        BigDecimal priceOfProduct = BigDecimal.valueOf(10_000);
-        BigDecimal priceOfProduct2 = BigDecimal.valueOf(9_000);
-        BigDecimal priceOfMenu = priceOfProduct.add(priceOfProduct2)
-                                               .plus();
+        int priceOfProduct = 10_000;
+        int priceOfProduct2 = 9_000;
+        int priceOfMenu = (priceOfProduct + priceOfProduct2) + 1;
 
         Product product = createProduct(priceOfProduct);
         productDao.save(product);
@@ -165,9 +164,9 @@ class MenuBoTest {
     @Test
     void successfulIfMenuPriceEqualsTotalPriceOfMenuItem() {
         // given
-        BigDecimal priceOfProduct = BigDecimal.valueOf(10_000);
-        BigDecimal priceOfProduct2 = BigDecimal.valueOf(9_000);
-        BigDecimal priceOfMenu = priceOfProduct.add(priceOfProduct2);
+        int priceOfProduct = 10_000;
+        int priceOfProduct2 = 9_000;
+        int priceOfMenu = priceOfProduct + priceOfProduct2;
 
         Product product = createProduct(priceOfProduct);
         productDao.save(product);
@@ -197,20 +196,20 @@ class MenuBoTest {
     }
 
     private Menu createMenu(String menuOfName) {
-        Product product = createProduct(BigDecimal.valueOf(10_000));
+        Product product = createProduct(10_000);
         productDao.save(product);
         MenuGroup menuGroup = createOfMenuGroup("추천메뉴");
         menuGroupDao.save(menuGroup);
         List<MenuProduct> menuProducts = createOfMenuProduct(product);
-        Menu menu = createOfMenu(menuOfName, BigDecimal.valueOf(10_000), menuGroup, menuProducts);
+        Menu menu = createOfMenu(menuOfName, 10_000, menuGroup, menuProducts);
         menuDao.save(menu);
         return menu;
     }
 
-    private Menu createOfMenu(String name, BigDecimal price, MenuGroup menuGroup, List<MenuProduct> menuProducts) {
+    private Menu createOfMenu(String name, int price, MenuGroup menuGroup, List<MenuProduct> menuProducts) {
         Menu menu = new Menu();
         menu.setName(name);
-        menu.setPrice(price);
+        menu.setPrice(BigDecimal.valueOf(price));
         menu.setMenuGroupId(menuGroup.getId());
         menu.setMenuProducts(menuProducts);
         return menu;
@@ -235,10 +234,10 @@ class MenuBoTest {
         return menuGroup;
     }
 
-    private Product createProduct(BigDecimal price) {
+    private Product createProduct(int price) {
         Product product = new Product();
         product.setName("양념치킨");
-        product.setPrice(price);
+        product.setPrice(BigDecimal.valueOf(price));
         return product;
     }
 }

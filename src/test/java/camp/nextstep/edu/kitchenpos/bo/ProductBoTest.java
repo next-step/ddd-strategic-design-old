@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -37,8 +38,8 @@ class ProductBoTest {
     @Test
     void create() {
         // given
-        BigDecimal price = BigDecimal.valueOf(10_000);
-        Product product = createProduct(1L, BigDecimal.valueOf(10_000));
+        int price = 10_000;
+        Product product = createProduct(1L, price);
 
         // when
         Product actual = productBo.create(product);
@@ -46,7 +47,7 @@ class ProductBoTest {
         // then
         assertThat(actual).isEqualTo(product);
         assertAll(
-                () -> assertThat(actual.getPrice()).isEqualTo(price)
+                () -> assertThat(actual.getPrice()).isEqualTo(BigDecimal.valueOf(price))
         );
     }
 
@@ -55,7 +56,7 @@ class ProductBoTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = "-1")
-    void createWhenPriceLessThanZero_exception(BigDecimal wrongPrice) {
+    void createWhenPriceLessThanZero_exception(int wrongPrice) {
         // given
         Product registeredProduct = createProduct(1L, wrongPrice);
 
@@ -68,8 +69,8 @@ class ProductBoTest {
     @Test
     void list() {
         // given
-        List<Product> products = Arrays.asList(createProduct(1L, BigDecimal.valueOf(10_000)),
-                                               createProduct(2L, BigDecimal.valueOf(8_000)));
+        List<Product> products = Arrays.asList(createProduct(1L, 10_000),
+                                               createProduct(2L, 8_000));
 
         // when
         List<Product> actual = productBo.list();
@@ -78,12 +79,19 @@ class ProductBoTest {
         assertThat(actual).containsExactlyInAnyOrderElementsOf(products);
     }
 
-    private Product createProduct(Long id, BigDecimal price) {
+    private Product createProduct(Long id, Integer price) {
         Product product = new Product();
         product.setId(id);
         product.setName("양념치킨");
-        product.setPrice(price);
+        product.setPrice(nullablePrice(price));
         productDao.save(product);
         return product;
+    }
+
+    private BigDecimal nullablePrice(Integer price) {
+        if (Objects.isNull(price)) {
+            return null;
+        }
+        return BigDecimal.valueOf(price);
     }
 }
