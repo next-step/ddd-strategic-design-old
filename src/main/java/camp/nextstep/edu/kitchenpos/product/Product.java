@@ -1,4 +1,4 @@
-package camp.nextstep.edu.kitchenpos.model;
+package camp.nextstep.edu.kitchenpos.product;
 
 import java.math.BigDecimal;
 

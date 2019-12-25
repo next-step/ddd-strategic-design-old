@@ -1,4 +1,4 @@
-package camp.nextstep.edu.kitchenpos.model;
+package camp.nextstep.edu.kitchenpos.order;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,7 +1,5 @@
-package camp.nextstep.edu.kitchenpos.bo;
+package camp.nextstep.edu.kitchenpos.product;
 
-import camp.nextstep.edu.kitchenpos.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.model.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

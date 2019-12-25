@@ -1,4 +1,6 @@
-package camp.nextstep.edu.kitchenpos.model;
+package camp.nextstep.edu.kitchenpos.tablegroup;
+
+import camp.nextstep.edu.kitchenpos.table.OrderTable;
 
 import java.time.LocalDateTime;
 import java.util.List;

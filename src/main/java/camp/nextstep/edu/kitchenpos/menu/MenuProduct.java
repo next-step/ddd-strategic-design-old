@@ -1,4 +1,4 @@
-package camp.nextstep.edu.kitchenpos.model;
+package camp.nextstep.edu.kitchenpos.menu;
 
 public class MenuProduct {
     private Long seq;
@@ -36,5 +36,15 @@ public class MenuProduct {
 
     public void setQuantity(final long quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "MenuProduct{" +
+                "seq=" + seq +
+                ", menuId=" + menuId +
+                ", productId=" + productId +
+                ", quantity=" + quantity +
+                '}';
     }
 }
