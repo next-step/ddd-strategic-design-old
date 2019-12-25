@@ -1,6 +1,7 @@
 package camp.nextstep.edu.kitchenpos.dao;
 
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.product.Product;
+import camp.nextstep.edu.kitchenpos.product.ProductDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

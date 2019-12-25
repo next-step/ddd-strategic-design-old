@@ -1,6 +1,4 @@
-package camp.nextstep.edu.kitchenpos.dao;
-
-import camp.nextstep.edu.kitchenpos.model.MenuProduct;
+package camp.nextstep.edu.kitchenpos.menu;
 
 import java.util.List;
 import java.util.Optional;

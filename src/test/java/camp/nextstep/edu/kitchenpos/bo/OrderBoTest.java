@@ -1,10 +1,10 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
-import camp.nextstep.edu.kitchenpos.dao.OrderDao;
-import camp.nextstep.edu.kitchenpos.dao.OrderLineItemDao;
-import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
-import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
-import camp.nextstep.edu.kitchenpos.model.*;
+import camp.nextstep.edu.kitchenpos.order.*;
+import camp.nextstep.edu.kitchenpos.table.OrderTable;
+import camp.nextstep.edu.kitchenpos.table.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.TableGroup;
+import camp.nextstep.edu.kitchenpos.tablegroup.TableGroupDao;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static camp.nextstep.edu.kitchenpos.model.OrderStatus.COOKING;
+import static camp.nextstep.edu.kitchenpos.order.OrderStatus.COOKING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.assertAll;

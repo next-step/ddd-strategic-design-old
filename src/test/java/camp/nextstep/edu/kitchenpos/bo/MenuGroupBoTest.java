@@ -1,8 +1,9 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import camp.nextstep.edu.kitchenpos.dao.InMemoryMenuGroupDao;
-import camp.nextstep.edu.kitchenpos.dao.MenuGroupDao;
-import camp.nextstep.edu.kitchenpos.model.MenuGroup;
+import camp.nextstep.edu.kitchenpos.tablegroup.MenuGroupDao;
+import camp.nextstep.edu.kitchenpos.menugroup.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menugroup.MenuGroupBo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

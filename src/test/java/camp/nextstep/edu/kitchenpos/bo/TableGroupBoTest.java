@@ -1,11 +1,12 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
-import camp.nextstep.edu.kitchenpos.dao.OrderDao;
-import camp.nextstep.edu.kitchenpos.dao.OrderTableDao;
-import camp.nextstep.edu.kitchenpos.dao.TableGroupDao;
-import camp.nextstep.edu.kitchenpos.model.OrderStatus;
-import camp.nextstep.edu.kitchenpos.model.OrderTable;
-import camp.nextstep.edu.kitchenpos.model.TableGroup;
+import camp.nextstep.edu.kitchenpos.order.OrderDao;
+import camp.nextstep.edu.kitchenpos.table.OrderTableDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.TableGroupDao;
+import camp.nextstep.edu.kitchenpos.order.OrderStatus;
+import camp.nextstep.edu.kitchenpos.table.OrderTable;
+import camp.nextstep.edu.kitchenpos.tablegroup.TableGroup;
+import camp.nextstep.edu.kitchenpos.tablegroup.TableGroupBo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

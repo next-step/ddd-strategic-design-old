@@ -1,8 +1,9 @@
 package camp.nextstep.edu.kitchenpos.bo;
 
 import camp.nextstep.edu.kitchenpos.dao.InMemoryProductDao;
-import camp.nextstep.edu.kitchenpos.dao.ProductDao;
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.product.ProductDao;
+import camp.nextstep.edu.kitchenpos.product.Product;
+import camp.nextstep.edu.kitchenpos.product.ProductBo;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

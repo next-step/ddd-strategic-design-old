@@ -2,10 +2,15 @@ package camp.nextstep.edu.kitchenpos.bo;
 
 
 import camp.nextstep.edu.kitchenpos.dao.*;
-import camp.nextstep.edu.kitchenpos.model.Menu;
-import camp.nextstep.edu.kitchenpos.model.MenuGroup;
-import camp.nextstep.edu.kitchenpos.model.MenuProduct;
-import camp.nextstep.edu.kitchenpos.model.Product;
+import camp.nextstep.edu.kitchenpos.menu.Menu;
+import camp.nextstep.edu.kitchenpos.menugroup.MenuGroup;
+import camp.nextstep.edu.kitchenpos.menu.MenuProduct;
+import camp.nextstep.edu.kitchenpos.product.Product;
+import camp.nextstep.edu.kitchenpos.menu.MenuBo;
+import camp.nextstep.edu.kitchenpos.menu.MenuDao;
+import camp.nextstep.edu.kitchenpos.menu.MenuProductDao;
+import camp.nextstep.edu.kitchenpos.product.ProductDao;
+import camp.nextstep.edu.kitchenpos.tablegroup.MenuGroupDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
