@@ -94,9 +94,57 @@ Menu, MenuGroup, Product : mock 객체 직접 구현
 | 주문 | order | 테이블 번호를 식별자로 하여 주문 신청하는 주문표. (주문표 : 메뉴, 주문시간, 주문 상태, 주문한 메뉴 리스트를 가진다) |
 | 주문한 메뉴 리스트 | orderLineItem | 주문한 메뉴와 각 메뉴의 주문 수량을 표기 |
 | 주문상태 | orderStatus | 주문한 손님의 현재 상태 (식사 대기중, 식사중, 식사완료)|  
-| 주문 테이블 | table | 홀의 테이블을 말하며, 손님이 홀에서 식사하는 경우 손님이 앉은 테이블을 먼저 등록한다. 각 테이블은 고유의 테이블 번호를 가지고 있다.
+| 주문 테이블 | orderTable | 홀의 테이블을 말하며, 손님이 홀에서 식사하는 경우 손님이 앉은 테이블을 먼저 등록한다. 각 테이블은 고유의 테이블 번호를 가지고 있다.
 | 테이블 그룹 | tableGroup | 여러개의 테이블을 사용 할 경우, 여러 테이블을 하나로 묶음 |
 
 ## 모델링
-
-- “
+- 상품 
+    - `product`은 번호, 이름, 가격을 가진다.
+    - 상품 가격은 `0원`이상이다.
+    
+- 메뉴
+    - `menu`는 번호, 이름, 가격, 메뉴에 속한 상품, 메뉴그룹 번호를 가진다.
+    - `menu` 가격은 `0원`이상이어야 한다.
+    - `menu` 등록을 위해서는 가격, 메뉴 그룹, 상품들이 필요하다.
+    - `menu`의 금액은 `menuProduct`의 총액보다 커야한다.
+      - `MenuProduct`의 총액 = 각 `product`의 `price * quantity`의 합
+    
+- 메뉴그룹
+    - `menuGroup`은 번호, 이름을 가진다.
+    
+- 메뉴상품
+    - `menuProduct`은 번호, 메뉴번호, 상품번호, 재고량을 가진다.
+    
+- 주문
+    - `order`는 번호, 주문테이블 번호, 주문상태, 주문시간, 주문한 항목들을 가진다.
+    - `order` 등록 할 수 있다.
+        - `orderStatus`는 `COOKING`이고 `orderTime`은 현재시각이다.
+        - `orderTable` 상태가 `false`인 경우 등록에 실패한다.
+        - `orderTable`이 `orderGroupId`가 미등록된 번호일 경우 등록에 실패한다.
+    - `order` 상태변경을 할 수 있다.
+        - `orderStatus`가 `COMPLETION`면 상태변경에 실패한다.
+        
+- 주문한 메뉴 리스트
+    - `orderLineItem`은 번호, 주문번호, 메뉴번호, 메뉴수량을 가진다.
+ 
+- 주문상태
+    - 조리중(`COOKING`), 식사중(`MEAL`), 식사완료(`COMPLETION`)를 가진다.
+    - `orderStatus`가 `COMPLETION`이면 `order` 상태변경 할 수 없다.
+    - `orderStatus`가 `COOKING`, `MEAL`이면 `orderTable`의 `empty` 상태를 변경 할 수 없다.
+    - `orderStatus`가 `COOKING`, `MEAL`이면 `tableGroup`을 삭제할 수 없다. 
+    
+- 주문 테이블 
+    - `orderTable`은 번호, `tableGroup`번호, 손님 수, 테이블 상태를 가진다.
+    - 손님 수는 `0명`이상이어야 한다.
+    - `empty`은 `true`, `false`이다.
+    - 손님수를 입력하지 않은 경우, 기본값은 __0명__이다. 
+    
+- 테이블 그룹
+    - `tableGroup`은 번호, 등록시간, `orderTable` 목록을 가진다.
+    - `tableGroup`을 등록 할 수 있다.
+        - `orderTable`은 2개 이상이어야 한다.
+        - 모든 `orderTable`은 `empty`가 `false`이어야 한다.
+        - `createDate`는 현재시간이다.
+    - `tableGroup`을 삭제 할 수 있다. 
+        - `tableGroup`에 속한 `orderTable`이 없을 경우 삭제 할 수 없다.    
+        - 마지막으로 주문한 `orderTable`의 `orderStatus`가 `COMPLETION`이 아닌 경우, 삭제 할 수 없다.    
